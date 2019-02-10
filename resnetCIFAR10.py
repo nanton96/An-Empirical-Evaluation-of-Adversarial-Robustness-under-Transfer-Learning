@@ -89,7 +89,7 @@ def test(epoch,testloader):
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-	    logging.info('Batch: %d Test Accuracy %.3f',batch_idx,correct/total)
+            logging.info('Batch: %d Test Accuracy %.3f',batch_idx,correct/total)
             # progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
             #     % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
@@ -125,7 +125,7 @@ optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5
 for epoch in range(start_epoch, start_epoch + args.ep):
     train(epoch,trainloader)
     if epoch > 95:
-	    torch.save(net.state_dict(), "models/ResNet{0:03d}.pwf".format(epoch))
+        torch.save(net.state_dict(), "models/ResNet{0:03d}.pwf".format(epoch))
 
 test(epoch,testloader)
 

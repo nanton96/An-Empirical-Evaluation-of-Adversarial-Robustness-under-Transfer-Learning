@@ -7,6 +7,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 import numpy as np
 import matplotlib.pyplot as plt
+from resnets import resnet50
 
 def attack_network(model):
     testset = torchvision.datasets.CIFAR10(root='./data', train=False,
@@ -88,3 +89,7 @@ def fgsm_attack(image, epsilon, data_grad):
     
     # Return the perturbed image
     return perturbed_image
+
+resnet = resnet50(pretrained=False)
+resnet.load_state_dict(torch.load("models/ResNet014.pwf"))
+resnet.eval()
