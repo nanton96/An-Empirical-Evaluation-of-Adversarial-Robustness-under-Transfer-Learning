@@ -7,7 +7,7 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
-from utils import progress_bar
+# from utils import progress_bar
 import os
 import argparse
 import logging
