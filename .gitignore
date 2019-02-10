@@ -105,3 +105,6 @@ venv.bak/
 
 # Do not upload datasets, only use them locally
 /data
+
+# Pycharm-specific files are not needed
+.idea
