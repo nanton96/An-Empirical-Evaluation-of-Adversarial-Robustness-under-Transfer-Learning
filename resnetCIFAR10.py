@@ -14,7 +14,7 @@ import logging
 
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py
 
-logging.basicConfig(filename='log_file.log', level=logging.DEBUG)
+logging.basicConfig(filename='log_file.log', level=logging.INFO)
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.15, type=float, help='learning rate')
@@ -45,6 +45,7 @@ testset = torchvision.datasets.CIFAR10(root='./data', train=False,
 testloader = torch.utils.data.DataLoader(testset, batch_size=100,
                                          shuffle=False, num_workers=4)
 
+logging.info("Both datasets were downloaded")
 classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 net = resnet50(pretrained=False)
