@@ -17,9 +17,9 @@ import logging
 logging.basicConfig(filename='log_file.log', level=logging.INFO)
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
-parser.add_argument('--lr', default=0.15, type=float, help='learning rate')
+parser.add_argument('--lr', default=0.12, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
-parser.add_argument('--ep', default = 15, type=int, help = 'total epochs')
+parser.add_argument('--ep', default = 200, type=int, help = 'total epochs')
 parser.add_argument('--modelPath', default ='models/CIFAR10.pwf')
 
 args = parser.parse_args()
@@ -89,7 +89,7 @@ def test(epoch,testloader):
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-
+	    logging.info('Batch: %d Test Accuracy %.3f',batch_idx,correct/total)
             # progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
             #     % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
@@ -124,7 +124,8 @@ optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5
 
 for epoch in range(start_epoch, start_epoch + args.ep):
     train(epoch,trainloader)
-    torch.save(net.state_dict(), "models/ResNet{0:03d}.pwf".format(epoch))
+    if epoch > 95:
+	    torch.save(net.state_dict(), "models/ResNet{0:03d}.pwf".format(epoch))
 
 test(epoch,testloader)
 

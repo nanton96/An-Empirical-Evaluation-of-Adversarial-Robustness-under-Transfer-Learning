@@ -111,3 +111,6 @@ venv.bak/
 
 # Slurm outputs are not of interest
 slurm-*
+
+# 
+/checkpoint
