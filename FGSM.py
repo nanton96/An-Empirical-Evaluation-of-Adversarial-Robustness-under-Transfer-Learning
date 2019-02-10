@@ -91,5 +91,5 @@ def fgsm_attack(image, epsilon, data_grad):
     return perturbed_image
 
 resnet = resnet50(pretrained=False)
-resnet.load_state_dict(torch.load("models/ResNet014.pwf"))
+resnet.load_state_dict(torch.load("models/ResNet014.pwf", map_location=lambda storage, loc: storage))
 resnet.eval()

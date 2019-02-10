@@ -49,6 +49,7 @@ logging.info("Both datasets were downloaded")
 classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 net = resnet50(pretrained=False)
+net = nn.DataParallel(net, device_ids=None)
 
 def train(epoch,trainloader):
     logging.info('Epoch: %d',epoch);
