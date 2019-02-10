@@ -1,5 +1,8 @@
-# mlpcw4
-Exploring Adversarial Defense Robustness on Transfer Learning
+# mlpcw4 - Exploring Adversarial Defense Robustness on Transfer Learning
+
+* Network Arxhitecture : ResNet
+* Attacks: FSGM 
+* Transfer Learning Techniques: Weight Sharing, finetuning, 
 
 
 Github references:
