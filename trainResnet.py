@@ -17,7 +17,7 @@ from data_utils import load_dataset
 
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
-parser.add_argument('--lr', default=0.12, type=float, help='learning rate')
+parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--ep', default = 200, type=int, help = 'total epochs')
 parser.add_argument('--loc',default=False,type=bool, help = 'Stands for local. Triggers progress_bar if not running on MLP cluster')
@@ -115,7 +115,7 @@ if device == 'cuda':
 #Define a Loss function and optimize
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
-scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer,step_size=25,gamma=0.1)
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer,step_size=50,gamma=0.1)
 
 # Train the network
 
