@@ -34,9 +34,10 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
+DATA_DIR = os.environ['DATA_DIR'] 
 
 # ---------------- LOADING DATASETS ----------------------
-trainloader, testloader = load_dataset(args.dt)
+trainloader, testloader = load_dataset(args.dt, DATA_DIR)
 logging.info("Train and test datasets were loaded")
 
 # ---------------- LOADING ARCHITECTURE ------------------
