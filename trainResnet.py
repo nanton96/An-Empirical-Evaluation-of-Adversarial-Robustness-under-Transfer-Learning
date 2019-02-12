@@ -15,7 +15,6 @@ import FGSM
 from data_utils import load_dataset
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py
 
-logging.basicConfig(filename= 'resnet' args.dt +'log_file.log', level=logging.INFO)
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.12, type=float, help='learning rate')
@@ -26,6 +25,8 @@ parser.add_argument('--loc',default=False,type=bool, help = 'Stands for local. T
 parser.add_argument('--dt', default = 'cifar10', type=str, help='cifar10/cifar100')
 
 args = parser.parse_args()
+
+logging.basicConfig(filename= 'log_file' + 'ResNet' + args.dt + '.log', level=logging.INFO)
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
@@ -102,7 +103,7 @@ def test(epoch,testloader):
             os.mkdir('checkpoint')
         
         torch.save(state, './checkpoint/ckpt.t7')
-        torch.save(net.state_dict(), "models/ResNet"+args.dt"Best.pwf".format(epoch))
+        torch.save(net.state_dict(), "models/ResNet"+args.dt+"Best.pwf".format(epoch))
         best_acc = acc
 
 #Get our network Architecture
