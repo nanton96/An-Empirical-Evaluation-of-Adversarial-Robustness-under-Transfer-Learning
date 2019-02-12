@@ -6,6 +6,7 @@ from resnets import resnet50
 import torch.optim as optim
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
+from FGSM import attack_network
 import torch.nn.functional as F
 # from utils import progress_bar
 import os
@@ -49,7 +50,8 @@ logging.info("Both datasets were downloaded")
 classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 net = resnet50(pretrained=False)
-net = nn.DataParallel(net, device_ids=None)
+# net = nn.DataParallel(net, device_ids=None)
+
 
 def train(epoch,trainloader):
     logging.info('Epoch: %d',epoch);
@@ -64,8 +66,8 @@ def train(epoch,trainloader):
         outputs = net(inputs)
         loss = criterion(outputs, targets)
         loss.backward()
+        scheduler.step()
         optimizer.step()
-
         train_loss += loss.item()
         _, predicted = outputs.max(1)
         total += targets.size(0)
@@ -107,6 +109,15 @@ def test(epoch,testloader):
             os.mkdir('checkpoint')
         torch.save(state, './checkpoint/ckpt.t7')
         best_acc = acc
+    attack()
+
+def attack():
+    resnet = resnet50(pretrained=False)
+    resnet = nn.DataParallel(resnet)
+    resnet.load_state_dict(torch.load("models/ResNet179.pwf", map_location=lambda storage, loc: storage))
+    resnet.eval()
+    attack_network(resnet)
+
 
 #Get our network Architecture
 
@@ -118,7 +129,7 @@ if device == 'cuda':
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
-
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer,step_size=50,gamma=0.1)
 
 # Train the network
 
@@ -127,6 +138,7 @@ for epoch in range(start_epoch, start_epoch + args.ep):
     train(epoch,trainloader)
     if epoch > 95:
         torch.save(net.state_dict(), "models/ResNet{0:03d}.pwf".format(epoch))
+
 
 test(epoch,testloader)
 

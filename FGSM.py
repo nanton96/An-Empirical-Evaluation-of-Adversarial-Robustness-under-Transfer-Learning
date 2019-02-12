@@ -10,8 +10,12 @@ import matplotlib.pyplot as plt
 from resnets import resnet50
 
 def attack_network(model):
+    transform = transforms.Compose(
+        [transforms.ToTensor(),
+         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+    
     testset = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                           download=True, transform=transform)
+                                           download=False, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=1,
                                              shuffle=False, num_workers=4)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -23,7 +27,6 @@ def check_robustness(model,device,test_loader,epsilon=.25):
     adv_examples = []
     
     for data, target in test_loader:
-        
         data, target = data.to(device), target.to(device)
         
         # loss w.r.t the inputs will be automatically computed
@@ -34,8 +37,8 @@ def check_robustness(model,device,test_loader,epsilon=.25):
         init_pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
         
         # If the initial prediction is wrong, dont bother attacking, just move on
-        if init_pred.item() != target.item():
-            continue
+        # if init_pred.item() != target.item():
+        #     continue
         
         # Calculate the loss
         loss = F.nll_loss(output, target)
@@ -89,8 +92,9 @@ def fgsm_attack(image, epsilon, data_grad):
     
     # Return the perturbed image
     return perturbed_image
-
 resnet = resnet50(pretrained=False)
 resnet.load_state_dict(torch.load("models/ResNet199.pwf", map_location=lambda storage, loc: storage))
 resnet.eval()
 attack_network(resnet)
+
+
