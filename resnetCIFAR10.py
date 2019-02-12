@@ -11,6 +11,7 @@ import torch.nn.functional as F
 import os
 import argparse
 import logging
+import FGSM
 
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py
 
@@ -37,7 +38,7 @@ transform = transforms.Compose(
 
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=False, transform=transform)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=128,
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=500,
                                           shuffle=True, num_workers=4)
 
 testset = torchvision.datasets.CIFAR10(root='./data', train=False,
@@ -51,9 +52,8 @@ classes = ('plane', 'car', 'bird', 'cat',
 net = resnet50(pretrained=False)
 net = nn.DataParallel(net, device_ids=None)
 
+
 def train(epoch,trainloader):
-    logging.info('Epoch: %d',epoch);
-    
     net.train()
     train_loss = 0
     correct = 0
@@ -64,13 +64,13 @@ def train(epoch,trainloader):
         outputs = net(inputs)
         loss = criterion(outputs, targets)
         loss.backward()
+        scheduler.step()
         optimizer.step()
-
         train_loss += loss.item()
         _, predicted = outputs.max(1)
         total += targets.size(0)
         correct += predicted.eq(targets).sum().item()
-        logging.info('Batch: %d Train Accuracy %.3f',batch_idx,correct/total)
+        logging.info('Epoch: %d, Batch: %d Train Accuracy %.3f',epoch, batch_idx,correct/total)
         # progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
         #     % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
@@ -85,7 +85,6 @@ def test(epoch,testloader):
             inputs, targets = inputs.to(device), targets.to(device)
             outputs = net(inputs)
             loss = criterion(outputs, targets)
-
             test_loss += loss.item()
             _, predicted = outputs.max(1)
             total += targets.size(0)
@@ -107,27 +106,23 @@ def test(epoch,testloader):
             os.mkdir('checkpoint')
         torch.save(state, './checkpoint/ckpt.t7')
         best_acc = acc
+    FGSM.attack()
 
 #Get our network Architecture
 
 if device == 'cuda':
-    net = torch.nn.DataParallel(net)
     cudnn.benchmark = True
 
 #Define a Loss function and optimize
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
-
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer,step_size=25,gamma=0.1)
 
 # Train the network
-
 
 for epoch in range(start_epoch, start_epoch + args.ep):
     train(epoch,trainloader)
     if epoch > 95:
         torch.save(net.state_dict(), "models/ResNet{0:03d}.pwf".format(epoch))
-
 test(epoch,testloader)
-
-# PATH = args.modelPath

@@ -11,6 +11,7 @@ import math
 import torch.nn as nn
 import torch.nn.init as init
 
+#code taken from: https://github.com/kuangliu/pytorch-cifar
 
 def get_mean_and_std(dataset):
     '''Compute the mean and std value of dataset.'''

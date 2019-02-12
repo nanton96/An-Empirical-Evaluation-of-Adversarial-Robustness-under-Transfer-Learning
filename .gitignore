@@ -114,3 +114,6 @@ slurm-*
 
 # 
 /checkpoint
+
+# Ingore trained models
+/models
