@@ -1,10 +1,9 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=Short
-#SBATCH --gres=gpu:${gpu}
+#SBATCH --partition=Long
 #SBATCH --mem=12000  # memory in Mb
-#SBATCH --time=0-03:59:00
+#SBATCH --time=0-07:59:00
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 export CUDNN_HOME=/opt/cuDNN-7.0/
@@ -15,10 +14,15 @@ export CPATH=${CUDNN_HOME}/include:$CPATH
 export PATH=${CUDA_HOME}/bin:${PATH}
 export PYTHON_PATH=$PATH
 
-mkdir -p /disk/scratch/ibm-prize-winners/data
-export DATASET_DIR=/disk/scratch/ibm-prize-winners/data
+mkdir -p /disk/scratch/${STUDENT_ID}/data/
+mkdir -p /disk/scratch/${STUDENT_ID}/models/
+export ROOT_DIR=/disk/scratch/${STUDENT_ID}
+export DATA_DIR=/disk/scratch/${STUDENT_ID}/data
+export MODELS_DIR=/disk/scratch/${STUDENT_ID}/models
 
-# Activate the relevant virtual environment:
+
+# Activate the relevant virtual environment
+## - #SBATCH --gres=gpu:1
 
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
