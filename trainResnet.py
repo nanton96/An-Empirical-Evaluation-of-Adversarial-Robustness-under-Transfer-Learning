@@ -1,7 +1,6 @@
 from __future__ import print_function
 import torch
 import torchvision
-import torchvision.transforms as transforms
 
 from resnets import resnet50
 import torch.optim as optim
@@ -16,7 +15,7 @@ import FGSM
 from data_utils import load_dataset
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py
 
-logging.basicConfig(filename='log_file.log', level=logging.INFO)
+logging.basicConfig(filename= 'resnet' args.dt +'log_file.log', level=logging.INFO)
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.12, type=float, help='learning rate')
@@ -103,7 +102,7 @@ def test(epoch,testloader):
             os.mkdir('checkpoint')
         
         torch.save(state, './checkpoint/ckpt.t7')
-        torch.save(net.state_dict(), "models/ResNetBest.pwf".format(epoch))
+        torch.save(net.state_dict(), "models/ResNet"+args.dt"Best.pwf".format(epoch))
         best_acc = acc
 
 #Get our network Architecture
