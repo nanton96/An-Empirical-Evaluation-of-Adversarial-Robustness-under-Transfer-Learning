@@ -2,6 +2,16 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
+mean = {
+    'cifar10': (0.4914, 0.4822, 0.4465),
+    'cifar100': (0.5071, 0.4867, 0.4408),
+}
+
+std = {
+    'cifar10': (0.2023, 0.1994, 0.2010),
+    'cifar100': (0.2675, 0.2565, 0.2761),
+}
+
 def load_dataset(dataset):
 
     dataset.lower()
@@ -36,17 +46,3 @@ def load_dataset(dataset):
                                              shuffle=False, num_workers=4)
 
     return trainloader, testloader
-
-
-mean = {
-    'cifar10': (0.4914, 0.4822, 0.4465),
-    'cifar100': (0.5071, 0.4867, 0.4408),
-}
-
-std = {
-    'cifar10': (0.2023, 0.1994, 0.2010),
-    'cifar100': (0.2675, 0.2565, 0.2761),
-}
-
-# normalize = transforms.Normalize(mean=[0.491, 0.482, 0.447], std=[0.247, 0.243, 0.262]) # cirar 10
-# normalize = transforms.Normalize(mean=[0.507, 0.487, 0.441], std=[0.267, 0.256, 0.276]) # cifar 100
