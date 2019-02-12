@@ -40,6 +40,7 @@ DATA_DIR = os.environ['DATA_DIR']
 MODELS_DIR = os.environ['MODELS_DIR']
 
 # ---------------- LOADING DATASETS ----------------------
+logging.info("Loading datasets")
 trainloader, testloader = load_dataset(args.dataset, DATA_DIR)
 logging.info("Train and test datasets were loaded")
 
