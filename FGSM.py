@@ -12,7 +12,7 @@ from resnets import resnet50
 def attack_network(model):
     testset = torchvision.datasets.CIFAR10(root='./data', train=False,
                                            download=True, transform=transform)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=100,
+    testloader = torch.utils.data.DataLoader(testset, batch_size=1,
                                              shuffle=False, num_workers=4)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
@@ -91,5 +91,6 @@ def fgsm_attack(image, epsilon, data_grad):
     return perturbed_image
 
 resnet = resnet50(pretrained=False)
-resnet.load_state_dict(torch.load("models/ResNet014.pwf", map_location=lambda storage, loc: storage))
+resnet.load_state_dict(torch.load("models/ResNet199.pwf", map_location=lambda storage, loc: storage))
 resnet.eval()
+attack_network(resnet)
