@@ -33,11 +33,11 @@ best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
 
-# The output of torchvision datasets are PILImage images of range [0, 1].
-# We transform them to Tensors of normalized range [-1, 1].
+# ---------------- LOADING DATASETS ----------------------
 trainloader, testloader = load_dataset(args.dt)
 logging.info("Train and test datasets were loaded")
 
+# ---------------- LOADING ARCHITECTURE ------------------
 net = resnet50(pretrained=False)
 
 def train(epoch,trainloader):
@@ -45,7 +45,9 @@ def train(epoch,trainloader):
     train_loss = 0
     correct = 0
     total = 0
+    
     for batch_idx, (inputs, targets) in enumerate(trainloader):
+        
         inputs, targets = inputs.to(device), targets.to(device)
         optimizer.zero_grad()
         outputs = net(inputs)
@@ -57,7 +59,9 @@ def train(epoch,trainloader):
         total += targets.size(0)
         correct += predicted.eq(targets).sum().item()
         logging.info('Epoch: %d, Batch: %d Train Accuracy %.3f',epoch, batch_idx,correct/total)
+        
         if args.loc:
+        
             progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
                 % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
@@ -67,7 +71,9 @@ def test(epoch,testloader):
     test_loss = 0
     correct = 0
     total = 0
+    
     with torch.no_grad():
+        
         for batch_idx, (inputs, targets) in enumerate(testloader):
             inputs, targets = inputs.to(device), targets.to(device)
             outputs = net(inputs)
@@ -77,13 +83,16 @@ def test(epoch,testloader):
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
             logging.info('Batch: %d Test Accuracy %.3f',batch_idx,correct/total)
+            
             if args.loc:
+                
                 progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
                     % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
     # Save checkpoint.
     acc = 100.*correct/total
     if acc > best_acc:
+        
         logging.info('Saving..')
         state = {
             'net': net.state_dict(),
@@ -92,6 +101,7 @@ def test(epoch,testloader):
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
+        
         torch.save(state, './checkpoint/ckpt.t7')
         torch.save(net.state_dict(), "models/ResNetBest.pwf".format(epoch))
         best_acc = acc
