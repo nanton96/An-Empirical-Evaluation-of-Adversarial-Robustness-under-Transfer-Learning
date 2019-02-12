@@ -26,7 +26,7 @@ from resnets import resnet50
 ######################################################################
 # Loading the data
 # ------------------
-data_dir = './data'
+DATA_DIR = os.environ['DATA_DIR']
 
 # The output of torchvision datasets are PILImage images of range [0, 1].
 # We transform them to Tensors of normalized range [-1, 1].

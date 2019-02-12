@@ -24,6 +24,5 @@ export MODELS_DIR=/disk/scratch/${STUDENT_ID}/models
 # Activate the relevant virtual environment
 ## - #SBATCH --gres=gpu:1
 
-
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 python ${file}

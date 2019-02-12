@@ -12,38 +12,41 @@ import argparse
 import logging
 import FGSM
 from data_utils import load_dataset
+from utils import save_statistics
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py
 
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
-parser.add_argument('--ep', default = 200, type=int, help = 'total epochs')
+parser.add_argument('--ep', default = 1, type=int, help = 'total epochs')
 parser.add_argument('--loc',default=False,type=bool, help = 'Stands for local. Triggers progress_bar if not running on MLP cluster')
 #parser.add_argument('--modelPath', default ='models/CIFAR10.pwf')
-parser.add_argument('--dt', default = 'cifar10', type=str, help='cifar10/cifar100')
+parser.add_argument('--dataset', default = 'cifar10', type=str, help='cifar10/cifar100')
 
 args = parser.parse_args()
 
 if args.loc:
     from utils import progress_bar
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(format='%(message)s', level=logging.INFO)
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
 ROOT_DIR = os.environ['ROOT_DIR'] 
-DATA_DIR = os.path.join('DATA_DIR')
-MODELS_DIR = os.path.join('MODELS_DIR')
+DATA_DIR = os.environ['DATA_DIR']
+MODELS_DIR = os.environ['MODELS_DIR']
 
 # ---------------- LOADING DATASETS ----------------------
-trainloader, testloader = load_dataset(args.dt, DATA_DIR)
+trainloader, testloader = load_dataset(args.dataset, DATA_DIR)
 logging.info("Train and test datasets were loaded")
 
 # ---------------- LOADING ARCHITECTURE ------------------
 net = resnet50(pretrained=False)
+
+accuracies={}
 
 def train(epoch,trainloader):
     net.train()
@@ -71,7 +74,7 @@ def train(epoch,trainloader):
                 % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
 def test(epoch,testloader):
-    global best_acc
+    global best_acc, accuracies
     net.eval()
     test_loss = 0
     correct = 0
@@ -96,6 +99,12 @@ def test(epoch,testloader):
 
     # Save checkpoint.
     acc = 100.*correct/total
+    accuracies[epoch] = acc
+
+    checkpoint_dir = os.join(MODELS_DIR, "ResNet_"+args.dataset)
+    save_statistics(experiment_log_dir=checkpoint_dir, filename='summary.csv',
+                stats_dict=accuracies, current_epoch=epoch,
+                continue_from_mode=True if (epoch > 0) else False)
     if acc > best_acc:
         
         logging.info('Saving..')
@@ -104,11 +113,10 @@ def test(epoch,testloader):
             'acc': acc,
             'epoch': epoch,
         }
-        checkpoint_dir = os.join(MODELS_DIR, "ResNet_"+args.dt)
         if not os.path.isdir(checkpoint_dir):
             os.mkdir(checkpoint_dir)
         
-        torch.save(state, os.path.join(MODELS_DIR, "ResNet_"+args.dt+"_Best.pwf")
+        torch.save(state, os.path.join(MODELS_DIR, "ResNet_"+args.dataset+"_Best.pwf"))
         best_acc = acc
 
 #Get our network Architecture
@@ -130,4 +138,3 @@ for epoch in range(start_epoch, start_epoch + args.ep):
     #    torch.save(net.state_dict(), "models/ResNet{0:03d}.pwf".format(epoch))
     test(epoch,testloader)
     scheduler.step()
-
