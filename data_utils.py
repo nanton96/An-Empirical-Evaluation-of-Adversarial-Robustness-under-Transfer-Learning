@@ -2,7 +2,7 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
-def load_dataset(dataset, datadir):
+def load_dataset(dataset):
 
     dataset.lower()
 	# The output of torchvision datasets are PILImage images of range [0, 1].
@@ -21,13 +21,13 @@ def load_dataset(dataset, datadir):
 
     if(dataset == 'cifar10'):
         print("| Preparing CIFAR-10 dataset...")
-        trainset = torchvision.datasets.CIFAR10(root=datadir, train=True, download=True, transform=transform_train)
-        testset = torchvision.datasets.CIFAR10(root=datadir, train=False, download=True, transform=transform_test)
+        trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform_train)
+        testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
         num_classes = 10
     elif(dataset == 'cifar100'):
         print("| Preparing CIFAR-100 dataset...")
-        trainset = torchvision.datasets.CIFAR100(root=datadir, train=True, download=True, transform=transform_train)
-        testset = torchvision.datasets.CIFAR100(root=datadir, train=False, download=True, transform=transform_test)
+        trainset = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform_train)
+        testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform_test)
         num_classes = 100
 
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=128,
@@ -47,3 +47,6 @@ std = {
     'cifar10': (0.2023, 0.1994, 0.2010),
     'cifar100': (0.2675, 0.2565, 0.2761),
 }
+
+# normalize = transforms.Normalize(mean=[0.491, 0.482, 0.447], std=[0.247, 0.243, 0.262]) # cirar 10
+# normalize = transforms.Normalize(mean=[0.507, 0.487, 0.441], std=[0.267, 0.256, 0.276]) # cifar 100
