@@ -9,6 +9,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from resnets import resnet50
 
+
+
+def attack():
+    resnet = resnet50()
+    resnet = nn.DataParallel(resnet)
+    resnet.load_state_dict(torch.load("models/ResNet179.pwf",map_location='cpu' ))# map_location=lambda storage, loc: storage))
+    resnet.eval()
+    attack_network(resnet)
+    
 def attack_network(model):
     transform = transforms.Compose(
         [transforms.ToTensor(),
@@ -92,9 +101,4 @@ def fgsm_attack(image, epsilon, data_grad):
     
     # Return the perturbed image
     return perturbed_image
-resnet = resnet50(pretrained=False)
-resnet.load_state_dict(torch.load("models/ResNet199.pwf", map_location=lambda storage, loc: storage))
-resnet.eval()
-attack_network(resnet)
-
 
