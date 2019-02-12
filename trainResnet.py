@@ -7,7 +7,6 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
-from utils import progress_bar
 import os
 import argparse
 import logging
@@ -25,6 +24,9 @@ parser.add_argument('--loc',default=False,type=bool, help = 'Stands for local. T
 parser.add_argument('--dt', default = 'cifar10', type=str, help='cifar10/cifar100')
 
 args = parser.parse_args()
+
+if args.loc:
+    from utils import progress_bar
 
 logging.basicConfig(filename= 'log_file' + 'ResNet' + args.dt + '.log', level=logging.INFO)
 
