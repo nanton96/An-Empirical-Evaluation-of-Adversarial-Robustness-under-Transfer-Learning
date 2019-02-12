@@ -28,13 +28,15 @@ args = parser.parse_args()
 if args.loc:
     from utils import progress_bar
 
-logging.basicConfig(filename= 'log_file' + 'ResNet' + args.dt + '.log', level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
-DATA_DIR = os.environ['DATA_DIR'] 
+ROOT_DIR = os.environ['ROOT_DIR'] 
+DATA_DIR = os.path.join('DATA_DIR')
+MODELS_DIR = os.path.join('MODELS_DIR')
 
 # ---------------- LOADING DATASETS ----------------------
 trainloader, testloader = load_dataset(args.dt, DATA_DIR)
@@ -102,11 +104,11 @@ def test(epoch,testloader):
             'acc': acc,
             'epoch': epoch,
         }
-        if not os.path.isdir('checkpoint'):
-            os.mkdir('checkpoint')
+        checkpoint_dir = os.join(MODELS_DIR, "ResNet_"+args.dt)
+        if not os.path.isdir(checkpoint_dir):
+            os.mkdir(checkpoint_dir)
         
-        torch.save(state, './checkpoint/ckpt.t7')
-        torch.save(net.state_dict(), "models/ResNet"+args.dt+"Best.pwf".format(epoch))
+        torch.save(state, os.path.join(MODELS_DIR, "ResNet_"+args.dt+"_Best.pwf")
         best_acc = acc
 
 #Get our network Architecture
