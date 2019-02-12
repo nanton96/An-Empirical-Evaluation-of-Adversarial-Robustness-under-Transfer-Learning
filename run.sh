@@ -14,11 +14,11 @@ export CPATH=${CUDNN_HOME}/include:$CPATH
 export PATH=${CUDA_HOME}/bin:${PATH}
 export PYTHON_PATH=$PATH
 
-mkdir -p /disk/scratch/${STUDENT_ID}/data/
-mkdir -p /disk/scratch/${STUDENT_ID}/models/
-export ROOT_DIR=/disk/scratch/${STUDENT_ID}
-export DATA_DIR=/disk/scratch/${STUDENT_ID}/data
-export MODELS_DIR=/disk/scratch/${STUDENT_ID}/models
+mkdir -p /disk/scratch/ibm_prize_winners/data/
+mkdir -p /disk/scratch/ibm_prize_winners/models/
+export ROOT_DIR=/disk/scratch/ibm_prize_winners
+export DATA_DIR=/disk/scratch/ibm_prize_winners/data
+export MODELS_DIR=/disk/scratch/ibm_prize_winners/models
 
 
 # Activate the relevant virtual environment
@@ -26,3 +26,5 @@ export MODELS_DIR=/disk/scratch/${STUDENT_ID}/models
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 python ${file}
+
+rsync -ua --progress /disk/scratch/team_name/models/ /home/${STUDENT_ID}/models/
