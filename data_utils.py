@@ -30,12 +30,12 @@ def load_dataset(dataset, datadir):
     ])
 
     if(dataset == 'cifar10'):
-        print("| Preparing CIFAR-10 dataset...")
+        logging.info("| Preparing CIFAR-10 dataset...")
         trainset = torchvision.datasets.CIFAR10(root=datadir, train=True, download=True, transform=transform_train)
         testset = torchvision.datasets.CIFAR10(root=datadir, train=False, download=True, transform=transform_test)
         num_classes = 10
     elif(dataset == 'cifar100'):
-        print("| Preparing CIFAR-100 dataset...")
+        logging.info("| Preparing CIFAR-100 dataset...")
         trainset = torchvision.datasets.CIFAR100(root=datadir, train=True, download=True, transform=transform_train)
         testset = torchvision.datasets.CIFAR100(root=datadir, train=False, download=True, transform=transform_test)
         num_classes = 100
