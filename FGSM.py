@@ -21,6 +21,7 @@ def attack():
     # resnet = torch.nn.DataParallel(resnet)
     resnet.load_state_dict(dic['net'])
     resnet.eval()
+    
     print("Network was loaded, attacking")
     attack_network(resnet)
     
@@ -41,8 +42,10 @@ def attack_network(model):
 def check_robustness(model,device,test_loader,stats,epsilon=.25):
     correct = 0
     adv_examples = []
-    
-
+    if torch.cuda.is_available():
+        print("cuda is available")
+        model = torch.nn.DataParallel(model)
+        model = model.to(device)
     print("Begging attack")
     for data, target in test_loader:
         data, target = data.to(device), target.to(device)
