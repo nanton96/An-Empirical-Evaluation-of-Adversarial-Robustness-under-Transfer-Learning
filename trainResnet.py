@@ -12,6 +12,7 @@ import argparse
 import logging
 from data_utils import load_dataset
 from utils import save_statistics
+import json
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py
 
 
@@ -32,7 +33,7 @@ logging.basicConfig(format='%(message)s', level=logging.INFO)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 best_acc = 0  # best test accuracy
-start_epoch = 0  # start from epoch 0 or last checkpoint epoch
+start_epoch = 1  # start from epoch 0 or last checkpoint epoch
 
 ROOT_DIR = os.environ['ROOT_DIR'] 
 DATA_DIR = os.environ['DATA_DIR']
@@ -45,7 +46,6 @@ logging.info("Train and test datasets were loaded")
 
 # ---------------- LOADING ARCHITECTURE ------------------
 net = resnet50(pretrained=False)
-accuracies={}
 
 def train(epoch,trainloader):
     net.train()
@@ -73,7 +73,7 @@ def train(epoch,trainloader):
     return (train_loss, 100*correct/total)
 
 def test(epoch,testloader):
-    global best_acc, accuracies
+    global best_acc
     net.eval()
     test_loss = 0
     correct = 0
@@ -97,16 +97,9 @@ def test(epoch,testloader):
 
     # Save checkpoint.
     acc = 100.*correct/total
-    accuracies[epoch] = acc
 
-    checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_"+args.dataset)
-    if not os.path.isdir(checkpoint_dir):
-            os.mkdir(checkpoint_dir)
-    save_statistics(experiment_log_dir=checkpoint_dir, filename='summary.csv',
-                stats_dict=accuracies, current_epoch=epoch,
-                continue_from_mode=True if (epoch > 0) else False)
+
     if acc > best_acc:
-        
         logging.info('Saving..')
         state = {
             'net': net.state_dict(),
@@ -132,8 +125,19 @@ if torch.cuda.device_count() > 1:
 
 net = net.to(device)
 
+
+checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_"+args.dataset)
+if not os.path.isdir(checkpoint_dir):
+        os.mkdir(checkpoint_dir)
+
+stats={'epoch':[], 'train_acc':[], 'test_acc':[]}
+
 for epoch in range(start_epoch, start_epoch + args.ep):
     train_loss, train_acc = train(epoch,trainloader)
     test_acc = test(epoch,testloader)
     logging.info('Epoch:{:d} Loss: {:.4f} Acc: {:.1f} Test Acc: {:1f}'.format(epoch, train_loss, train_acc, test_acc))
+    stats['epoch'].append(epoch)
+    stats['train_acc'].append(train_acc)
+    stats['test_acc'].append(test_acc)
+    json.dump(stats, file(os.path.join(checkpoint_dir, 'stats.csv'),'w'))
     scheduler.step()
