@@ -10,7 +10,6 @@ import torch.nn.functional as F
 import os
 import argparse
 import logging
-import FGSM
 from data_utils import load_dataset
 from utils import save_statistics
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py

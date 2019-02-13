@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[151]:
-
-
 from __future__ import print_function, division
 
 import torch
@@ -40,12 +34,12 @@ transform = transforms.Compose([
         transforms.Normalize((0.5, 0.5, 0.5), (0.25, 0.25, 0.25))]) 
 # transform from https://github.com/meliketoy/wide-resnet.pytorch/blob/master/config.py 
 
-trainset = torchvision.datasets.CIFAR100(root=data_dir, train=True,
+trainset = torchvision.datasets.CIFAR100(root=DATA_DIR, train=True,
                                         download=True, transform=transform)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=128,
                                           shuffle=True, num_workers=4)
 
-testset = torchvision.datasets.CIFAR100(root=data_dir, train=False,
+testset = torchvision.datasets.CIFAR100(root=DATA_DIR, train=False,
                                        download=True, transform=transform)
 testloader = torch.utils.data.DataLoader(testset, batch_size=100,
                                          shuffle=False, num_workers=4)
