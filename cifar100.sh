@@ -17,9 +17,8 @@ export PYTHON_PATH=$PATH
 
 mkdir -p /disk/scratch/${STUDENT_ID}/data
 mkdir -p /disk/scratch/${STUDENT_ID}/models
-export ROOT_DIR=/disk/scratch/${STUDENT_ID}
 export DATA_DIR=/disk/scratch/${STUDENT_ID}/data
-export MODELS_DIR=/disk/scratch/${STUDENT_ID}/models
+export OUTPUT_DIR=/home/${STUDENT_ID}/mlpcw4/models
 
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID}/data
 
@@ -27,4 +26,4 @@ rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 python trainResnet.py --dataset cifar100 
 
-rsync -ua --progress /disk/scratch/${STUDENT_ID}/models/ /home/${STUDENT_ID}/mlpcw4/models/
+# rsync -ua --progress /disk/scratch/${STUDENT_ID}/models/ /home/${STUDENT_ID}/mlpcw4/models/

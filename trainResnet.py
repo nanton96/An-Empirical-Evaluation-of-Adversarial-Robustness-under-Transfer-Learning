@@ -35,9 +35,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 best_acc = 0  # best test accuracy
 start_epoch = 1  # start from epoch 0 or last checkpoint epoch
 
-ROOT_DIR = os.environ['ROOT_DIR'] 
 DATA_DIR = os.environ['DATA_DIR']
-MODELS_DIR = os.environ['MODELS_DIR']
+OUTPUT_DIR = os.environ['OUTPUT_DIR']
 
 # ---------------- LOADING DATASETS ----------------------
 logging.info("Loading datasets")
@@ -108,7 +107,7 @@ def test(epoch,testloader):
             'acc': acc,
             'epoch': epoch,
         }
-        torch.save(state, os.path.join(MODELS_DIR, "ResNet_"+args.dataset+"_Best.pwf"))
+        torch.save(state, os.path.join(checkpoint_dir, "ResNet_"+args.dataset+"_Best.pwf"))
         best_acc = acc
     return acc
 
@@ -128,7 +127,7 @@ if torch.cuda.device_count() > 1:
 net = net.to(device)
 
 
-checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_"+args.dataset)
+checkpoint_dir = os.path.join(OUTPUT_DIR, "ResNet_"+args.dataset)
 if not os.path.isdir(checkpoint_dir):
         os.mkdir(checkpoint_dir)
 
