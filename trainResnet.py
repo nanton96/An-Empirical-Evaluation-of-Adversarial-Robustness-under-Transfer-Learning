@@ -138,7 +138,7 @@ stats={'epoch':[], 'train_acc':[], 'test_acc':[]}
 for epoch in range(start_epoch, start_epoch + args.ep):
     train_loss, train_acc = train(epoch,trainloader)
     test_acc = test(epoch,testloader)
-    logging.info('Epoch:{:d} Loss: {:.4f} Acc: {:.1f} Test Acc: {:1f}'.format(epoch, train_loss, train_acc, test_acc))
+    logging.info('Epoch:{:d} Loss: {:.4f} Acc: {:.1f} Test Acc: {:.1f}'.format(epoch, train_loss, train_acc, test_acc))
     stats['epoch'].append(epoch)
     stats['train_acc'].append(train_acc)
     stats['test_acc'].append(test_acc)
