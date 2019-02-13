@@ -99,9 +99,9 @@ def test(epoch,testloader):
     acc = 100.*correct/total
     accuracies[epoch] = acc
 
+    checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_"+args.dataset)
     if not os.path.isdir(checkpoint_dir):
             os.mkdir(checkpoint_dir)
-    checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_"+args.dataset)
     save_statistics(experiment_log_dir=checkpoint_dir, filename='summary.csv',
                 stats_dict=accuracies, current_epoch=epoch,
                 continue_from_mode=True if (epoch > 0) else False)
