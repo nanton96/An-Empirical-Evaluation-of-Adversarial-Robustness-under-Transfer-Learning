@@ -65,12 +65,12 @@ def train(epoch,trainloader):
         _, predicted = outputs.max(1)
         total += targets.size(0)
         correct += predicted.eq(targets).sum().item()
-        logging.info('Epoch: %d, Batch: %d Train Accuracy %.3f',epoch, batch_idx,correct/total)
+        # logging.info('Epoch: %d, Batch: %d Train Accuracy %.3f',epoch, batch_idx,correct/total)
         
         if args.loc:
-        
             progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
                 % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
+    return (train_loss, 100*correct/total)
 
 def test(epoch,testloader):
     global best_acc, accuracies
@@ -100,7 +100,7 @@ def test(epoch,testloader):
     acc = 100.*correct/total
     accuracies[epoch] = acc
 
-    checkpoint_dir = os.join(MODELS_DIR, "ResNet_"+args.dataset)
+    checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_"+args.dataset)
     save_statistics(experiment_log_dir=checkpoint_dir, filename='summary.csv',
                 stats_dict=accuracies, current_epoch=epoch,
                 continue_from_mode=True if (epoch > 0) else False)
@@ -117,6 +117,7 @@ def test(epoch,testloader):
         
         torch.save(state, os.path.join(MODELS_DIR, "ResNet_"+args.dataset+"_Best.pwf"))
         best_acc = acc
+    return acc
 
 
 #Define a Loss function and optimize
@@ -126,13 +127,15 @@ scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer,step_size=50,gamma=0.1
 
 if device == 'cuda':
     cudnn.benchmark = True
+
+if torch.cuda.device_count() > 1:
+    print("Let's use", torch.cuda.device_count(), "GPUs!")
     net = nn.DataParallel(net)
 
 net = net.to(device)
 
 for epoch in range(start_epoch, start_epoch + args.ep):
-    train(epoch,trainloader)
-    #if epoch > 95:
-    #    torch.save(net.state_dict(), "models/ResNet{0:03d}.pwf".format(epoch))
-    test(epoch,testloader)
+    train_loss, train_acc = train(epoch,trainloader)
+    test_acc = test(epoch,testloader)
+    logging.info('Epoch:{:d} Loss: {:.4f} Acc: {:.1f} Test Acc: {:1f}'.format(epoch, train_loss, train_acc, test_acc))
     scheduler.step()
