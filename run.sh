@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=Interactive
+#SBATCH --partition=Standard
 #SBATCH --mem=12000  # memory in Mb
 #SBATCH --time=0-1:59:00
 
@@ -27,4 +27,4 @@ export MODELS_DIR=/disk/scratch/ibm_prize_winners/models
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 python ${file}
 
-rsync -ua --progress /disk/scratch/team_name/models/ /home/${STUDENT_ID}/models/
+#rsync -ua --progress /disk/scratch/ibm_prize_winners/models/ /home/${STUDENT_ID}/mlpcw4/models/
