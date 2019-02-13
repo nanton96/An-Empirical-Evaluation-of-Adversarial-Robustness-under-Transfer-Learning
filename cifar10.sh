@@ -27,4 +27,4 @@ rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/cifar-10-python.tar.gz /dis
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 python trainResnet.py 
 
-rsync -ua --progress /disk/scratch/ibm_prize_winners/models/ /home/${STUDENT_ID}/mlpcw4/models/
+rsync -ua --progress /disk/scratch/${STUDENT_ID}/models/ /home/${STUDENT_ID}/mlpcw4/models/
