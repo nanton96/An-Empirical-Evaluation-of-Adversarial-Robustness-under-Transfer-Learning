@@ -15,12 +15,13 @@ export CPATH=${CUDNN_HOME}/include:$CPATH
 export PATH=${CUDA_HOME}/bin:${PATH}
 export PYTHON_PATH=$PATH
 
-mkdir -p /disk/scratch/ibm_prize_winners/data/
-mkdir -p /disk/scratch/ibm_prize_winners/models/
-export ROOT_DIR=/disk/scratch/ibm_prize_winners
-export DATA_DIR=/disk/scratch/ibm_prize_winners/data
-export MODELS_DIR=/disk/scratch/ibm_prize_winners/models
+mkdir -p /disk/scratch/${STUDENT_ID}/data
+mkdir -p /disk/scratch/${STUDENT_ID}/models
+export ROOT_DIR=/disk/scratch/${STUDENT_ID}
+export DATA_DIR=/disk/scratch/${STUDENT_ID}/data
+export MODELS_DIR=/disk/scratch/${STUDENT_ID}/models
 
+rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/cifar-10-python.tar.gz /disk/scratch/${STUDENT_ID}/data
 
 # Activate the relevant virtual environment
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
