@@ -100,6 +100,8 @@ def test(epoch,testloader):
     acc = 100.*correct/total
     accuracies[epoch] = acc
 
+    if not os.path.isdir(checkpoint_dir):
+            os.mkdir(checkpoint_dir)
     checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_"+args.dataset)
     save_statistics(experiment_log_dir=checkpoint_dir, filename='summary.csv',
                 stats_dict=accuracies, current_epoch=epoch,
@@ -112,9 +114,6 @@ def test(epoch,testloader):
             'acc': acc,
             'epoch': epoch,
         }
-        if not os.path.isdir(checkpoint_dir):
-            os.mkdir(checkpoint_dir)
-        
         torch.save(state, os.path.join(MODELS_DIR, "ResNet_"+args.dataset+"_Best.pwf"))
         best_acc = acc
     return acc
@@ -128,9 +127,9 @@ scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer,step_size=50,gamma=0.1
 if device == 'cuda':
     cudnn.benchmark = True
 
-# if torch.cuda.device_count() > 1:
-    # print("Let's use", torch.cuda.device_count(), "GPUs!")
-    # net = nn.DataParallel(net)
+if torch.cuda.device_count() > 1:
+    print("Let's use", torch.cuda.device_count(), "GPUs!")
+    net = nn.DataParallel(net)
 
 net = net.to(device)
 
