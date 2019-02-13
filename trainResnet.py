@@ -89,10 +89,9 @@ def test(epoch,testloader):
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-            logging.info('Batch: %d Test Accuracy %.3f',batch_idx,correct/total)
+            # logging.info('Batch: %d Test Accuracy %.3f',batch_idx,correct/total)
             
             if args.loc:
-                
                 progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
                     % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
