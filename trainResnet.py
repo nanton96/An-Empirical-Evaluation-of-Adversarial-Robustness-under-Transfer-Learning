@@ -19,7 +19,7 @@ import json
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
-parser.add_argument('--ep', default = 1, type=int, help = 'total epochs')
+parser.add_argument('--ep', default = 200, type=int, help = 'total epochs')
 parser.add_argument('--loc',default=False,type=bool, help = 'Stands for local. Triggers progress_bar if not running on MLP cluster')
 #parser.add_argument('--modelPath', default ='models/CIFAR10.pwf')
 parser.add_argument('--dataset', default = 'cifar10', type=str, help='cifar10/cifar100')
@@ -48,6 +48,7 @@ logging.info("Train and test datasets were loaded")
 net = resnet50(pretrained=False)
 
 def train(epoch,trainloader):
+    # return (1s,3)
     net.train()
     train_loss = 0
     correct = 0
@@ -73,6 +74,7 @@ def train(epoch,trainloader):
     return (train_loss, 100*correct/total)
 
 def test(epoch,testloader):
+    # return 2
     global best_acc
     net.eval()
     test_loss = 0
@@ -132,6 +134,7 @@ if not os.path.isdir(checkpoint_dir):
 
 stats={'epoch':[], 'train_acc':[], 'test_acc':[]}
 
+# print(args.ep)
 for epoch in range(start_epoch, start_epoch + args.ep):
     train_loss, train_acc = train(epoch,trainloader)
     test_acc = test(epoch,testloader)
@@ -139,6 +142,7 @@ for epoch in range(start_epoch, start_epoch + args.ep):
     stats['epoch'].append(epoch)
     stats['train_acc'].append(train_acc)
     stats['test_acc'].append(test_acc)
-    with open(os.path(checkpoint_dir, 'stats.csv'), 'w') as fp:
+    # print(stats)
+    with open(os.path.join(checkpoint_dir, 'stats.csv'), 'w') as fp:
         json.dump(stats, fp)
     scheduler.step()
