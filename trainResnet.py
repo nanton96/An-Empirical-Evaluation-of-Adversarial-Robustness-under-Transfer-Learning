@@ -30,7 +30,7 @@ if args.loc:
 
 logging.basicConfig(format='%(message)s', level=logging.INFO)
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
@@ -128,9 +128,9 @@ scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer,step_size=50,gamma=0.1
 if device == 'cuda':
     cudnn.benchmark = True
 
-if torch.cuda.device_count() > 1:
-    print("Let's use", torch.cuda.device_count(), "GPUs!")
-    net = nn.DataParallel(net)
+# if torch.cuda.device_count() > 1:
+    # print("Let's use", torch.cuda.device_count(), "GPUs!")
+    # net = nn.DataParallel(net)
 
 net = net.to(device)
 
