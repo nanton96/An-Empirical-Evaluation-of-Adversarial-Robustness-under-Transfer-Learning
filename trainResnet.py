@@ -45,10 +45,6 @@ logging.info("Train and test datasets were loaded")
 
 # ---------------- LOADING ARCHITECTURE ------------------
 net = resnet50(pretrained=False)
-if device == 'cuda':
-    cudnn.benchmark = True
-    net = nn.DataParallel(net, device_ids=None)
-
 accuracies={}
 
 def train(epoch,trainloader):
@@ -128,7 +124,11 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer,step_size=50,gamma=0.1)
 
-# Train the network
+if device == 'cuda':
+    cudnn.benchmark = True
+    net = nn.DataParallel(net)
+
+net = net.to(device)
 
 for epoch in range(start_epoch, start_epoch + args.ep):
     train(epoch,trainloader)
