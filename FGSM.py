@@ -1,17 +1,24 @@
 from __future__ import print_function
 import torch
-import torchvision
-import torch.nn as nn
+import json
 import torch.nn.functional as F
+import os
 from torchvision import datasets, transforms
-path = "models/ResNet_cifar10/ResNet_cifar10_Best.pwf"
-
 from resnets import resnet50
 
 
+model_path = "models/ResNet_cifar10/ResNet_cifar10_Best.pwf"
+OUTPUT_DIR = os.environ['OUTPUT_DIR']
+checkpoint_dir = os.path.join(OUTPUT_DIR)
+if not os.path.isdir(checkpoint_dir):
+        os.mkdir(checkpoint_dir)
+stats = {'epsilon': [], 'accuracy': []}
+
+
 def attack():
-    dic = torch.load(path,map_location='cpu')
+    dic = torch.load(model_path)#,map_location='gpu')
     resnet = resnet50()
+    # resnet = torch.nn.DataParallel(resnet)
     resnet.load_state_dict(dic['net'])
     resnet.eval()
     print("Network was loaded, attacking")
@@ -27,7 +34,6 @@ def attack_network(model):
     testloader = torch.utils.data.DataLoader(testset, batch_size=1,
                                              shuffle=True, num_workers=4)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    stats = {'epsilon': [], 'accuracy': []}
     epsilons = [0.05, 0.1, 0.2, 0.25, 0.4]
     for epsilon in epsilons:
         check_robustness(model,device,testloader,stats,epsilon)
@@ -89,6 +95,8 @@ def check_robustness(model,device,test_loader,stats,epsilon=.25):
     stats['epsilon'].append(epsilon)
     stats['accuracy'].append(final_acc)
     print("Epsilon: {}\tTest Accuracy = {} / {} = {}".format(epsilon, correct, len(test_loader), final_acc))
+    with open(os.path.join(checkpoint_dir, 'stats.csv'), 'w') as fp:
+        json.dump(stats, fp)
     
     # Return the accuracy and an adversarial example
     return final_acc, adv_examples
@@ -107,5 +115,6 @@ def fgsm_attack(image, epsilon, data_grad):
     
     # Return the perturbed image
     return perturbed_image
+
 
 attack()

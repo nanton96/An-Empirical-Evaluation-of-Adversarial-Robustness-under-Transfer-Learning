@@ -11,7 +11,6 @@ import os
 import argparse
 import logging
 from data_utils import load_dataset
-from utils import save_statistics
 import json
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py
 
