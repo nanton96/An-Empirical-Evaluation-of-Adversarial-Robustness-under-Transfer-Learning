@@ -3,19 +3,18 @@ import torch
 import torchvision
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.optim as optim
 from torchvision import datasets, transforms
-import numpy as np
-import matplotlib.pyplot as plt
+path = "models/ResNet_cifar10/ResNet_cifar10_Best.pwf"
+
 from resnets import resnet50
 
 
-
 def attack():
+    dic = torch.load(path,map_location='cpu')
     resnet = resnet50()
-    resnet = nn.DataParallel(resnet)
-    resnet.load_state_dict(torch.load("models/ResNet179.pwf",map_location='cpu' ))# map_location=lambda storage, loc: storage))
+    resnet.load_state_dict(dic['net'])
     resnet.eval()
+    print("Network was loaded, attacking")
     attack_network(resnet)
     
 def attack_network(model):
@@ -23,18 +22,22 @@ def attack_network(model):
         [transforms.ToTensor(),
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     
-    testset = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                           download=False, transform=transform)
+    testset = datasets.CIFAR10(root='./data', train=False,
+                                           download=True, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=1,
-                                             shuffle=False, num_workers=4)
+                                             shuffle=True, num_workers=4)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    stats = {'epsilon': [], 'accuracy': []}
+    epsilons = [0.05, 0.1, 0.2, 0.25, 0.4]
+    for epsilon in epsilons:
+        check_robustness(model,device,testloader,stats,epsilon)
     
-    check_robustness(model,device,testloader)
-    
-def check_robustness(model,device,test_loader,epsilon=.25):
+def check_robustness(model,device,test_loader,stats,epsilon=.25):
     correct = 0
     adv_examples = []
     
+
+    print("Begging attack")
     for data, target in test_loader:
         data, target = data.to(device), target.to(device)
         
@@ -83,6 +86,8 @@ def check_robustness(model,device,test_loader,epsilon=.25):
         
         # Calculate final accuracy for this epsilon
     final_acc = correct / float(len(test_loader))
+    stats['epsilon'].append(epsilon)
+    stats['accuracy'].append(final_acc)
     print("Epsilon: {}\tTest Accuracy = {} / {} = {}".format(epsilon, correct, len(test_loader), final_acc))
     
     # Return the accuracy and an adversarial example
@@ -90,6 +95,7 @@ def check_robustness(model,device,test_loader,epsilon=.25):
     pass
 
 def fgsm_attack(image, epsilon, data_grad):
+    print("Applying FGSM to image")
     # Collect the element-wise sign of the data gradient
     sign_data_grad = data_grad.sign()
     
@@ -102,3 +108,4 @@ def fgsm_attack(image, epsilon, data_grad):
     # Return the perturbed image
     return perturbed_image
 
+attack()
