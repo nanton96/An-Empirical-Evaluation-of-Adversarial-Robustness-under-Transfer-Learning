@@ -45,6 +45,9 @@ logging.info("Train and test datasets were loaded")
 
 # ---------------- LOADING ARCHITECTURE ------------------
 net = resnet50(pretrained=False)
+if device == 'cuda':
+    cudnn.benchmark = True
+    net = nn.DataParallel(net, device_ids=None)
 
 accuracies={}
 
@@ -119,11 +122,6 @@ def test(epoch,testloader):
         torch.save(state, os.path.join(MODELS_DIR, "ResNet_"+args.dataset+"_Best.pwf"))
         best_acc = acc
 
-#Get our network Architecture
-
-if device == 'cuda':
-    cudnn.benchmark = True
-    net = nn.DataParallel(net, device_ids=None)
 
 #Define a Loss function and optimize
 criterion = nn.CrossEntropyLoss()
