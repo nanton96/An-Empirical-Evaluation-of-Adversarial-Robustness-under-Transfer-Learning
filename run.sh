@@ -25,6 +25,6 @@ export MODELS_DIR=/disk/scratch/ibm_prize_winners/models
 ## - #SBATCH --gres=gpu:1
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
-python ${file}
+python trainResnet.py
 
 #rsync -ua --progress /disk/scratch/ibm_prize_winners/models/ /home/${STUDENT_ID}/mlpcw4/models/
