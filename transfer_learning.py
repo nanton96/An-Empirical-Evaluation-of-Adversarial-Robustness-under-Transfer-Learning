@@ -33,10 +33,10 @@ if torch.cuda.is_available():  # checks whether a cuda gpu is available and whet
 		device = torch.device('cuda:{}'.format(gpu_id))  # sets device to be cuda
 
 	os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id  # sets the main GPU to be the one at index 0 (on multi gpu machines you can choose which one you want to use by using the relevant GPU ID)
-	print("use GPU")
-	print("GPU ID {}".format(gpu_id))
+	logging.info("use GPU")
+	logging.info("GPU ID {}".format(gpu_id))
 else:
-	print("use CPU")
+	logging.info("use CPU")
 	device = torch.device('cpu')  # sets the device to be CPU
 
 ######################################################################
@@ -62,10 +62,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
 		scheduler.step()
 		model.train()  # Set model to training mode
-
-		train_loss = 0
-		correct = 0
-		total = 0
 
 		running_loss = 0.0
 		running_corrects = 0
@@ -96,6 +92,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         		os.mkdir(checkpoint_dir)
 		# deep copy the model
 		if epoch_acc > best_acc:
+			logging.info('Saving best model')
 			best_acc = epoch_acc
 			best_model_wts = copy.deepcopy(model.state_dict())
 			torch.save(model, os.path.join(checkpoint_dir, "ResNet_cifar10_to_100_Best.pwf"))
@@ -119,7 +116,8 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 model = resnet50(pretrained=False)
 mpath =os.path.join(MODELS_DIR, "ResNet_cifar10/ResNet_cifar10_Best.pwf")
 logging.info(mpath) 
-mdict = torch.load(os.path.join(MODELS_DIR, "ResNet_cifar10/ResNet_cifar10_Best.pwf"))
+first_device = device[0] if type(device) is list else device
+mdict = torch.load(os.path.join(MODELS_DIR, "ResNet_cifar10/ResNet_cifar10_Best.pwf"), map_location=first_device)
 model.load_state_dict(mdict['net'])
 
 # Freeze model weights
@@ -132,13 +130,12 @@ model.fc = nn.Linear(num_ftrs, 100)
 ###############################################
 ############ Parallelize model ################
 if type(device) is list:
+	logging.info('Parallelize model')
 	model.to(device[0])
 	model = nn.DataParallel(module=model, device_ids=device)
 	device = device[0]
 else:
 	model.to(device)  # sends the model from the cpu to the gpu
-
-
 
 model = model.to(device)
 criterion = nn.CrossEntropyLoss().to(device)  
@@ -146,8 +143,6 @@ criterion = nn.CrossEntropyLoss().to(device)
 optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 # Decay LR by a factor of 0.1 every 7 epochs
 exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
-
-
 
 
 ######################################################################
