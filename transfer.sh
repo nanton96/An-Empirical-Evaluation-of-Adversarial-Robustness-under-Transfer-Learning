@@ -4,7 +4,7 @@
 #SBATCH --partition=Standard
 #SBATCH --mem=12000  # memory in Mb
 #SBATCH --time=0-7:59:00
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:4
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 export CUDNN_HOME=/opt/cuDNN-7.0/
@@ -24,6 +24,6 @@ rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID
 
 # Activate the relevant virtual environment
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
-python trainResnet.py 
+python transfer_learning.py 
 
 # rsync -ua --progress /disk/scratch/${STUDENT_ID}/models/ /home/${STUDENT_ID}/mlpcw4/models/

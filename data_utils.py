@@ -14,7 +14,7 @@ std = {
 }
 
 def load_dataset(dataset, datadir):
-
+    logging.info("Loading datasets")
     dataset.lower()
 	# The output of torchvision datasets are PILImage images of range [0, 1].
 	# We transform them to Tensors of normalized range [-1, 1].
@@ -46,4 +46,5 @@ def load_dataset(dataset, datadir):
     testloader = torch.utils.data.DataLoader(testset, batch_size=100,
                                              shuffle=False, num_workers=4)
 
+    logging.info("Train and test datasets were loaded")
     return trainloader, testloader

@@ -11,7 +11,6 @@ import os
 import argparse
 import logging
 from data_utils import load_dataset
-from utils import save_statistics
 import json
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py
 
@@ -29,19 +28,17 @@ args = parser.parse_args()
 if args.loc:
     from utils import progress_bar
 
-logging.basicConfig(format='%(message)s', level=logging.INFO)
+
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 best_acc = 0  # best test accuracy
 start_epoch = 1  # start from epoch 0 or last checkpoint epoch
 
 DATA_DIR = os.environ['DATA_DIR']
-OUTPUT_DIR = os.environ['OUTPUT_DIR']
+MODELS_DIR = os.environ['MODELS_DIR']
 
 # ---------------- LOADING DATASETS ----------------------
-logging.info("Loading datasets")
 trainloader, testloader = load_dataset(args.dataset, DATA_DIR)
-logging.info("Train and test datasets were loaded")
 
 # ---------------- LOADING ARCHITECTURE ------------------
 net = resnet50(pretrained=False)
@@ -127,7 +124,7 @@ if torch.cuda.device_count() > 1:
 net = net.to(device)
 
 
-checkpoint_dir = os.path.join(OUTPUT_DIR, "ResNet_"+args.dataset)
+checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_"+args.dataset)
 if not os.path.isdir(checkpoint_dir):
         os.mkdir(checkpoint_dir)
 
