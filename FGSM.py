@@ -16,7 +16,10 @@ stats = {'epsilon': [], 'accuracy': []}
 
 
 def attack():
-    dic = torch.load(model_path,map_location='cpu')
+    if torch.cuda.is_available():
+        dic = torch.load(model_path)
+    else:
+        dic = torch.load(model_path,map_location='cpu')
     resnet = resnet50()
     # resnet = torch.nn.DataParallel(resnet)
     resnet.load_state_dict(dic['net'])
