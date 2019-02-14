@@ -7,7 +7,7 @@ from torchvision import datasets, transforms
 from resnets import resnet50
 
 
-model_path = "models/ResNet_cifar10/ResNet_cifar10_Best.pwf"
+model_path = "models/ResNet_cifar100/ResNet_cifar100_Best.pwf"
 # OUTPUT_DIR = os.environ['OUTPUT_DIR']
 # checkpoint_dir = os.path.join(OUTPUT_DIR)
 # if not os.path.isdir(checkpoint_dir):
@@ -16,7 +16,7 @@ stats = {'epsilon': [], 'accuracy': []}
 
 
 def attack():
-    dic = torch.load(model_path)#,map_location='gpu')
+    dic = torch.load(model_path,map_location='cpu')
     resnet = resnet50()
     # resnet = torch.nn.DataParallel(resnet)
     resnet.load_state_dict(dic['net'])
@@ -30,8 +30,8 @@ def attack_network(model):
         [transforms.ToTensor(),
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     
-    testset = datasets.CIFAR10(root='./data', train=False,
-                                           download=False, transform=transform)
+    testset = datasets.CIFAR100(root='./data', train=False,
+                                           download=True, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=1,
                                              shuffle=True, num_workers=4)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -98,7 +98,7 @@ def check_robustness(model,device,test_loader,stats,epsilon=.25):
     stats['epsilon'].append(epsilon)
     stats['accuracy'].append(final_acc)
     print("Epsilon: {}\tTest Accuracy = {} / {} = {}".format(epsilon, correct, len(test_loader), final_acc))
-    with open('stats.csv','w+') as fp:
+    with open('stats100.csv','w+') as fp:
         json.dump(stats, fp)
     
     # Return the accuracy and an adversarial example
@@ -106,7 +106,7 @@ def check_robustness(model,device,test_loader,stats,epsilon=.25):
     pass
 
 def fgsm_attack(image, epsilon, data_grad):
-    print("Applying FGSM to image")
+    # print("Applying FGSM to image")
     # Collect the element-wise sign of the data gradient
     sign_data_grad = data_grad.sign()
     
