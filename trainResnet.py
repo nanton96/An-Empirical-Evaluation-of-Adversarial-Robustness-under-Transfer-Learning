@@ -110,19 +110,15 @@ def test(epoch,testloader):
 
 
 #Define a Loss function and optimize
-criterion = nn.CrossEntropyLoss()
+criterion = nn.CrossEntropyLoss().to(device)
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer,step_size=50,gamma=0.1)
-
-if device == 'cuda':
-    cudnn.benchmark = True
 
 if torch.cuda.device_count() > 1:
     print("Let's use", torch.cuda.device_count(), "GPUs!")
     net = nn.DataParallel(net)
 
 net = net.to(device)
-
 
 checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_"+args.dataset)
 if not os.path.isdir(checkpoint_dir):
