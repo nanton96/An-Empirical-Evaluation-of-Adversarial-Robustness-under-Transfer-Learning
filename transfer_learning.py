@@ -25,8 +25,8 @@ trainloader, testloader = load_dataset('cifar100', DATA_DIR)
 
 
 # ---------------- SET GPU DEVICES ----------------------
-gpu_id = 0
-if torch.cuda.is_available() and use_gpu:  # checks whether a cuda gpu is available and whether the gpu flag is True
+gpu_id = "0,1"
+if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
 	if "," in gpu_id:
 		device = [torch.device('cuda:{}'.format(idx)) for idx in gpu_id.split(",")]  # sets device to be cuda
 	else:
@@ -89,13 +89,16 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 		epoch_acc = running_corrects.double() / total_trainset
 
 		logging.info('{} Loss: {:.4f} Acc: {:.4f}'.format(
-			phase, epoch_loss, epoch_acc))
+			epoch, epoch_loss, epoch_acc))
 
+		checkpoint_dir = os.path.join(MODELS_DIR, "transfer_learning")
+		if not os.path.isdir(checkpoint_dir):
+        		os.mkdir(checkpoint_dir)
 		# deep copy the model
 		if epoch_acc > best_acc:
 			best_acc = epoch_acc
 			best_model_wts = copy.deepcopy(model.state_dict())
-			torch.save(state, os.path.join(MODELS_DIR, "transfer_learning/ResNet_cifar10_to_100_Best.pwf"))
+			torch.save(model, os.path.join(checkpoint_dir, "ResNet_cifar10_to_100_Best.pwf"))
 			
 	time_elapsed = time.time() - since
 	logging.info('Training complete in {:.0f}m {:.0f}s'.format(
@@ -114,8 +117,10 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 # Load a pretrained model and reset final fully connected layer.
 
 model = resnet50(pretrained=False)
-mdict = torch.load(os.path.join(MODELS_DIR, "ResNet_cifar10/ResNet_cifar10_Best.pwf"), map_location=device)['net']
-model.load_state_dict(mdict)
+mpath =os.path.join(MODELS_DIR, "ResNet_cifar10/ResNet_cifar10_Best.pwf")
+logging.info(mpath) 
+mdict = torch.load(os.path.join(MODELS_DIR, "ResNet_cifar10/ResNet_cifar10_Best.pwf"))
+model.load_state_dict(mdict['net'])
 
 # Freeze model weights
 for param in model.parameters():
