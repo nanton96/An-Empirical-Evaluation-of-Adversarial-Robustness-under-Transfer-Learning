@@ -11,7 +11,6 @@ import os
 import argparse
 import logging
 from data_utils import load_dataset
-from utils import save_statistics
 import json
 # saw how to set some settings from: https://github.com/kuangliu/pytorch-cifar/blob/master/main.py
 
@@ -39,9 +38,7 @@ DATA_DIR = os.environ['DATA_DIR']
 OUTPUT_DIR = os.environ['OUTPUT_DIR']
 
 # ---------------- LOADING DATASETS ----------------------
-logging.info("Loading datasets")
 trainloader, testloader = load_dataset(args.dataset, DATA_DIR)
-logging.info("Train and test datasets were loaded")
 
 # ---------------- LOADING ARCHITECTURE ------------------
 net = resnet50(pretrained=False)
