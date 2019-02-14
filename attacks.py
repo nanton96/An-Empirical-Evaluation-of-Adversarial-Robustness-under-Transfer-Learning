@@ -8,13 +8,6 @@ from resnets import resnet50,resnet101,resnet152
 import numpy as np
 import abc
 
-
-# MODELS_DIR = os.environ['MODELS_DIR']
-# checkpoint_dir = os.path.join(MODELS_DIR)
-# if not os.path.isdir(checkpoint_dir):
-#         os.mkdir(checkpoint_dir)
-
-
 stats = {'epsilon': [], 'accuracy': []}
 
 
@@ -29,9 +22,13 @@ class attacks():
             self.params = params
             self.model = model
             self.dataset = dataset
+        
+        
     @abc.abstractmethod
     def attack(self):
         pass;
+    
+    
 
     def return_dataset(self,dataset_name,batch_size=100,seed=0):
         rng = np.random.RandomState(seed=seed)
@@ -124,7 +121,7 @@ class attacks():
 class fgsm(attacks):
     
     def __init__(self, epsilon, model_name,  dataset_name):
-        super().__init__(epsilon, model_name,  dataset_name)
+        super(fgsm, self).__init__(epsilon, model_name,  dataset_name)
         self.epsilon = epsilon
         self.path = self.path + model_name+"_"+dataset_name+"/" +model_name+"_"+dataset_name+".pwf"
         self.model = self.ResNetLoader(model_name,self.path)
