@@ -18,7 +18,7 @@ export PYTHON_PATH=$PATH
 mkdir -p /disk/scratch/${STUDENT_ID}/data
 mkdir -p /disk/scratch/${STUDENT_ID}/models
 export DATA_DIR=/disk/scratch/${STUDENT_ID}/data
-export OUTPUT_DIR=/home/${STUDENT_ID}/mlpcw4/models
+export MODELS_DIR=/home/${STUDENT_ID}/mlpcw4/models
 
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID}/data
 

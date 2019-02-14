@@ -8,8 +8,8 @@ from resnets import resnet50
 
 
 model_path = "models/ResNet_cifar100/ResNet_cifar100_Best.pwf"
-# OUTPUT_DIR = os.environ['OUTPUT_DIR']
-# checkpoint_dir = os.path.join(OUTPUT_DIR)
+# MODELS_DIR = os.environ['MODELS_DIR']
+# checkpoint_dir = os.path.join(MODELS_DIR)
 # if not os.path.isdir(checkpoint_dir):
 #         os.mkdir(checkpoint_dir)
 stats = {'epsilon': [], 'accuracy': []}
