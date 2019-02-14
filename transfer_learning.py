@@ -58,7 +58,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 	total_trainset = len(trainloader.dataset)
 
 	for epoch in range(num_epochs):
-		logging.info('Epoch: %d/%d' %(epoch, num_epochs));
+		logging.info('Epoch: %d/%d' %(epoch, num_epochs))
 
 		scheduler.step()
 		model.train()  # Set model to training mode
