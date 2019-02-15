@@ -98,8 +98,8 @@ class attacks():
             return {"train_data": train_data, "val_data": val_data, "test_data": test_data, "num_output_classes": num_output_classes}
             
     def store_adv_examples(self):
-        with open("adv_examples","w+") as f:
-            json.dump(self.adv_examples, f)
+        np.save("adv_exampls",self.adv_examples)
+
         
     def get_adv_examples(self):
         return self.adv_examples
