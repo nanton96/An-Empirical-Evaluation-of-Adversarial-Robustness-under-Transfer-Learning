@@ -15,7 +15,8 @@ class attacks():
 
     # List of adversarial examples created
     adv_examples = []
-    model_model_path = "models/"
+    stats = None
+    model_path = "models/"
     stats_paths = "statistics/"
     network = torch.nn.Module()
     experiment_name = None
@@ -27,7 +28,7 @@ class attacks():
         
     @abc.abstractmethod
     def attack(self):
-        pass;
+        pass
     
     
 
@@ -99,9 +100,8 @@ class attacks():
             
     def store_adv_examples(self):
         with open("adv_examples","w+") as f:
-            json.dump(stats, f)
+            json.dump(self.stats, f)
         
-
     def get_adv_examples(self):
         return self.adv_examples
 
@@ -130,7 +130,7 @@ class fgsm(attacks):
         super(fgsm, self).__init__(epsilon, model_name,  dataset_name)
         self.epsilon = epsilon
         self.experiment_name = model_name+"_"+dataset_name
-        self.model_path = self.model_path + experiment_name+ "/" +experiment_name+".pwf"
+        self.model_path = self.model_path + self.experiment_name+ "/" +self.experiment_name+".pwf"
         self.model = self.ResNetLoader(model_name,self.model_path)
         self.dataset = self.return_dataset(dataset_name)
 
@@ -188,8 +188,8 @@ class fgsm(attacks):
         self.stats['epsilon'].append(epsilon)
         self.stats['accuracy'].append(final_acc)
         print("Epsilon: {}\tTest Accuracy = {} / {} = {}".format(epsilon, correct, len(test_loader), final_acc))
-        with open(stats_paths+experiment_name+'.csv', 'w+') as fp:
-            json.dump(stats, fp)
+        with open(self.stats_paths+self.experiment_name+'.csv', 'w+') as fp:
+            json.dump(self.stats, fp)
     
         # Return the accuracy and an adversarial example
         return final_acc
@@ -210,5 +210,6 @@ class fgsm(attacks):
 
 att = fgsm(epsilon=0.2,model_name="resnet50",dataset_name="cifar10")
 att.attack()
+att.store_adv_examples()
 
 
