@@ -7,17 +7,18 @@ from torchvision import datasets, transforms
 from resnets import resnet50,resnet101,resnet152
 import numpy as np
 import abc
+import json
 
-stats = {'epsilon': [], 'accuracy': []}
 
 
 class attacks():
 
     # List of adversarial examples created
     adv_examples = []
-    path = "models/"
+    model_model_path = "models/"
+    stats_paths = "statistics/"
     network = torch.nn.Module()
-
+    experiment_name = None
     def __init__(self,params,model,dataset):
             self.params = params
             self.model = model
@@ -96,16 +97,20 @@ class attacks():
             num_output_classes = 100
             return {"train_data": train_data, "val_data": val_data, "test_data": test_data, "num_output_classes": num_output_classes}
             
-    def get_examples(self):
+    def store_adv_examples(self):
+        with open("adv_examples","w+") as f:
+            json.dump(stats, f)
+        
+
+    def get_adv_examples(self):
         return self.adv_examples
 
-    def ResNetLoader(self, name, path):
+    def ResNetLoader(self, name, model_path):
         resnet = None
         if torch.cuda.is_available():
-            fp = torch.load(path)
+            fp = torch.load(model_path)
         else:
-            fp = torch.load(path, map_location='cpu')
-        print(len(fp))
+            fp = torch.load(model_path, map_location='cpu')
         assert (name == 'resnet50' or name == 'resnet101' or name == '')
         if name == 'resnet50':
             resnet = resnet50()
@@ -119,14 +124,15 @@ class attacks():
     
     
 class fgsm(attacks):
-    
+    stats = {'epsilon': [], 'accuracy': []}
+
     def __init__(self, epsilon, model_name,  dataset_name):
         super(fgsm, self).__init__(epsilon, model_name,  dataset_name)
         self.epsilon = epsilon
-        self.path = self.path + model_name+"_"+dataset_name+"/" +model_name+"_"+dataset_name+".pwf"
-        self.model = self.ResNetLoader(model_name,self.path)
+        self.experiment_name = model_name+"_"+dataset_name
+        self.model_path = self.model_path + experiment_name"/" +experiment_name+".pwf"
+        self.model = self.ResNetLoader(model_name,self.model_path)
         self.dataset = self.return_dataset(dataset_name)
-        print(type(self.dataset))
     def attack(self):
         # Initialization
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -137,8 +143,8 @@ class fgsm(attacks):
        
         if torch.cuda.is_available():
             model = torch.nn.DataParallel(model)
-            model = model.to(device)
-
+        model = model.to(device)
+        print("FGSM attacks starts")
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
             data.requires_grad = True
@@ -178,14 +184,14 @@ class fgsm(attacks):
         
             # Calculate final accuracy for this epsilon
         final_acc = correct / float(len(test_loader))
-        stats['epsilon'].append(epsilon)
-        stats['accuracy'].append(final_acc)
+        self.stats['epsilon'].append(epsilon)
+        self.stats['accuracy'].append(final_acc)
         print("Epsilon: {}\tTest Accuracy = {} / {} = {}".format(epsilon, correct, len(test_loader), final_acc))
-        # with open('stats100.csv', 'w+') as fp:
-        #     json.dump(stats, fp)
+        with open(stats_paths+experiment_name+'.csv', 'w+') as fp:
+            json.dump(stats, fp)
     
         # Return the accuracy and an adversarial example
-        return final_acc,  self.adv_examples
+        return final_acc
 
     def fgsm_attack(self,image, epsilon, data_grad):
         # print("Applying FGSM to image")

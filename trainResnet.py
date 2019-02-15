@@ -135,6 +135,6 @@ for epoch in range(start_epoch, start_epoch + args.ep):
     stats['train_acc'].append(train_acc)
     stats['test_acc'].append(test_acc)
     # print(stats)
-    with open(os.path.join(checkpoint_dir, 'stats.csv'), 'w') as fp:
+    with open(os.path.join(checkpoint_dir, 'stats.csv'), 'w+') as fp:
         json.dump(stats, fp)
     scheduler.step()
