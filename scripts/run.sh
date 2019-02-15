@@ -24,7 +24,6 @@ export MODELS_DIR=/disk/scratch/ibm_prize_winners/models
 
 # Activate the relevant virtual environment
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
-cd ..
-python attacks.py
+python attacks.py 
 
 rsync -ua --progress /disk/scratch/ibm_prize_winners/models/ /home/${STUDENT_ID}/mlpcw4/models/
