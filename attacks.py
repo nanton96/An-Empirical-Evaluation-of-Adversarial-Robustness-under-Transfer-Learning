@@ -130,9 +130,10 @@ class fgsm(attacks):
         super(fgsm, self).__init__(epsilon, model_name,  dataset_name)
         self.epsilon = epsilon
         self.experiment_name = model_name+"_"+dataset_name
-        self.model_path = self.model_path + experiment_name"/" +experiment_name+".pwf"
+        self.model_path = self.model_path + experiment_name+ "/" +experiment_name+".pwf"
         self.model = self.ResNetLoader(model_name,self.model_path)
         self.dataset = self.return_dataset(dataset_name)
+
     def attack(self):
         # Initialization
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
