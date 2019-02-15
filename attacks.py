@@ -8,6 +8,7 @@ from resnets import resnet50,resnet101,resnet152
 import numpy as np
 import abc
 import json
+import pickle
 
 
 
@@ -98,8 +99,9 @@ class attacks():
             return {"train_data": train_data, "val_data": val_data, "test_data": test_data, "num_output_classes": num_output_classes}
             
     def store_adv_examples(self):
-        np.save("adv_exampls",self.adv_examples)
-
+        pickle_out = open("adv_attack.pickle","wb")
+        pickle.dump(self.adv_examples, pickle_out)
+        pickle_out.close()
         
     def get_adv_examples(self):
         return self.adv_examples
@@ -146,7 +148,10 @@ class fgsm(attacks):
             self.adv_examples = []
             print("attacking with epsilon:", epsilon)
             correct = 0
+            i =0
             for data, target in test_loader:
+                i+=1
+                print (i)
                 data, target = data.to(device), target.to(device)
                 data.requires_grad = True
             
@@ -182,7 +187,8 @@ class fgsm(attacks):
                     if len( self.adv_examples) < 5:
                         adv_ex = perturbed_data.squeeze().detach().cpu().numpy()
                         self.adv_examples.append((init_pred.item(), final_pred.item(), adv_ex))
-            
+                if i >=8:
+                    break
                 # Calculate final accuracy for this epsilon
             final_acc = correct / float(len(test_loader))
             self.stats['epsilon'].append(epsilon)
