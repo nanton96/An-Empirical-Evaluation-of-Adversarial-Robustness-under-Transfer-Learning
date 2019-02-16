@@ -119,3 +119,6 @@ slurm-*
 
 # Ingore trained models
 /models
+
+# Ignore experimental results
+/experiments_results
