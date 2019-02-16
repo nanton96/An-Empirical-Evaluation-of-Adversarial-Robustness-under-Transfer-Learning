@@ -36,6 +36,9 @@ DATA_DIR = os.environ['DATA_DIR']
 MODELS_DIR = os.environ['MODELS_DIR']
 checkpoint_dir = os.path.join(MODELS_DIR, "ResNet_" + args.dataset)
 
+# ---------------- Usual model training & testing ------------------ #
+
+
 def train(net,trainloader,criterion,optimizer):
     # return (1s,3)
     net.train()
@@ -99,6 +102,9 @@ def test(net, epoch, testloader, criterion):
         torch.save(state, os.path.join(checkpoint_dir, "ResNet_" + args.dataset + "_Best.pwf"))
         best_acc = acc
     return acc
+
+# ---------------- Train and Test an adversarial trained network  ---------------------- #
+
 
 def adv_train(net,trainloader,criterion,optimizer):
     net.train()
@@ -177,6 +183,8 @@ def adv_test(net, epoch, testloader, criterion):
         best_acc = acc
     return acc
 
+
+
 def train_net(net,adv=False):
    
     #Define a Loss function and optimize
@@ -219,7 +227,6 @@ def train_net(net,adv=False):
         scheduler.step()
     return net
     
-
 
 # ---------------- LOADING DATASETS ----------------------
 trainloader, testloader = load_dataset(args.dataset, DATA_DIR)
