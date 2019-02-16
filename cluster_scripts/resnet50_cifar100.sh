@@ -33,10 +33,11 @@ export DATASET_DIR=${TMP}/datasets/
 # Activate the relevant virtual environment:
 
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID}/data
-mkdir experiments_results
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd ..
+mkdir experiments_results
+
 python train.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
                                                     --lr 0.1 --model resnet50\
                                                       --num_epochs 200 --experiment_name 'resnet50_cifar100' \
