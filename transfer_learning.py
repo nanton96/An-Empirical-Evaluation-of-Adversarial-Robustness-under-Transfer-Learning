@@ -106,17 +106,17 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 # Load a pretrained model and reset final fully connected layer.
 
 model = resnet50(pretrained=True)
-# mpath =os.path.join(MODELS_DIR, "cifar100/ResNet_cifar100_Best.pwf")
+# mpath =os.path.join(MODELS_DIR, "cifar10/ResNet_cifar10_Best.pwf")
 # logging.info(mpath) 
 # mdict = torch.load(mpath, map_location=device)
 # model.load_state_dict(mdict['net'])
 
 # Freeze model weights
-for param in model.parameters():
-	param.requires_grad = False
+# for param in model.parameters():
+	# param.requires_grad = False
 	
 num_ftrs = model.fc.in_features
-# model.fc.weight.requires_grad=True
+model.fc.weight.requires_grad=True
 model.fc = nn.Linear(num_ftrs, 100)
 
 ###############################################
@@ -130,9 +130,9 @@ model = model.to(device)
 
 criterion = nn.CrossEntropyLoss().to(device)  
 # Observe that all parameters are being optimized
-optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
+optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
 # Decay LR by a factor of 0.1 every 7 epochs
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
+exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.9)
 
 
 ######################################################################
