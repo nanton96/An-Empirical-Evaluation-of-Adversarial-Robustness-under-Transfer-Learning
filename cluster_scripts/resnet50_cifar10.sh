@@ -38,6 +38,6 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd ..
 python train.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
                                                     --lr 0.1 --model resnet50\
-                                                      --num_epochs 100 --experiment_name 'resnet50_cifar10' \
+                                                      --num_epochs 200 --experiment_name 'resnet50_cifar10' \
                                                       --use_gpu "True" --gpu_id "0" --weight_decay_coefficient 0.00005 \
                                                       --dataset_name "cifar10"
