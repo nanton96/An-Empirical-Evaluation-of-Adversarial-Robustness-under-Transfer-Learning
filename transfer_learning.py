@@ -117,7 +117,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 # Load a pretrained model and reset final fully connected layer.
 
 model = resnet50(pretrained=False)
-mpath =os.path.join(MODELS_DIR, "ResNet_cifar100/ResNet_cifar100_Best.pwf")
+mpath =os.path.join(MODELS_DIR, "cifar10/ResNet_cifar10_Best.pwf")
 logging.info(mpath) 
 first_device = device[0] if type(device) is list else device
 mdict = torch.load(mpath, map_location=first_device)
