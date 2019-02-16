@@ -58,7 +58,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 	total_trainset = len(trainloader.dataset)
 
 	for epoch in range(num_epochs):
-		logging.info('Epoch: %d/%d' %(epoch, num_epochs));
+		logging.info('Epoch: %d/%d' %(epoch, num_epochs))
 
 		scheduler.step()
 		model.train()  # Set model to training mode
@@ -92,7 +92,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
 		checkpoint_dir = os.path.join(MODELS_DIR, "transfer_learning")
 		if not os.path.isdir(checkpoint_dir):
-        		os.mkdir(checkpoint_dir)
+			os.mkdir(checkpoint_dir)
 		# deep copy the model
 		if epoch_acc > best_acc:
 			logging.info('Saving best model')
