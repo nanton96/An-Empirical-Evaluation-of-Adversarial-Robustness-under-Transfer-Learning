@@ -40,6 +40,6 @@ mkdir experiments_results
 
 python transfer.py  --batch_size 128 --continue_from_epoch -1 --seed 0 \
 					--lr 0.001 --model resnet50\
-					--num_epochs 25 --experiment_name 'resnet50_cifar100_to_cifar100' \
-					--use_gpu "True" --gpu_id "0" --weight_decay_coefficient 0.00005 \
+					--num_epochs 25 --experiment_name 'resnet50_cifar100_to_cifar100_0.001' \
+					--use_gpu "True" --gpu_id "0" --weight_decay_coefficient 0.0000 \
 					--dataset_name "cifar100" --source_net 'cifar100'
