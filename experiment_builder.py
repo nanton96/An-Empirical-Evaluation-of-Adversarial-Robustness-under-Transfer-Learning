@@ -67,6 +67,9 @@ class ExperimentBuilder(nn.Module):
         self.best_val_model_idx = 0
         self.best_val_model_acc = 0.
 
+        if not os.path.exists("experiments_results"):  # If experiment directory does not exist
+            os.mkdir("experiments_results")
+
         if not os.path.exists(self.experiment_folder):  # If experiment directory does not exist
             os.mkdir(self.experiment_folder)  # create the experiment directory
 
