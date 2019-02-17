@@ -48,6 +48,8 @@ def get_args():
                         help='Weight decay to use for Adam')
     parser.add_argument('--filepath_to_arguments_json_file', nargs="?", type=str, default=None,
                          help='')
+    parser.add_argument('--source_net', type=str, default="pretrained", help="pretrained/cifar10/cifa100")
+
 
     args = parser.parse_args()
     gpu_id = str(args.gpu_id)
