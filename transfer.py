@@ -96,8 +96,9 @@ elif args.model=='densenet121':
     net=DenseNet121()
 
 
-optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9)
-scheduler = optim.lr_scheduler.MultiStepLR(optimizer=optimizer,milestones=[10],gamma=0.1)
+optimizer = optim.Adam(net.parameters(), lr=args.lr, weight_decay=args.weight_decay_coefficient)
+# optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.1)
 
 for param in net.parameters():
     net.requires_grad = False
