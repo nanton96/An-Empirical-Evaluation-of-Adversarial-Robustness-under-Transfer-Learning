@@ -7,8 +7,11 @@ import data_providers as data_providers
 import numpy as np
 from arg_extractor import get_args
 from experiment_builder import ExperimentBuilder
+import logging
 #from model_architectures import ConvolutionalNetwork
 # from resnets import resnet50
+
+logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 args = get_args()  # get arguments from command line
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
@@ -73,9 +76,12 @@ elif args.dataset_name == 'cifar100':
     test_data = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
     num_output_classes = 100
 
+logging.info('Net architecture: %s' % args.model)
 if args.model=='resnet50':
     from resnets import resnet50
-    net=models.resnet50(pretrained=True)
+    if args.source_net == 'pretrained':
+        logging.info('Loading pretrained ImageNet model')
+        net= resnet50(pretrained=True)
 elif args.model=='densenet121':
     from densenets import DenseNet121
     net=DenseNet121()
