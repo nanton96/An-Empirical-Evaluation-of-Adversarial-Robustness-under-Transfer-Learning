@@ -8,8 +8,12 @@ import numpy as np
 from arg_extractor import get_args
 from experiment_builder import ExperimentBuilder
 import logging
+import os
 #from model_architectures import ConvolutionalNetwork
 # from resnets import resnet50
+
+DATA_DIR='../data'
+MODELS_DIR='models'
 
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
@@ -17,7 +21,6 @@ args = get_args()  # get arguments from command line
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
 torch.manual_seed(seed=args.seed) # sets pytorch's seed
 
-DATA_DIR='../data'
 
 if args.dataset_name == 'emnist':
     train_data = data_providers.EMNISTDataProvider('train', batch_size=args.batch_size,
@@ -79,15 +82,22 @@ elif args.dataset_name == 'cifar100':
 logging.info('Net architecture: %s' % args.model)
 if args.model=='resnet50':
     from resnets import resnet50
+    net=resnet50()
     if args.source_net == 'pretrained':
         logging.info('Loading pretrained ImageNet model')
-        net= resnet50(pretrained=True)
+        net=resnet50(pretrained=True)
+    else:
+        mpath =os.path.join(MODELS_DIR, "%s/ResNet_%s_Best.pwf" % (args.source_net,args.source_net))
+        logging.info('Loading %s model from %s' % (args.source_net, mpath))
+        mdict = torch.load(mpath, map_location='cpu')
+        net.load_state_dict(mdict['net'])
 elif args.model=='densenet121':
     from densenets import DenseNet121
     net=DenseNet121()
 
-optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
-scheduler = optim.lr_scheduler.MultiStepLR(optimizer=optimizer,milestones=[100,150],gamma=0.1)
+
+optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9)
+scheduler = optim.lr_scheduler.MultiStepLR(optimizer=optimizer,milestones=[10],gamma=0.1)
 
 for param in net.parameters():
     net.requires_grad = False
