@@ -107,8 +107,10 @@ num_ftrs = net.fc.in_features
 # net.fc.weight.requires_grad=True
 net.fc = nn.Linear(num_ftrs, num_output_classes)
 
+experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f' % (args.model, args.source_net, args.dataset_name, args.lr)
+
 conv_experiment = ExperimentBuilder(network_model=net,
-                                    experiment_name=args.experiment_name,
+                                    experiment_name=experiment_name,
                                     num_epochs=args.num_epochs,
                                     weight_decay_coefficient=args.weight_decay_coefficient,
                                     gpu_id=args.gpu_id, use_gpu=args.use_gpu,
