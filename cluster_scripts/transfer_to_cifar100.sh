@@ -36,10 +36,10 @@ rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 # cd ..
-mkdir experiments_results
+#mkdir experiments_results
 
 python transfer.py  --batch_size 128 --continue_from_epoch -1 --seed 0 \
-					--lr 0.001 --model resnet50\
-					--num_epochs 25 --experiment_name 'resnet50_cifar100_to_cifar100_0.001' \
-					--use_gpu "True" --gpu_id "0" --weight_decay_coefficient 0.0000 \
-					--dataset_name "cifar100" --source_net 'cifar100'
+					--lr ${LR} --model resnet50\
+					--num_epochs 25 
+					--use_gpu "True" --gpu_id="0,1,2,3,4,5,6,7,8" --weight_decay_coefficient 0.0000 \
+					--dataset_name "cifar100" --source_net ${SOURCE} 
