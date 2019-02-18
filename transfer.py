@@ -21,9 +21,8 @@ args = get_args()  # get arguments from command line
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
 torch.manual_seed(seed=args.seed) # sets pytorch's seed
 
-
 experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f' % (args.model, args.source_net, args.dataset_name, args.lr)
-logging.log(experiment_name)
+logging.info('Experiment name: %s' %experiment_name)
 
 if args.dataset_name == 'emnist':
     train_data = data_providers.EMNISTDataProvider('train', batch_size=args.batch_size,
