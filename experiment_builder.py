@@ -67,6 +67,9 @@ class ExperimentBuilder(nn.Module):
         self.best_val_model_idx = 0
         self.best_val_model_acc = 0.
 
+        if not os.path.exists("experiments_results"):  # If experiment directory does not exist
+            os.mkdir("experiments_results")
+
         if not os.path.exists(self.experiment_folder):  # If experiment directory does not exist
             os.mkdir(self.experiment_folder)  # create the experiment directory
 
@@ -205,7 +208,7 @@ class ExperimentBuilder(nn.Module):
                     current_epoch_losses["train_loss"].append(loss)  # add current iter loss to the train loss list
                     current_epoch_losses["train_acc"].append(accuracy)  # add current iter acc to the train acc list
                     pbar_train.update(1)
-                    pbar_train.set_description("loss: {:.4f}, accuracy: {:.4f}".format(loss, accuracy))
+                    pbar_train.set_description("train loss: {:.4f}, accuracy: {:.4f}".format(loss, accuracy))
 
             with tqdm.tqdm(total=len(self.val_data)) as pbar_val:  # create a progress bar for validation
                 for x, y in self.val_data:  # get data batches
@@ -213,7 +216,7 @@ class ExperimentBuilder(nn.Module):
                     current_epoch_losses["val_loss"].append(loss)  # add current iter loss to val loss list.
                     current_epoch_losses["val_acc"].append(accuracy)  # add current iter acc to val acc lst.
                     pbar_val.update(1)  # add 1 step to the progress bar
-                    pbar_val.set_description("loss: {:.4f}, accuracy: {:.4f}".format(loss, accuracy))
+                    pbar_val.set_description("val loss: {:.4f}, accuracy: {:.4f}".format(loss, accuracy))
             val_mean_accuracy = np.mean(current_epoch_losses['val_acc'])
             if val_mean_accuracy > self.best_val_model_acc:  # if current epoch's mean val acc is greater than the saved best val acc then
                 self.best_val_model_acc = val_mean_accuracy  # set the best val model acc to be current epoch's val accuracy

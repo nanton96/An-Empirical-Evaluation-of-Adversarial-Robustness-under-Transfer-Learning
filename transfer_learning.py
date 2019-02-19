@@ -25,19 +25,8 @@ trainloader, testloader = load_dataset('cifar100', DATA_DIR)
 
 
 # ---------------- SET GPU DEVICES ----------------------
-gpu_id = "0,1"
-if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
-	if "," in gpu_id:
-		device = [torch.device('cuda:{}'.format(idx)) for idx in gpu_id.split(",")]  # sets device to be cuda
-	else:
-		device = torch.device('cuda:{}'.format(gpu_id))  # sets device to be cuda
-
-	os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id  # sets the main GPU to be the one at index 0 (on multi gpu machines you can choose which one you want to use by using the relevant GPU ID)
-	logging.info("use GPU")
-	logging.info("GPU ID {}".format(gpu_id))
-else:
-	logging.info("use CPU")
-	device = torch.device('cpu')  # sets the device to be CPU
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+logging.info("use %s" %device)
 
 ######################################################################
 # Training the model
@@ -81,6 +70,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 			running_loss += loss.item() * inputs.size(0)
 			running_corrects += torch.sum(preds == labels.data)
 
+			logging.info('Minibatch Acc: {:.4f}'.format( float(torch.sum(preds == labels.data)) / float(len(labels.data)) ))
+
+
 		epoch_loss = running_loss / total_trainset
 		epoch_acc = running_corrects.double() / total_trainset
 
@@ -114,35 +106,33 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 # Load a pretrained model and reset final fully connected layer.
 
 model = resnet50(pretrained=True)
-# mpath =os.path.join(MODELS_DIR, "ResNet_cifar100/ResNet_cifar100_Best.pwf")
+# mpath =os.path.join(MODELS_DIR, "cifar10/ResNet_cifar10_Best.pwf")
 # logging.info(mpath) 
-first_device = device[0] if type(device) is list else device
-# mdict = torch.load(mpath, map_location=first_device)
+# mdict = torch.load(mpath, map_location=device)
 # model.load_state_dict(mdict['net'])
 
 # Freeze model weights
-for param in model.parameters():
-	param.requires_grad = False
+# for param in model.parameters():
+	# param.requires_grad = False
 	
 num_ftrs = model.fc.in_features
+model.fc.weight.requires_grad=True
 model.fc = nn.Linear(num_ftrs, 100)
 
 ###############################################
 ############ Parallelize model ################
-if type(device) is list:
-	logging.info('Parallelize model')
-	model.to(device[0])
-	model = nn.DataParallel(module=model, device_ids=device)
-	device = device[0]
-else:
-	model.to(device)  # sends the model from the cpu to the gpu
+if torch.cuda.device_count() > 1:
+  print("Let's use", torch.cuda.device_count(), "GPUs!")
+  # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
+  model = nn.DataParallel(model)
 
 model = model.to(device)
+
 criterion = nn.CrossEntropyLoss().to(device)  
 # Observe that all parameters are being optimized
-optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
 # Decay LR by a factor of 0.1 every 7 epochs
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
+exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.9)
 
 
 ######################################################################
