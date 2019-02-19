@@ -18,7 +18,7 @@ torch.manual_seed(seed=args.seed) # sets pytorch's seed
 classes, train_data,val_data,test_data = getDataProviders(args.dataset_name)
 
 if args.model=='resnet50':
-    from resnets import ResNet
+    from resnets import ResNet,BasicBlock
     # Resnet50 architecture
     net=ResNet(BasicBlock, [3, 4, 6, 3],num_classes = classes)
 elif args.model=='densenet121':
@@ -29,7 +29,7 @@ else:
     raise ValueError("Model Architecture: " + args.model + " not supported")
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
-scheduler = optim.lr_scheduler.MultiStepLR(optimizer=optimizer,milestones=[150,250],gamma=0.1)
+scheduler = optim.lr_scheduler.MultiStepLR(optimizer=optimizer,milestones=[100,150],gamma=0.1)
 
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=args.experiment_name,
