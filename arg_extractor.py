@@ -49,7 +49,7 @@ def get_args():
     parser.add_argument('--filepath_to_arguments_json_file', nargs="?", type=str, default=None,
                          help='')
     parser.add_argument('--source_net', type=str, default="pretrained", help="pretrained/cifar10/cifa100")
-
+    parser.add_argument('--adv_train', type=str2bool, default=False, help="Indicates whether or not we perform adversarial training")
 
     args = parser.parse_args()
     gpu_id = str(args.gpu_id)
