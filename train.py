@@ -29,7 +29,7 @@ else:
     raise ValueError("Model Architecture: " + args.model + " not supported")
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
-scheduler = optim.lr_scheduler.MultiStepLR(optimizer=optimizer,milestones=[100,150],gamma=0.1)
+scheduler = optim.lr_scheduler.MultiStepLR(optimizer=optimizer,milestones=[150,250],gamma=0.1)
 
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=args.experiment_name,
