@@ -113,4 +113,4 @@ def getDataProviders(dataset_name):
     else:
         raise ValueError("Dataset name not supported")
 
-    return train_data,val_data,test_data
+    return num_output_classes,train_data,val_data,test_data
