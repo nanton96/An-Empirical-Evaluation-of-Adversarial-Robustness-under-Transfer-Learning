@@ -199,7 +199,7 @@ class ExperimentBuilder(nn.Module):
         # Second half of the attack - Perturbed examples accuracy 
 
         e = random.choice(epsilon)                     # Make sure you train with many different values of epsilon 
-        inputs_perturbed = x + e*x.grad.data           # Add perturbation to inputs and send them through the network again 
+        inputs_perturbed = x + e*x.grad.data.sign()          # Add perturbation to inputs and send them through the network again 
         out = self.model.forward(inputs_perturbed)    
 
         loss = F.cross_entropy(out, y.data)
@@ -220,7 +220,7 @@ class ExperimentBuilder(nn.Module):
         '''
         epsilon = [0.05,0.1,0.2,0.3]
 
-        self.optimizer.zero_grad() # Required in order to get the gradient sign. 
+       # Required in order to get the gradient sign. 
         self.eval()  # sets the system to validation mode
         if len(y.shape) > 1:
             y = np.argmax(y, axis=1)  # convert one hot encoded labels to single integer labels
@@ -230,11 +230,13 @@ class ExperimentBuilder(nn.Module):
 
         x = x.to(self.device)
         y = y.to(self.device)
+        self.optimizer.zero_grad()
+        x.requires_grad = True
         out = self.model.forward(x)  # forward the data in the model
         loss = F.cross_entropy(out, y)  # compute loss
         loss.backward() 
         e = random.choice(epsilon)
-        x_perturbed = x + e*x.grad.data  
+        x_perturbed = x + e*x.grad.data.sign()
         out = self.model.forward(x_perturbed)
         _, predicted = torch.max(out.data, 1)  # get argmax of predictions
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
@@ -252,7 +254,7 @@ class ExperimentBuilder(nn.Module):
 
         """
         state['network'] = self.best_val_model  # save network parameter and other variables.
-        if (self.best_val_model == self.state_dict):
+        if (self.best_val_model == self.state_dict()):
             print("Attention, best and current dictionaries are exactly the same")
         torch.save(state, f=os.path.join(model_save_dir, "{}_{}".format(model_save_name, str(
             model_idx))))  # save state at prespecified filepath
