@@ -4,11 +4,11 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 import numpy as np
-from arg_extractor import get_args
-from experiment_builder import ExperimentBuilder
-from data_utils import getDataProviders
+from utils.arg_extractor import get_args
+from utils.experiment_builder import ExperimentBuilder
+from utils.data_utils import getDataProviders
 #from model_architectures import ConvolutionalNetwork
-from resnets import resnet50
+
 
 args = get_args()  # get arguments from command line
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
@@ -18,12 +18,12 @@ torch.manual_seed(seed=args.seed) # sets pytorch's seed
 classes, train_data,val_data,test_data = getDataProviders(dataset_name=args.dataset_name, rng = rng, batch_size = args.batch_size)
 
 if args.model=='resnet50':
-    from resnets import ResNet,BasicBlock
+    from utils.resnets import ResNet,BasicBlock
     # Resnet50 architecture
     net=ResNet(BasicBlock, [3, 4, 6, 3],num_classes = classes)
 elif args.model=='densenet121':
     # Densetnet121 architecture
-    from densenets import DenseNet, Bottleneck
+    from utils.densenets import DenseNet, Bottleneck
     net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = classes)
 else:
     raise ValueError("Model Architecture: " + args.model + " not supported")

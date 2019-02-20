@@ -2,7 +2,7 @@ import logging
 import torch
 import torchvision
 import torchvision.transforms as transforms
-import data_providers as data_providers
+import utils.data_providers as data_providers
 
 mean = {
     'cifar10': (0.4914, 0.4822, 0.4465),

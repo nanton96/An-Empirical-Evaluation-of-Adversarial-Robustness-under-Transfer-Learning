@@ -7,7 +7,7 @@ import os
 import numpy as np
 import time
 import random 
-from storage_utils import save_statistics
+from utils.storage_utils import save_statistics
 
 
 class ExperimentBuilder(nn.Module):
