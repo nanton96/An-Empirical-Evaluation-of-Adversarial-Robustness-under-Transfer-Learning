@@ -251,7 +251,9 @@ class ExperimentBuilder(nn.Module):
         :param state: The dictionary containing the system state.
 
         """
-        state['network'] = self.state_dict()  # save network parameter and other variables.
+        state['network'] = self.best_val_model  # save network parameter and other variables.
+        if (self.best_val_model == self.state_dict):
+            print("Attention, best and current dictionaries are exactly the same")
         torch.save(state, f=os.path.join(model_save_dir, "{}_{}".format(model_save_name, str(
             model_idx))))  # save state at prespecified filepath
 
@@ -284,8 +286,8 @@ class ExperimentBuilder(nn.Module):
                         loss, accuracy = self.run_train_iter(x=x, y=y)  # take a training iter step
                     else:
                         loss, accuracy = self.run_adv_train_iter(x=x, y=y)  # take a training iter step
-                    current_epoch_losses["train_loss"].append(loss)  # add current iter loss to the train loss list
-                    current_epoch_losses["train_acc"].append(accuracy)  # add current iter acc to the train acc list
+                    current_epoch_losses["train_loss"].append(loss)         # add current iter loss to the train loss list
+                    current_epoch_losses["train_acc"].append(accuracy)      # add current iter acc to the train acc list
                     pbar_train.update(1)
                     pbar_train.set_description("train loss: {:.4f}, accuracy: {:.4f}".format(loss, accuracy))
 
@@ -294,7 +296,7 @@ class ExperimentBuilder(nn.Module):
                     if(self.adv_train) == False:
                         loss, accuracy = self.run_evaluation_iter(x=x, y=y)  # run a validation iter
                     else:
-                        loss, accuracy = self.run_evaluation_iter(x=x, y=y)  # run a validation iter
+                        loss, accuracy = self.run_adv_evaluation_iter(x=x, y=y)  # run a validation iter
                     current_epoch_losses["val_loss"].append(loss)  # add current iter loss to val loss list.
                     current_epoch_losses["val_acc"].append(accuracy)  # add current iter acc to val acc lst.
                     pbar_val.update(1)  # add 1 step to the progress bar
@@ -303,7 +305,7 @@ class ExperimentBuilder(nn.Module):
             if val_mean_accuracy > self.best_val_model_acc:  # if current epoch's mean val acc is greater than the saved best val acc then
                 self.best_val_model_acc = val_mean_accuracy  # set the best val model acc to be current epoch's val accuracy
                 self.best_val_model_idx = epoch_idx  # set the experiment-wise best val idx to be the current epoch's idx
-
+                self.best_val_model = self.state_dict() 
             for key, value in current_epoch_losses.items():
                 total_losses[key].append(np.mean(
                     value))  # get mean of all metrics of current epoch metrics dict, to get them ready for storage and output on the terminal.
@@ -324,19 +326,23 @@ class ExperimentBuilder(nn.Module):
             self.state['current_epoch_idx'] = epoch_idx
             self.state['best_val_model_acc'] = self.best_val_model_acc
             self.state['best_val_model_idx'] = self.best_val_model_idx
-            self.save_model(model_save_dir=self.experiment_saved_models,
-                            # save model and best val idx and best val acc, using the model dir, model name and model idx
-                            model_save_name="train_model", model_idx=epoch_idx, state=self.state)
-            self.save_model(model_save_dir=self.experiment_saved_models,
-                            # save model and best val idx and best val acc, using the model dir, model name and model idx
-                            model_save_name="train_model", model_idx='latest', state=self.state)
-            #update scheduler
             self.scheduler.step()
 
+            # self.save_model(model_save_dir=self.experiment_saved_models,
+            #                 # save model and best val idx and best val acc, using the model dir, model name and model idx
+            #                 model_save_name="train_model", model_idx=epoch_idx, state=self.state)
+            # self.save_model(model_save_dir=self.experiment_saved_models,
+            #                 # save model and best val idx and best val acc, using the model dir, model name and model idx
+            #                 model_save_name="train_model", model_idx='latest', state=self.state)
+            #update scheduler
+           
+
+        # self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx=epoch_idx, state=self.state)
+        self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx="best", state=self.state)
+
         print("Generating test set evaluation metrics")
-        self.load_model(model_save_dir=self.experiment_saved_models, model_idx=self.best_val_model_idx,
-                        # load best validation model
-                        model_save_name="train_model")
+        self.load_model(model_save_dir=self.experiment_saved_models, model_idx="best", model_save_name="train_model")
+        
         current_epoch_losses = {"test_acc": [], "test_loss": []}  # initialize a statistics dict
         with tqdm.tqdm(total=len(self.test_data)) as pbar_test:  # ini a progress bar
             for x, y in self.test_data:  # sample batch

@@ -17,8 +17,9 @@ class attacks():
     # List of adversarial examples created
     adv_examples = []
     stats = None
-    model_path = "models/"
-    stats_paths = "statistics/"
+    model_path = "/home/s1877727/mlpcw4/experiments_results/"
+    stats_paths = "cifar10_adv_test_exp/saved_models/
+    #statistics/"
     network = torch.nn.Module()
     experiment_name = None
     def __init__(self,params,model,dataset):
