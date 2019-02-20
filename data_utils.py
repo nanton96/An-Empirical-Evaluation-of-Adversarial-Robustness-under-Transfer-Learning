@@ -50,13 +50,13 @@ def load_dataset(dataset, datadir):
     logging.info("Train and test datasets were loaded")
     return trainloader, testloader
 
-def getDataProviders(dataset_name):
+def getDataProviders(dataset_name,rng,batch_size):
     if dataset_name == 'emnist':
-        train_data = data_providers.EMNISTDataProvider('train', batch_size=args.batch_size,
+        train_data = data_providers.EMNISTDataProvider('train', batch_size=batch_size,
                                                     rng=rng, flatten=False)  # initialize our rngs using the argument set seed
-        val_data = data_providers.EMNISTDataProvider('valid', batch_size=args.batch_size,
+        val_data = data_providers.EMNISTDataProvider('valid', batch_size=batch_size,
                                                     rng=rng, flatten=False)  # initialize our rngs using the argument set seed
-        test_data = data_providers.EMNISTDataProvider('test', batch_size=args.batch_size,
+        test_data = data_providers.EMNISTDataProvider('test', batch_size=batch_size,
                                                     rng=rng, flatten=False)  # initialize our rngs using the argument set seed
         num_output_classes = train_data.num_classes
 
@@ -74,13 +74,13 @@ def getDataProviders(dataset_name):
         ])
 
         trainset = data_providers.CIFAR10(root='data', set_name='train', download=True, transform=transform_train)
-        train_data = torch.utils.data.DataLoader(trainset, batch_size=100, shuffle=True, num_workers=2)
+        train_data = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
 
         valset = data_providers.CIFAR10(root='data', set_name='val', download=True, transform=transform_test)
-        val_data = torch.utils.data.DataLoader(valset, batch_size=100, shuffle=False, num_workers=2)
+        val_data = torch.utils.data.DataLoader(valset, batch_size=batch_size, shuffle=False, num_workers=2)
 
         testset = data_providers.CIFAR10(root='data', set_name='test', download=True, transform=transform_test)
-        test_data = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+        test_data = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
 
         classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
         num_output_classes = 10
@@ -99,13 +99,13 @@ def getDataProviders(dataset_name):
         ])
 
         trainset = data_providers.CIFAR100(root='data', set_name='train', download=True, transform=transform_train)
-        train_data = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
+        train_data = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
 
         valset = data_providers.CIFAR100(root='data', set_name='val', download=True, transform=transform_test)
-        val_data = torch.utils.data.DataLoader(valset, batch_size=100, shuffle=False, num_workers=2)
+        val_data = torch.utils.data.DataLoader(valset, batch_size=batch_size, shuffle=False, num_workers=2)
 
         testset = data_providers.CIFAR100(root='data', set_name='test', download=True, transform=transform_test)
-        test_data = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+        test_data = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
 
 
         num_output_classes = 100
