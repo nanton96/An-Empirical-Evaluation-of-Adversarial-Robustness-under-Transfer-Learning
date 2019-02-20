@@ -6,7 +6,8 @@ import tqdm
 import os
 import numpy as np
 import time
-import random 
+import random
+from scipy.stats import truncnorm
 from utils.storage_utils import save_statistics
 
 
@@ -45,6 +46,12 @@ class ExperimentBuilder(nn.Module):
         self.experiment_name = experiment_name
         self.model = network_model
         #self.model.reset_parameters()
+        
+        # Create truncated normal distribution - For details check https://arxiv.org/pdf/1611.01236.pdf
+        lower, upper,mu, sigma = 0, 16,0, 8
+        self.distribution = truncnorm((lower - mu) / sigma, (upper - mu) / sigma, loc=mu, scale=sigma)
+        
+        
         if type(self.device) is list:
             self.model.to(self.device[0])
             self.model = nn.DataParallel(module=self.model, device_ids=self.device)
@@ -168,8 +175,7 @@ class ExperimentBuilder(nn.Module):
 
     def run_adv_train_iter(self,x,y):
        
-        # Data Preproccessing 
-        epsilon = [0.05,0.1,0.2,0.3]
+        # Data Preproccessing
         self.train()
         alpha = 0.5
         # convert one hot encoded labels to single integer labels
@@ -198,7 +204,7 @@ class ExperimentBuilder(nn.Module):
 
         # Second half of the attack - Perturbed examples accuracy 
 
-        e = random.choice(epsilon)                     # Make sure you train with many different values of epsilon 
+        e = self.distribution.rvs(1)[0]                    # Make sure you train with many different values of epsilon
         inputs_perturbed = x + e*x.grad.data.sign()          # Add perturbation to inputs and send them through the network again 
         out = self.model.forward(inputs_perturbed)    
 
@@ -215,28 +221,26 @@ class ExperimentBuilder(nn.Module):
         return (0.5*(adv_loss+clean_loss), accuracy)
 
     def run_adv_evaluation_iter(self,x,y):
-        '''
-            
-        '''
-        epsilon = [0.05,0.1,0.2,0.3]
-
-       # Required in order to get the gradient sign. 
+       
         self.eval()  # sets the system to validation mode
+        
         if len(y.shape) > 1:
             y = np.argmax(y, axis=1)  # convert one hot encoded labels to single integer labels
         if type(x) is np.ndarray:
             x, y = torch.Tensor(x).float().to(device=self.device), torch.Tensor(y).long().to(
             device=self.device)  # convert data to pytorch tensors and send to the computation device
-
         x = x.to(self.device)
         y = y.to(self.device)
         self.optimizer.zero_grad()
         x.requires_grad = True
+        
         out = self.model.forward(x)  # forward the data in the model
         loss = F.cross_entropy(out, y)  # compute loss
         loss.backward() 
-        e = random.choice(epsilon)
+        
+        e = self.distribution.rvs(1)[0]
         x_perturbed = x + e*x.grad.data.sign()
+        
         out = self.model.forward(x_perturbed)
         _, predicted = torch.max(out.data, 1)  # get argmax of predictions
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
