@@ -6,13 +6,14 @@ import tqdm
 import os
 import numpy as np
 import time
-
+import random 
 from storage_utils import save_statistics
 
 
 class ExperimentBuilder(nn.Module):
+
     def __init__(self, network_model, experiment_name, num_epochs, train_data, val_data,
-                 test_data, weight_decay_coefficient, use_gpu, gpu_id, scheduler, optimizer, continue_from_epoch=-1):
+                 test_data, weight_decay_coefficient, use_gpu, gpu_id, scheduler, optimizer, continue_from_epoch=-1, adv_train= False ):
         """
         Initializes an ExperimentBuilder object. Such an object takes care of running training and evaluation of a deep net
         on a given dataset. It also takes care of saving per epoch models and automatically inferring the best val model
@@ -40,7 +41,7 @@ class ExperimentBuilder(nn.Module):
         else:
             print("use CPU")
             self.device = torch.device('cpu')  # sets the device to be CPU
-
+        self.adv_train = adv_train
         self.experiment_name = experiment_name
         self.model = network_model
         #self.model.reset_parameters()
@@ -143,6 +144,7 @@ class ExperimentBuilder(nn.Module):
         return loss.data.detach().cpu().numpy(), accuracy
 
     def run_evaluation_iter(self, x, y):
+
         """
         Receives the inputs and targets for the model and runs an evaluation iterations. Returns loss and accuracy metrics.
         :param x: The inputs to the model. A numpy array of shape batch_size, channels, height, width
@@ -160,6 +162,80 @@ class ExperimentBuilder(nn.Module):
         y = y.to(self.device)
         out = self.model.forward(x)  # forward the data in the model
         loss = F.cross_entropy(out, y)  # compute loss
+        _, predicted = torch.max(out.data, 1)  # get argmax of predictions
+        accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
+        return loss.data.detach().cpu().numpy(), accuracy
+
+    def run_adv_train_iter(self,x,y):
+       
+        # Data Preproccessing 
+        epsilon = [0.05,0.1,0.2,0.3]
+        self.train()
+        alpha = 0.5
+        # convert one hot encoded labels to single integer labels
+        if len(y.shape) > 1:
+            y = np.argmax(y, axis=1)               
+
+        if type(x) is np.ndarray:
+            x, y = torch.Tensor(x).float().to(device=self.device), torch.Tensor(y).long().to(
+            device=self.device)                     # send data to device as torch tensors
+
+        x = x.to(self.device)
+        y = y.to(self.device)     
+        self.optimizer.zero_grad()  # set all weight grads from previous training iters to 0
+        x.requires_grad = True
+
+        # First half of the attack - Clean examples accuracy 
+
+        out = self.model.forward(x)
+        loss = F.cross_entropy(input=out, target=y)  # compute loss
+        loss *= alpha         
+        loss.backward()     
+        clean_loss = loss.item()
+
+        _, predicted = torch.max(out.data, 1)  
+        clean_correct = predicted.eq(y.data).sum().item()
+
+        # Second half of the attack - Perturbed examples accuracy 
+
+        e = random.choice(epsilon)                     # Make sure you train with many different values of epsilon 
+        inputs_perturbed = x + e*x.grad.data           # Add perturbation to inputs and send them through the network again 
+        out = self.model.forward(inputs_perturbed)    
+
+        loss = F.cross_entropy(out, y.data)
+        loss *= (1-alpha)
+        loss.backward()                                # Store gradient w.r.t to the perturbed examples
+        adv_loss = loss.item()
+
+        self.optimizer.step()                               # Update the network's parameters
+
+        _, predicted = torch.max(out.data, 1)  # get argmax of predictions
+        adv_correct = predicted.eq(y.data).sum().item()
+        accuracy =  (adv_correct + clean_correct) / (2 * y.data.size(0))  # compute accuracy
+        return (0.5*(adv_loss+clean_loss), accuracy)
+
+    def run_adv_evaluation_iter(self,x,y):
+        '''
+            
+        '''
+        epsilon = [0.05,0.1,0.2,0.3]
+
+        self.optimizer.zero_grad() # Required in order to get the gradient sign. 
+        self.eval()  # sets the system to validation mode
+        if len(y.shape) > 1:
+            y = np.argmax(y, axis=1)  # convert one hot encoded labels to single integer labels
+        if type(x) is np.ndarray:
+            x, y = torch.Tensor(x).float().to(device=self.device), torch.Tensor(y).long().to(
+            device=self.device)  # convert data to pytorch tensors and send to the computation device
+
+        x = x.to(self.device)
+        y = y.to(self.device)
+        out = self.model.forward(x)  # forward the data in the model
+        loss = F.cross_entropy(out, y)  # compute loss
+        loss.backward() 
+        e = random.choice(epsilon)
+        x_perturbed = x + e*x.grad.data  
+        out = self.model.forward(x_perturbed)
         _, predicted = torch.max(out.data, 1)  # get argmax of predictions
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
         return loss.data.detach().cpu().numpy(), accuracy
@@ -204,7 +280,10 @@ class ExperimentBuilder(nn.Module):
 
             with tqdm.tqdm(total=len(self.train_data)) as pbar_train:  # create a progress bar for training
                 for idx, (x, y) in enumerate(self.train_data):  # get data batches
-                    loss, accuracy = self.run_train_iter(x=x, y=y)  # take a training iter step
+                    if(self.adv_train) == False:
+                        loss, accuracy = self.run_train_iter(x=x, y=y)  # take a training iter step
+                    else:
+                        loss, accuracy = self.run_adv_train_iter(x=x, y=y)  # take a training iter step
                     current_epoch_losses["train_loss"].append(loss)  # add current iter loss to the train loss list
                     current_epoch_losses["train_acc"].append(accuracy)  # add current iter acc to the train acc list
                     pbar_train.update(1)
@@ -212,7 +291,10 @@ class ExperimentBuilder(nn.Module):
 
             with tqdm.tqdm(total=len(self.val_data)) as pbar_val:  # create a progress bar for validation
                 for x, y in self.val_data:  # get data batches
-                    loss, accuracy = self.run_evaluation_iter(x=x, y=y)  # run a validation iter
+                    if(self.adv_train) == False:
+                        loss, accuracy = self.run_evaluation_iter(x=x, y=y)  # run a validation iter
+                    else:
+                        loss, accuracy = self.run_evaluation_iter(x=x, y=y)  # run a validation iter
                     current_epoch_losses["val_loss"].append(loss)  # add current iter loss to val loss list.
                     current_epoch_losses["val_acc"].append(accuracy)  # add current iter acc to val acc lst.
                     pbar_val.update(1)  # add 1 step to the progress bar
@@ -273,3 +355,5 @@ class ExperimentBuilder(nn.Module):
                         stats_dict=test_losses, current_epoch=0, continue_from_mode=False)
 
         return total_losses, test_losses
+
+  

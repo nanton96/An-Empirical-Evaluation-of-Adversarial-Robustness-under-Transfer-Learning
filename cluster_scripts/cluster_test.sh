@@ -36,7 +36,9 @@ rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd ..
+mkdir experiments_results
 python train.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
-                                                      --num_epochs 100 --experiment_name 'cifar10_test_exp' \
+						      --adv_train True --model resnet50\
+                                                      --num_epochs 100 --experiment_name 'cifar10_adv_test_exp' \
                                                       --use_gpu "True" --gpu_id "0" --weight_decay_coefficient 0.00005 \
                                                       --dataset_name "cifar10"

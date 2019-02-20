@@ -36,6 +36,7 @@ conv_experiment = ExperimentBuilder(network_model=net,
                                     num_epochs=args.num_epochs,
                                     weight_decay_coefficient=args.weight_decay_coefficient,
                                     gpu_id=args.gpu_id, use_gpu=args.use_gpu,
+                                    adv_train = args.adv_train,
                                     continue_from_epoch=args.continue_from_epoch,
                                     train_data=train_data, val_data=val_data,
                                     test_data=test_data,optimizer=optimizer,scheduler=scheduler)  # build an experiment object
