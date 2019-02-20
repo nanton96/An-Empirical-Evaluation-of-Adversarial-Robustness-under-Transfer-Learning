@@ -15,7 +15,7 @@ rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
 torch.manual_seed(seed=args.seed) # sets pytorch's seed
 
 
-classes, train_data,val_data,test_data = getDataProviders(args.dataset_name)
+classes, train_data,val_data,test_data = getDataProviders(dataset_name=args.dataset_name, rng = rng, batch_size = args.batch_size)
 
 if args.model=='resnet50':
     from resnets import ResNet,BasicBlock
