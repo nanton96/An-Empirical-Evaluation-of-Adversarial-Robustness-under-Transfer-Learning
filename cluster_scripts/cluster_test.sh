@@ -39,6 +39,6 @@ cd ..
 mkdir experiments_results
 python train.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
 						      --adv_train True --model resnet50\
-                                                      --num_epochs 100 --experiment_name 'cifar10_adv_test_exp' \
+                                                      --num_epochs 10 --experiment_name 'resnet50_cifar10_adv' \
                                                       --use_gpu "True" --gpu_id "0" --weight_decay_coefficient 0.00005 \
                                                       --dataset_name "cifar10"
