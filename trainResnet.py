@@ -8,6 +8,7 @@ import torch.nn as nn
 import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
 import os
+import random 
 import argparse
 import logging
 from data_utils import load_dataset
@@ -18,7 +19,7 @@ import json
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
-parser.add_argument('--ep', default = 200, type=int, help = 'total epochs')
+parser.add_argument('--ep', default = 2, type=int, help = 'total epochs')
 parser.add_argument('--loc',default=False,type=bool, help = 'Stands for local. Triggers progress_bar if not running on MLP cluster')
 #parser.add_argument('--modelPath', default ='models/CIFAR10.pwf')
 parser.add_argument('--dataset', default = 'cifar10', type=str, help='cifar10/cifar100')
@@ -65,7 +66,7 @@ def train(net,trainloader,criterion,optimizer):
                 % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
     return (train_loss, 100*correct/total)
 
-def test(net, epoch, testloader, criterion):
+def validate(net, epoch, testloader, criterion):
     # return 2
     global best_acc
     net.eval()
@@ -112,59 +113,83 @@ def adv_train(net,trainloader,criterion,optimizer):
     correct = 0
     total = 0
     alpha = 0.5
-    
+    epsilon = [0.05,0.1,0.2,0.3]
     for batch_idx, (inputs, targets) in enumerate(trainloader):
         
         inputs, targets = inputs.to(device), targets.to(device)
         inputs.requires_grad = True
         optimizer.zero_grad()
+    
+    
         outputs = net(inputs)
-        
-        # Use alpha to control loss from clean and perturbed examples
         loss = criterion(outputs, targets)
-        loss*=alpha
-        loss.backward()
-        
-        # Add perturbation to inputs and send them through the network again
-        
-        inputs_perturbed = inputs + inputs.grad.data
-        outputs = net(inputs_perturbed)
-        loss = criterion(outputs, targets)
-        loss *= (1-alpha)
-        loss.backward()
-        
-        optimizer.step()
-        train_loss += loss.item()
-        _, predicted = outputs.max(1)
+        loss*=alpha         # Use alpha to control loss from clean and perturbed examples
+        loss.backward()     # Store gradient w.r.t to the clean examples
+
+       
+        _, predicted = outputs.max(1)  # Count how many correct clean examples were given 
         total += targets.size(0)
         correct += predicted.eq(targets).sum().item()
-        # logging.info('Epoch: %d, Batch: %d Train Accuracy %.3f',epoch, batch_idx,correct/total)
+
+       
+        e = random.choice(epsilon)  # Make sure you train with many different values of epsilon 
         
+        
+        inputs_perturbed = inputs + e*inputs.grad.data # Add perturbation to inputs and send them through the network again 
+        outputs = net(inputs_perturbed)
+        
+        loss = criterion(outputs, targets)
+        loss *= (1-alpha)
+        loss.backward() # Store gradient w.r.t to the perturbed examples
+        
+        optimizer.step() # Update the network's parameters
+
+        train_loss += loss.item()
+        _, predicted = outputs.max(1)  # Count how many correct perturbed examples were given 
+        total += targets.size(0)
+        correct += predicted.eq(targets).sum().item()
+      
         if args.loc:
             progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
                          % (train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
     return (train_loss, 100 * correct / total)
 
-def adv_test(net, epoch, testloader, criterion):
-    # return 2
+def adv_validate(net, epoch, testloader, criterion,optimizer):
+    ''' 
+        Stores the  model with the lowest adversarial validation error.
+    '''
+
     global best_acc
     net.eval()
     test_loss = 0
     correct = 0
     total = 0
-    
+    epsilon = [0.05,0.1,0.2,0.3]
+
     with torch.no_grad():
         
         for batch_idx, (inputs, targets) in enumerate(testloader):
+            
+            optimizer.zero_grad()
             inputs, targets = inputs.to(device), targets.to(device)
+            inputs.requires_grad = True
+            
             outputs = net(inputs)
             loss = criterion(outputs, targets)
+            loss.backward() # Store gradient w.r.t to the perturbed examples
+                                            
+            # FGSM Attack - train with many different values of epsilon 
+            e = random.choice(epsilon)
+            inputs_perturbed = inputs + e*inputs.grad.data 
+            outputs = net(inputs_perturbed)
+            loss = criterion(outputs, targets)
+
+
             test_loss += loss.item()
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-            # logging.info('Batch: %d Test Accuracy %.3f',batch_idx,correct/total)
-            
+                    
             if args.loc:
                 progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
                              % (test_loss / (batch_idx + 1), 100. * correct / total, correct, total))
@@ -182,8 +207,6 @@ def adv_test(net, epoch, testloader, criterion):
         torch.save(state, os.path.join(checkpoint_dir, "ResNet_" + args.dataset + "_Best.pwf"))
         best_acc = acc
     return acc
-
-
 
 def train_net(net,adv=False):
    
@@ -213,11 +236,12 @@ def train_net(net,adv=False):
     for epoch in range(start_epoch, start_epoch + args.ep):
         if(adv == False):
             train_loss, train_acc = train(net,trainloader,criterion,optimizer)
-            test_acc = test(net,epoch,testloader,criterion)
+            test_acc = validate(net,epoch,testloader,criterion)
         else:
             train_loss, train_acc = adv_train(net, trainloader, criterion, optimizer)
-            test_acc = test(net, epoch, testloader, criterion)
-        logging.info('Epoch:{:d} Loss: {:.4f} Acc: {:.1f} Test Acc: {:.1f}'.format(epoch, train_loss, train_acc, test_acc))
+            test_acc = adv_validate(net, epoch, testloader, criterion,optimizer) # Optimiser is given as an argument to ensure zero gradient, required for FGSM attack
+
+        print('Epoch:{:d} Loss: {:.4f} Acc: {:.1f} Test Acc: {:.1f}'.format(epoch, train_loss, train_acc, test_acc))
         stats['epoch'].append(epoch)
         stats['train_acc'].append(train_acc)
         stats['test_acc'].append(test_acc)
@@ -234,4 +258,4 @@ trainloader, testloader = load_dataset(args.dataset, DATA_DIR)
 # ---------------- LOADING ARCHITECTURE ------------------
 
 initial_net = resnet50(pretrained=False)
-trained_network = train_net(initial_net)
+trained_network = train_net(initial_net,adv=True)

@@ -31,8 +31,7 @@ class attacks():
     def attack(self):
         pass
     
-    
-
+ 
     def return_dataset(self,dataset_name,batch_size=100,seed=0):
         rng = np.random.RandomState(seed=seed)
         if dataset_name == 'emnist':
@@ -122,8 +121,7 @@ class attacks():
         resnet.load_state_dict(fp['net'])
         resnet.eval()
         return resnet
-    
-    
+     
 class fgsm(attacks):
     stats = {'epsilon': [], 'accuracy': []}
 
@@ -148,14 +146,13 @@ class fgsm(attacks):
             self.adv_examples = []
             print("attacking with epsilon:", epsilon)
             correct = 0
-            i =0
             for data, target in test_loader:
-                i+=1
-                print (i)
                 data, target = data.to(device), target.to(device)
                 data.requires_grad = True
             
                 output = model(data)
+                print(type(output))
+
                 init_pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
             
                 # If the initial prediction is wrong, dont bother attacking, just move on
@@ -187,8 +184,6 @@ class fgsm(attacks):
                     if len( self.adv_examples) < 5:
                         adv_ex = perturbed_data.squeeze().detach().cpu().numpy()
                         self.adv_examples.append((init_pred.item(), final_pred.item(), adv_ex))
-                if i >=8:
-                    break
                 # Calculate final accuracy for this epsilon
             final_acc = correct / float(len(test_loader))
             self.stats['epsilon'].append(epsilon)
@@ -217,6 +212,8 @@ class fgsm(attacks):
     
         # Return the perturbed image
         return perturbed_image
+
+
 
 att = fgsm(epsilon=[0.05,0.1,0.2,0.03],model_name="resnet50",dataset_name="cifar10")
 att.attack()
