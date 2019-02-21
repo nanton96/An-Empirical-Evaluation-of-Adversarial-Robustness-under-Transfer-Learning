@@ -332,6 +332,7 @@ class ExperimentBuilder(nn.Module):
             self.state['current_epoch_idx'] = epoch_idx
             self.state['best_val_model_acc'] = self.best_val_model_acc
             self.state['best_val_model_idx'] = self.best_val_model_idx
+            #update scheduler
             self.scheduler.step()
 
             # self.save_model(model_save_dir=self.experiment_saved_models,
@@ -340,7 +341,7 @@ class ExperimentBuilder(nn.Module):
             # self.save_model(model_save_dir=self.experiment_saved_models,
             #                 # save model and best val idx and best val acc, using the model dir, model name and model idx
             #                 model_save_name="train_model", model_idx='latest', state=self.state)
-            #update scheduler
+
            
 
         # self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx=epoch_idx, state=self.state)

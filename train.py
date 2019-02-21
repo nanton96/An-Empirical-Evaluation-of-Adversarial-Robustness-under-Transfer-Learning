@@ -25,6 +25,9 @@ elif args.model=='densenet121':
     # Densetnet121 architecture
     from utils.densenets import DenseNet, Bottleneck
     net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = classes)
+elif args.model=='resnet56':
+    from utils.resnets_cifar_adapted import ResNet,BasicBlock
+    net = ResNet(BasicBlock, [9, 9, 9],num_classes= classes)
 else:
     raise ValueError("Model Architecture: " + args.model + " not supported")
 
