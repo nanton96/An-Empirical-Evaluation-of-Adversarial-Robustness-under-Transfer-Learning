@@ -258,8 +258,6 @@ class ExperimentBuilder(nn.Module):
 
         """
         state['network'] = self.best_val_model  # save network parameter and other variables.
-        if (self.best_val_model == self.state_dict()):
-            print("Attention, best and current dictionaries are exactly the same")
         torch.save(state, f=os.path.join(model_save_dir, "{}_{}".format(model_save_name, str(
             model_idx))))  # save state at prespecified filepath
 
