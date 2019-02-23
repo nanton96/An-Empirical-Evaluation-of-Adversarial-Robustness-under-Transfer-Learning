@@ -9,7 +9,7 @@ import os
 from utils.data_utils import getDataProviders
 from utils.arg_extractor import get_args
 from utils.experiment_builder import ExperimentBuilder
-from utils.storage_utils import model_load
+from utils.storage_utils import dict_load
 
 DATA_DIR='../data'
 MODELS_DIR='experiments_results'
@@ -24,42 +24,45 @@ experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f' % (args.model, args.source_net,
 logging.info('Experiment name: %s' %experiment_name)
 
 num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=args.dataset_name, rng = rng, batch_size = args.batch_size)
-
 num_original_classes = 10
-if args.model=='resnet50':
-    from utils.resnets import ResNet,BasicBlock
-    net=ResNet(BasicBlock, [3, 4, 6, 3],num_classes = num_original_classes)
-elif args.model=='resnet56':
-    from utils.resnets_cifar_adapted import ResNet,BasicBlock
-    net = ResNet(BasicBlock, [9, 9, 9],num_classes= num_original_classes)
-elif args.model=='densenet121':
-    from utils.densenets import DenseNet, Bottleneck
-    net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = num_original_classes)
-    net = torch.nn.DataParallel(net)
-else:
-    raise ValueError("Model Architecture: " + args.model + " not supported")
 
 model_path =os.path.join(MODELS_DIR, "%s_%s/saved_models/train_model_best" % (args.model, args.source_net))
 logging.info('Loading %s model from %s' % (args.source_net, model_path))
-net = model_load(net, model_path)
 
-optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
-scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.1)
+if args.model=='resnet50':
+    from utils.resnets import ResNet,BasicBlock
+    net=ResNet(BasicBlock, [3, 4, 6, 3],num_classes = num_original_classes)
+    model_dict = dict_load(model_path, parallel=False)
+elif args.model=='resnet56':
+    from utils.resnets_cifar_adapted import ResNet,BasicBlock
+    net = ResNet(BasicBlock, [9, 9, 9],num_classes= num_original_classes)
+    model_dict = dict_load(model_path, parallel=False)
+elif args.model=='densenet121':
+    from utils.densenets import DenseNet, Bottleneck
+    net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = num_original_classes)
+    # net = torch.nn.DataParallel(net)
+    model_dict = dict_load(model_path, parallel=True)
+else:
+    raise ValueError("Model Architecture: " + args.model + " not supported")
 
+
+net.load_state_dict(state_dict=model_dict)
 for param in net.parameters():
     param.requires_grad = False
 
-if args.model=='resnet56':
-    num_ftrs = net.linear.in_features
-    net.linear = nn.Linear(num_ftrs, num_output_classes)
-elif args.model=='densenet121':
-    num_ftrs = net.module.linear.in_features
-    net.module.linear = nn.Linear(num_ftrs, num_output_classes)
-
+# if args.model=='resnet56':
+num_ftrs = net.linear.in_features
+net.linear = nn.Linear(num_ftrs, num_output_classes)
+# elif args.model=='densenet121':
+#     num_ftrs = net.module.linear.in_features
+#     net.linear = nn.Linear(num_ftrs, num_output_classes)
 
 for name,param in net.named_parameters():
     if param.requires_grad == True:
         logging.info("REQUIRES GRAD: %s" % name)
+
+optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.1)
 
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=experiment_name,

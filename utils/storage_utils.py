@@ -3,7 +3,8 @@ import os
 import csv
 import torch
 
-def model_load(net, model_path):
+def dict_load(model_path, parallel=False):
+    start = 13 if parallel else 6
     if torch.cuda.is_available():
         model_dict = torch.load(model_path)
     else:
@@ -11,10 +12,9 @@ def model_load(net, model_path):
 
     model_dict2 = {}
     for k,v in model_dict['network'].items():
-        model_dict2[k[6:]] = v
+        model_dict2[k[start:]] = v
 
-    net.load_state_dict(state_dict=model_dict2)
-    return net
+    return model_dict2
 
 def save_to_stats_pkl_file(experiment_log_filepath, filename, stats_dict):
     summary_filename = os.path.join(experiment_log_filepath, filename)
