@@ -3,17 +3,15 @@ from torchvision import transforms, models
 import torch
 import torch.optim as optim
 import torch.nn as nn
-import data_providers as data_providers
 import numpy as np
-from arg_extractor import get_args
-from experiment_builder import ExperimentBuilder
 import logging
 import os
-#from model_architectures import ConvolutionalNetwork
-# from resnets import resnet50
+from utils.data_utils import getDataProviders
+from utils.arg_extractor import get_args
+from utils.experiment_builder import ExperimentBuilder
 
 DATA_DIR='../data'
-MODELS_DIR='models'
+MODELS_DIR='experiments_results'
 
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
@@ -24,90 +22,49 @@ torch.manual_seed(seed=args.seed) # sets pytorch's seed
 experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f' % (args.model, args.source_net, args.dataset_name, args.lr)
 logging.info('Experiment name: %s' %experiment_name)
 
-if args.dataset_name == 'emnist':
-    train_data = data_providers.EMNISTDataProvider('train', batch_size=args.batch_size,
-                                                   rng=rng, flatten=False)  # initialize our rngs using the argument set seed
-    val_data = data_providers.EMNISTDataProvider('valid', batch_size=args.batch_size,
-                                                 rng=rng, flatten=False)  # initialize our rngs using the argument set seed
-    test_data = data_providers.EMNISTDataProvider('test', batch_size=args.batch_size,
-                                                  rng=rng, flatten=False)  # initialize our rngs using the argument set seed
-    num_output_classes = train_data.num_classes
+num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=args.dataset_name, rng = rng, batch_size = args.batch_size)
 
-elif args.dataset_name == 'cifar10':
-    transform_train = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-    ])
-
-    transform_test = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-    ])
-
-    trainset = data_providers.CIFAR10(root=DATA_DIR, set_name='train', download=True, transform=transform_train)
-    train_data = torch.utils.data.DataLoader(trainset, batch_size=100, shuffle=True, num_workers=2)
-
-    valset = data_providers.CIFAR10(root=DATA_DIR, set_name='val', download=True, transform=transform_test)
-    val_data = torch.utils.data.DataLoader(valset, batch_size=100, shuffle=False, num_workers=2)
-
-    testset = data_providers.CIFAR10(root=DATA_DIR, set_name='test', download=True, transform=transform_test)
-    test_data = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
-
-    classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-    num_output_classes = 10
-
-elif args.dataset_name == 'cifar100':
-    transform_train = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-    ])
-
-    transform_test = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-    ])
-
-    trainset = data_providers.CIFAR100(root=DATA_DIR, set_name='train', download=True, transform=transform_train)
-    train_data = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
-
-    valset = data_providers.CIFAR100(root=DATA_DIR, set_name='val', download=True, transform=transform_test)
-    val_data = torch.utils.data.DataLoader(valset, batch_size=100, shuffle=False, num_workers=2)
-
-    testset = data_providers.CIFAR100(root=DATA_DIR, set_name='test', download=True, transform=transform_test)
-    test_data = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
-    num_output_classes = 100
-
-logging.info('Net architecture: %s' % args.model)
+num_original_classes = 10
 if args.model=='resnet50':
-    from resnets import resnet50
-    net=resnet50()
-    if args.source_net == 'pretrained':
-        logging.info('Loading pretrained ImageNet model')
-        net=resnet50(pretrained=True)
-    else:
-        mpath =os.path.join(MODELS_DIR, "%s/ResNet_%s_Best.pwf" % (args.source_net,args.source_net))
-        logging.info('Loading %s model from %s' % (args.source_net, mpath))
-        mdict = torch.load(mpath, map_location='cpu')
-        net.load_state_dict(mdict['net'])
+    from utils.resnets import ResNet,BasicBlock
+    # Resnet50 architecture
+    net=ResNet(BasicBlock, [3, 4, 6, 3],num_classes = num_original_classes)
 elif args.model=='densenet121':
-    from densenets import DenseNet121
-    net=DenseNet121()
+    # Densetnet121 architecture
+    from utils.densenets import DenseNet, Bottleneck
+    net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = num_original_classes)
+elif args.model=='resnet56':
+    from utils.resnets_cifar_adapted import ResNet,BasicBlock
+    net = ResNet(BasicBlock, [9, 9, 9],num_classes= num_original_classes)
+else:
+    raise ValueError("Model Architecture: " + args.model + " not supported")
 
+model_path =os.path.join(MODELS_DIR, "%s_%s/saved_models/train_model_best" % (args.model, args.source_net))
+logging.info('Loading %s model from %s' % (args.source_net, model_path))
+if torch.cuda.is_available():
+    model_dict = torch.load(model_path)
+else:
+    model_dict = torch.load(model_path, map_location='cpu')
+model_dict2 = {}
+for k,v in model_dict['network'].items():
+    model_dict2[k[6:]] = v
+# net = torch.nn.DataParallel(net)
+net.load_state_dict(state_dict=model_dict2)
 
-# optimizer = optim.Adam(net.parameters(), lr=args.lr, weight_decay=args.weight_decay_coefficient)
+print(model_dict2.keys())
+
+# state = torch.load(f=os.path.join(model_save_dir, "{}_{}".format(model_save_name, str(model_idx))))
+# self.load_state_dict(state_dict=state['network'])
+
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.1)
 
 for param in net.parameters():
     net.requires_grad = False
 
-num_ftrs = net.fc.in_features
+num_ftrs = net.linear.in_features
 # net.fc.weight.requires_grad=True
-net.fc = nn.Linear(num_ftrs, num_output_classes)
+net.linear = nn.Linear(num_ftrs, num_output_classes)
 
 
 conv_experiment = ExperimentBuilder(network_model=net,
