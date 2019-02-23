@@ -1,7 +1,20 @@
 import pickle
 import os
 import csv
+import torch
 
+def model_load(net, model_path):
+    if torch.cuda.is_available():
+        model_dict = torch.load(model_path)
+    else:
+        model_dict = torch.load(model_path, map_location='cpu')
+
+    model_dict2 = {}
+    for k,v in model_dict['network'].items():
+        model_dict2[k[6:]] = v
+
+    net.load_state_dict(state_dict=model_dict2)
+    return net
 
 def save_to_stats_pkl_file(experiment_log_filepath, filename, stats_dict):
     summary_filename = os.path.join(experiment_log_filepath, filename)

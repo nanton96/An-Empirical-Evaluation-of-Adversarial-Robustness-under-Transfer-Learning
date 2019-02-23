@@ -9,6 +9,7 @@ import os
 from utils.data_utils import getDataProviders
 from utils.arg_extractor import get_args
 from utils.experiment_builder import ExperimentBuilder
+from utils.storage_utils import model_load
 
 DATA_DIR='../data'
 MODELS_DIR='experiments_results'
@@ -27,34 +28,20 @@ num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_nam
 num_original_classes = 10
 if args.model=='resnet50':
     from utils.resnets import ResNet,BasicBlock
-    # Resnet50 architecture
     net=ResNet(BasicBlock, [3, 4, 6, 3],num_classes = num_original_classes)
-elif args.model=='densenet121':
-    # Densetnet121 architecture
-    from utils.densenets import DenseNet, Bottleneck
-    net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = num_original_classes)
 elif args.model=='resnet56':
     from utils.resnets_cifar_adapted import ResNet,BasicBlock
     net = ResNet(BasicBlock, [9, 9, 9],num_classes= num_original_classes)
+elif args.model=='densenet121':
+    from utils.densenets import DenseNet, Bottleneck
+    net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = num_original_classes)
+    net = torch.nn.DataParallel(net)
 else:
     raise ValueError("Model Architecture: " + args.model + " not supported")
 
 model_path =os.path.join(MODELS_DIR, "%s_%s/saved_models/train_model_best" % (args.model, args.source_net))
 logging.info('Loading %s model from %s' % (args.source_net, model_path))
-if torch.cuda.is_available():
-    model_dict = torch.load(model_path)
-else:
-    model_dict = torch.load(model_path, map_location='cpu')
-model_dict2 = {}
-for k,v in model_dict['network'].items():
-    model_dict2[k[6:]] = v
-# net = torch.nn.DataParallel(net)
-net.load_state_dict(state_dict=model_dict2)
-
-print(model_dict2.keys())
-
-# state = torch.load(f=os.path.join(model_save_dir, "{}_{}".format(model_save_name, str(model_idx))))
-# self.load_state_dict(state_dict=state['network'])
+net = model_load(net, model_path)
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.1)
@@ -62,9 +49,12 @@ scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0
 for param in net.parameters():
     net.requires_grad = False
 
-num_ftrs = net.linear.in_features
-# net.fc.weight.requires_grad=True
-net.linear = nn.Linear(num_ftrs, num_output_classes)
+if args.model=='resnet56':
+    num_ftrs = net.linear.in_features
+    net.linear = nn.Linear(num_ftrs, num_output_classes)
+elif args.model=='densenet121':
+    num_ftrs = net.module.linear.in_features
+    net.module.linear = nn.Linear(num_ftrs, num_output_classes)
 
 
 conv_experiment = ExperimentBuilder(network_model=net,
