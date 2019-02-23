@@ -47,7 +47,7 @@ optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=a
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.1)
 
 for param in net.parameters():
-    net.requires_grad = False
+    param.requires_grad = False
 
 if args.model=='resnet56':
     num_ftrs = net.linear.in_features
