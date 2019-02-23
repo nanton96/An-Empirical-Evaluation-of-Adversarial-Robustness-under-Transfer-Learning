@@ -57,6 +57,10 @@ elif args.model=='densenet121':
     net.module.linear = nn.Linear(num_ftrs, num_output_classes)
 
 
+for name,param in net.named_parameters():
+    if param.requires_grad == True:
+        logging.info("REQUIRES GRAD: %s" % name)
+
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=experiment_name,
                                     num_epochs=args.num_epochs,
