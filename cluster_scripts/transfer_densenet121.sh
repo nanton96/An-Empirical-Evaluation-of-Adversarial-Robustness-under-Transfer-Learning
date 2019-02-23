@@ -2,7 +2,7 @@
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
 #SBATCH --partition=Standard
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:2
 #SBATCH --mem=12000  # memory in Mb
 #SBATCH --time=0-08:00:00
 
@@ -40,5 +40,5 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 
 python transfer.py  --batch_size 128 --continue_from_epoch -1 --seed 0 \
 					--lr ${LR} --model densenet121 --num_epochs 25 \
-					--use_gpu "True" --gpu_id="0" --weight_decay_coefficient 0.0000 \
+					--use_gpu "True" --gpu_id="0,1" --weight_decay_coefficient 0.0000 \
 					--dataset_name "cifar100" --source_net 'cifar10'
