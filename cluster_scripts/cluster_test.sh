@@ -1,10 +1,10 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=Standard
-#SBATCH --gres=gpu:1
+#SBATCH --partition=LongJobs
+#SBATCH --gres=gpu:2
 #SBATCH --mem=12000  # memory in Mb
-#SBATCH --time=0-08:00:00
+#SBATCH --time=0-36:00:00
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 
@@ -40,11 +40,11 @@ mkdir experiments_results
 python train.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
 						      --adv_train True --model resnet50\
                                                       --num_epochs 200  --experiment_name 'resnet50_cifar10_adv' \
-                                                      --use_gpu "True" --gpu_id "0" --weight_decay_coefficient 0.00005 \
+                                                      --use_gpu "True" --gpu_id "0,1" --weight_decay_coefficient 0.00005 \
                                                       --dataset_name "cifar10"
 
 python train.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
                                     --adv_train True --model resnet50\
                                     --num_epochs 200 --experiment_name 'resnet50_cifar100_adv' \
-                                    --use_gpu "True" --gpu_id "0" --weight_decay_coefficient 0.00005 \
+                                    --use_gpu "True" --gpu_id "0,1" --weight_decay_coefficient 0.00005 \
                                     --dataset_name "cifar100"
