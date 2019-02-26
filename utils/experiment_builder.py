@@ -255,7 +255,7 @@ class ExperimentBuilder(nn.Module):
 
         adv_loss = F.cross_entropy(out, y.data)
         self.optimizer.zero_grad()
-        loss = (clean_loss.item() + lambda_weight*adv_loss )*1/((1+lambda_weight)*x.shape[0])
+        loss = (clean_loss + lambda_weight*adv_loss )*1/((1+lambda_weight)*x.shape[0])
         loss.backward()                                 # Store gradient w.r.t to the perturbed examples
 
         self.optimizer.step()                           # Update the network's parameters
