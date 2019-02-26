@@ -194,12 +194,13 @@ class ExperimentBuilder(nn.Module):
 
         # First half of the attack - Clean examples accuracy 
         out = self.model.forward(x)
-        loss = F.cross_entropy(input=out, target=y)  # compute loss
-        loss.backward()     
-        clean_loss = loss.item()
+        clean_loss = F.cross_entropy(input=out, target=y)  # compute loss
+        clean_loss.backward()   
+        clean_loss = clean_loss.item()  
+        _,predicted = torch.max(out.data, 1)  
 
-        _, predicted = torch.max(out.data, 1)  
-        clean_correct = predicted.eq(y.data).sum().item()
+        clean_acc = np.mean(list(predicted.eq(y.data).cpu()))
+       
 
         # Second half of the attack - Perturbed examples accuracy 
 
@@ -210,14 +211,15 @@ class ExperimentBuilder(nn.Module):
         out = self.model.forward(inputs_perturbed)    
 
         adv_loss = F.cross_entropy(out, y.data)
-        self.optimizer.zero_grad()
+       
         loss = (clean_loss + lambda_weight*adv_loss )*1/(x.shape[0]*(1 + lambda_weight))
+        self.optimizer.zero_grad()
         loss.backward()                                 # Store gradient w.r.t to the perturbed examples
         self.optimizer.step()                           # Update the network's parameters
 
         _, predicted = torch.max(out.data, 1)           # get argmax of predictions
-        adv_correct = predicted.eq(y.data).sum().item()
-        accuracy =  (adv_correct + clean_correct) / (2 * y.data.size(0))  # compute accuracy
+        adv_acc = np.mean(list(predicted.eq(y.data).cpu()))
+        accuracy =  (clean_acc + adv_acc)/2
         return loss.data.detach().cpu().numpy(), accuracy
 
     def run_adv_evaluation_iter(self,x,y):
@@ -242,7 +244,7 @@ class ExperimentBuilder(nn.Module):
         loss.backward()     
         clean_loss = loss.item()
         _, predicted = torch.max(out.data, 1)  
-        clean_correct = predicted.eq(y.data).sum().item()
+        clean_acc =np.mean(list(predicted.eq(y.data).cpu()))
 
         # Second half of the attack - Perturbed examples  
 
@@ -253,33 +255,15 @@ class ExperimentBuilder(nn.Module):
 
         adv_loss = F.cross_entropy(out, y.data)
         self.optimizer.zero_grad()
-        loss = (clean_loss + lambda_weight*adv_loss )*1/((1+lambda_weight)*x.shape[0])
+        loss = (clean_loss.item() + lambda_weight*adv_loss )*1/((1+lambda_weight)*x.shape[0])
         loss.backward()                                 # Store gradient w.r.t to the perturbed examples
-
 
         self.optimizer.step()                           # Update the network's parameters
 
         _, predicted = torch.max(out.data, 1)           # get argmax of predictions
-        adv_correct = predicted.eq(y.data).sum().item()
-        accuracy =  (adv_correct + clean_correct) / (2 * y.data.size(0))  # compute accuracy
+        adv_acc = np.mean(list(predicted.eq(y.data).cpu()))
+        accuracy =  (clean_acc + adv_acc)/2
         return loss.data.detach().cpu().numpy(), accuracy
-
-
-
-        # self.optimizer.zero_grad()
-        # x.requires_grad = True
-        
-        # out = self.model.forward(x)  # forward the data in the model
-        # loss = F.cross_entropy(out, y)  # compute loss
-        # loss.backward() 
-        
-        # e = self.distribution.rvs(1)[0]
-        # x_perturbed = x + e*x.grad.data.sign()
-        
-        # out = self.model.forward(x_perturbed)
-        # _, predicted = torch.max(out.data, 1)  # get argmax of predictions
-        # accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
-        # return loss.data.detach().cpu().numpy(), accuracy
 
     def save_model(self, model_save_dir, model_save_name, model_idx, state):
         """
