@@ -211,7 +211,8 @@ class ExperimentBuilder(nn.Module):
         out = self.model.forward(inputs_perturbed)    
 
         adv_loss = F.cross_entropy(out, y.data)
-       
+        adv_loss = adv_loss.item()
+        
         loss = (clean_loss + lambda_weight*adv_loss )*1/(x.shape[0]*(1 + lambda_weight))
         self.optimizer.zero_grad()
         loss.backward()                                 # Store gradient w.r.t to the perturbed examples
@@ -254,6 +255,7 @@ class ExperimentBuilder(nn.Module):
         out = self.model.forward(inputs_perturbed)    
 
         adv_loss = F.cross_entropy(out, y.data)
+        adv_loss = adv_loss.item()
         self.optimizer.zero_grad()
         loss = (clean_loss + lambda_weight*adv_loss )*1/((1+lambda_weight)*x.shape[0])
         loss.backward()                                 # Store gradient w.r.t to the perturbed examples
