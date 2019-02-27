@@ -20,8 +20,6 @@ args = get_args()  # get arguments from command line
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
 torch.manual_seed(seed=args.seed) # sets pytorch's seed
 
-experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f' % (args.model, args.source_net, args.dataset_name, args.lr)
-logging.info('Experiment name: %s' %experiment_name)
 
 num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=args.dataset_name, rng = rng, batch_size = args.batch_size)
 num_original_classes = 10 if args.source_net == 'cifar10' else 100
@@ -47,8 +45,16 @@ else:
 
 
 net.load_state_dict(state_dict=model_dict)
-for param in net.parameters():
-    param.requires_grad = False
+
+if args.feature_extraction==True:
+    for param in net.parameters():
+        param.requires_grad = False
+    transfer = 'last_layer'
+else:
+    transfer = 'all_layers'
+
+experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f_%s' % (args.model, args.source_net, args.dataset_name, args.lr, transfer)
+logging.info('Experiment name: %s' %experiment_name)
 
 # if args.model=='resnet56':
 num_ftrs = net.linear.in_features
