@@ -22,22 +22,15 @@ export PATH=${CUDA_HOME}/bin:${PATH}
 
 export PYTHON_PATH=$PATH
 
-mkdir -p /disk/scratch/${STUDENT_ID}
+export MODELS_DIR=/home/${STUDENT_ID}/mlpcw4/experiments_results
 
+mkdir -p /disk/scratch/${STUDENT_ID}/
+export DATA_DIR=/disk/scratch/${STUDENT_ID}/data $DATA_DIR
+rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ 
 
-export TMPDIR=/disk/scratch/${STUDENT_ID}/
-export TMP=/disk/scratch/${STUDENT_ID}/
-
-mkdir -p ${TMP}/datasets/
-export DATASET_DIR=${TMP}/datasets/
-# Activate the relevant virtual environment:
-
-rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID}/data
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
-# cd ..
-#mkdir experiments_results
-
+cd /home/${STUDENT_ID}/mlpcw4/
 python transfer.py  --batch_size 128 --continue_from_epoch -1 --seed 0 \
 					--lr LR --model MODEL --num_epochs 25 \
 					--use_gpu "True" --gpu_id="0,1,2,3" --weight_decay_coefficient 0.0000 \

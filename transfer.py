@@ -11,8 +11,8 @@ from utils.arg_extractor import get_args
 from utils.experiment_builder import ExperimentBuilder
 from utils.storage_utils import dict_load
 
-DATA_DIR='../data'
-MODELS_DIR='experiments_results'
+DATA_DIR=os.environ['DATA_DIR']
+MODELS_DIR=os.environ['MODELS_DIR']
 
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
