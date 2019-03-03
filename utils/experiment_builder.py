@@ -141,12 +141,12 @@ class ExperimentBuilder(nn.Module):
 
         x = x.to(self.device)
         y = y.to(self.device)
+        self.optimizer.zero_grad()  # set all weight grads from previous training iters to 0
 
         out = self.model.forward(x)  # forward the data in the model
         loss = F.cross_entropy(input=out, target=y)  # compute loss
 
-        self.optimizer.zero_grad()  # set all weight grads from previous training iters to 0
-        loss.backward()  # backpropagate to compute gradients for current iter loss
+        loss.backward()             # backpropagate to compute gradients for current iter loss
 
         self.optimizer.step()  # update network parameters
         _, predicted = torch.max(out.data, 1)  # get argmax of predictions
