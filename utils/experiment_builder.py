@@ -15,7 +15,7 @@ from utils.attacks import FGSMAttack, LinfPGDAttack
 
 class ExperimentBuilder(nn.Module):
 
-    def __init__(self, network_model, experiment_name, num_epochs, train_data, val_data,
+    def __init__(self, adversary, network_model, experiment_name, num_epochs, train_data, val_data,
                  test_data, weight_decay_coefficient, use_gpu, gpu_id, scheduler, optimizer, continue_from_epoch=-1, adv_train= False ):
         """
         Initializes an ExperimentBuilder object. Such an object takes care of running training and evaluation of a deep net
@@ -44,8 +44,12 @@ class ExperimentBuilder(nn.Module):
         else:
             print("use CPU")
             self.device = torch.device('cpu')  # sets the device to be CPU
+        if adversary == 'fgsm':
+            self.attacker = FGSMAttack
+        elif adversary == 'pgd':
+            self.attacker = LinfPGDAttack
         self.adv_train = adv_train
-        self.delay = 15
+        self.delay = 0
         self.experiment_name = experiment_name
         self.model = network_model
         #self.model.reset_parameters()
@@ -177,8 +181,7 @@ class ExperimentBuilder(nn.Module):
         return loss.data.detach().cpu().numpy(), accuracy
 
     def run_adv_train_iter(self,x,y,epoch):
-       
-        
+              
         
         self.train()
        
@@ -209,7 +212,7 @@ class ExperimentBuilder(nn.Module):
             # Create corresponding adversarial examples for training 
 
             e = self.distribution.rvs(1)[0] 
-            advesary = FGSMAttack(model=self.model,epsilon = e)
+            advesary =  self.attacker(model=self.model,epsilon = e)
             x_adv = adv_train(x,y_pred, self.model,nn.CrossEntropyLoss(),advesary)
             x_adv_var = to_var(x_adv)
             out = self.model(x_adv_var)
@@ -252,8 +255,9 @@ class ExperimentBuilder(nn.Module):
                 # Create corresponding adversarial examples for training 
 
                 e = self.distribution.rvs(1)[0] 
-                advesary = FGSMAttack(model=self.model,epsilon = e)
-                x_adv = adv_train(x,y_pred, self.model,nn.CrossEntropyLoss(),advesary)
+                # adversary = FGSMAttack(model=self.model,epsilon = e)
+                adversary = self.attacker(model=self.model,epsilon = e)
+                x_adv = adv_train(x,y_pred, self.model,nn.CrossEntropyLoss(),adversary)
                 x_adv_var = to_var(x_adv)
                 out = self.model(x_adv_var)
                 _,predicted = torch.max(out.data, 1)  
