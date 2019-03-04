@@ -49,7 +49,7 @@ class ExperimentBuilder(nn.Module):
         elif adversary == 'pgd':
             self.attacker = LinfPGDAttack
         self.adv_train = adv_train
-        self.delay = 0
+        self.delay = 15
         self.experiment_name = experiment_name
         self.model = network_model
         #self.model.reset_parameters()
