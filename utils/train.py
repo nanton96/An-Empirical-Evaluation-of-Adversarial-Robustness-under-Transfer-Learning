@@ -30,8 +30,8 @@ def adv_train(X, y, model, criterion, adversary):
     model_cp.eval()
     
     adversary.model = model_cp
-    if torch.cuda.is_available():
-        X = X.cpu().numpy()
+    
+    X = X.cpu().numpy()
     X_adv = adversary.perturb(X.numpy(), y)
 
     return torch.from_numpy(X_adv)
