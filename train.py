@@ -37,6 +37,7 @@ scheduler = optim.lr_scheduler.MultiStepLR(optimizer=optimizer,milestones=[100,1
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=args.experiment_name,
                                     num_epochs=args.num_epochs,
+                                    adversary = args.adversary,
                                     weight_decay_coefficient=args.weight_decay_coefficient,
                                     gpu_id=args.gpu_id, use_gpu=args.use_gpu,
                                     adv_train = args.adv_train,

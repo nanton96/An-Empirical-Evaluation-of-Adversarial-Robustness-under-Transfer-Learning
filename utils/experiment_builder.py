@@ -9,11 +9,13 @@ import time
 import random
 from scipy.stats import truncnorm
 from utils.storage_utils import save_statistics
-
+from utils.utils import pred_batch,to_var
+from utils.train import adv_train, FGSM_train_rnd
+from utils.attacks import FGSMAttack, LinfPGDAttack
 
 class ExperimentBuilder(nn.Module):
 
-    def __init__(self, network_model, experiment_name, num_epochs, train_data, val_data,
+    def __init__(self, adversary, network_model, experiment_name, num_epochs, train_data, val_data,
                  test_data, weight_decay_coefficient, use_gpu, gpu_id, scheduler, optimizer, continue_from_epoch=-1, adv_train= False ):
         """
         Initializes an ExperimentBuilder object. Such an object takes care of running training and evaluation of a deep net
@@ -42,7 +44,12 @@ class ExperimentBuilder(nn.Module):
         else:
             print("use CPU")
             self.device = torch.device('cpu')  # sets the device to be CPU
+        if adversary == 'fgsm':
+            self.attacker = FGSMAttack
+        elif adversary == 'pgd':
+            self.attacker = LinfPGDAttack
         self.adv_train = adv_train
+        self.delay = 15
         self.experiment_name = experiment_name
         self.model = network_model
         #self.model.reset_parameters()
@@ -138,12 +145,12 @@ class ExperimentBuilder(nn.Module):
 
         x = x.to(self.device)
         y = y.to(self.device)
+        self.optimizer.zero_grad()  # set all weight grads from previous training iters to 0
 
         out = self.model.forward(x)  # forward the data in the model
         loss = F.cross_entropy(input=out, target=y)  # compute loss
 
-        self.optimizer.zero_grad()  # set all weight grads from previous training iters to 0
-        loss.backward()  # backpropagate to compute gradients for current iter loss
+        loss.backward()             # backpropagate to compute gradients for current iter loss
 
         self.optimizer.step()  # update network parameters
         _, predicted = torch.max(out.data, 1)  # get argmax of predictions
@@ -173,11 +180,11 @@ class ExperimentBuilder(nn.Module):
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
         return loss.data.detach().cpu().numpy(), accuracy
 
-    def run_adv_train_iter(self,x,y):
-       
-        # Data Preproccessing
+    def run_adv_train_iter(self,x,y,epoch):
+              
+        
         self.train()
-        lambda_weight = 0.3 
+       
         # convert one hot encoded labels to single integer labels
         if len(y.shape) > 1:
             y = np.argmax(y, axis=1)               
@@ -190,43 +197,43 @@ class ExperimentBuilder(nn.Module):
         y = y.to(self.device)     
 
         self.optimizer.zero_grad()  # set all weight grads from previous training iters to 0
-        x.requires_grad = True
+        
 
         # First half of the attack - Clean examples accuracy 
-        out = self.model.forward(x)
-        clean_loss = F.cross_entropy(input=out, target=y)  # compute loss
-        clean_loss.backward()   
-        clean_loss = clean_loss.item()  
+        out = self.model(x)
         _,predicted = torch.max(out.data, 1)  
+        accuracy = np.mean(list(predicted.eq(y.data).cpu()))
+        loss = F.cross_entropy(input=out, target=y)  # compute loss
 
-        clean_acc = np.mean(list(predicted.eq(y.data).cpu()))
-       
+        if(epoch + 1 > self.delay):
+            # Prevent label leaking, by using most probable state
+            y_pred  = pred_batch(x,self.model)
 
-        # Second half of the attack - Perturbed examples accuracy 
+            # Create corresponding adversarial examples for training 
 
-        e = self.distribution.rvs(1)[0]                    # Make sure you train with many different values of epsilon
-       
-        inputs_perturbed = x + e*x.grad.data.sign()        # Add perturbation to inputs and send them through the network again 
+            e = self.distribution.rvs(1)[0] 
+            advesary =  self.attacker(model=self.model,epsilon = e)
+            x_adv = adv_train(x,y_pred, self.model,nn.CrossEntropyLoss(),advesary)
+            x_adv_var = to_var(x_adv)
+            out = self.model(x_adv_var)
+            _,predicted = torch.max(out.data, 1)  
+            adv_acc = np.mean(list(predicted.eq(y.data).cpu()))
+            
+            loss_adv =  F.cross_entropy(out, y.data)
+            loss = (loss + loss_adv) / 2
+            accuracy =  (accuracy + adv_acc)/2
 
-        out = self.model.forward(inputs_perturbed)    
-
-        adv_loss = F.cross_entropy(out, y.data)
-        adv_loss = adv_loss.item()
-        
-        loss = (clean_loss + lambda_weight*adv_loss )*1/(x.shape[0]*(1 + lambda_weight))
         self.optimizer.zero_grad()
-        loss.backward()                                 # Store gradient w.r.t to the perturbed examples
-        self.optimizer.step()                           # Update the network's parameters
-
-        _, predicted = torch.max(out.data, 1)           # get argmax of predictions
-        adv_acc = np.mean(list(predicted.eq(y.data).cpu()))
-        accuracy =  (clean_acc + adv_acc)/2
+        loss.backward()
+        self.optimizer.step()  
+       
         return loss.data.detach().cpu().numpy(), accuracy
 
-    def run_adv_evaluation_iter(self,x,y):
-       
+    def run_adv_evaluation_iter(self,x,y,epoch):
+      
+        # ---------------- Testing the given network --------------- #
+
         self.eval()  # sets the system to validation mode
-        lambda_weight = 0.3
         if len(y.shape) > 1:
             y = np.argmax(y, axis=1)  # convert one hot encoded labels to single integer labels
         if type(x) is np.ndarray:
@@ -236,35 +243,29 @@ class ExperimentBuilder(nn.Module):
         y = y.to(self.device)
 
 
-        self.optimizer.zero_grad()  # set all weight grads from previous training iters to 0
-        x.requires_grad = True
-
-        # First half of the attack - Clean examples  
         out = self.model.forward(x)
-        loss = F.cross_entropy(input=out, target=y)  # compute loss
-        loss.backward()     
-        clean_loss = loss.item()
-        _, predicted = torch.max(out.data, 1)  
-        clean_acc =np.mean(list(predicted.eq(y.data).cpu()))
+        loss = F.cross_entropy(input=out, target=y)
+        _,predicted = torch.max(out.data, 1)  
+        accuracy = np.mean(list(predicted.eq(y.data).cpu()))
 
-        # Second half of the attack - Perturbed examples  
+        if epoch + 1 > self.delay:
+                # Prevent label leaking, by using most probable state
+                y_pred  = pred_batch(x,self.model)
 
-        e = self.distribution.rvs(1)[0]                    # Make sure you train with many different values of epsilon       
-        inputs_perturbed = x + e*x.grad.data.sign()        # Add perturbation to inputs and send them through the network again 
+                # Create corresponding adversarial examples for training 
 
-        out = self.model.forward(inputs_perturbed)    
+                e = self.distribution.rvs(1)[0] 
+                # adversary = FGSMAttack(model=self.model,epsilon = e)
+                adversary = self.attacker(model=self.model,epsilon = e)
+                x_adv = adv_train(x,y_pred, self.model,nn.CrossEntropyLoss(),adversary)
+                x_adv_var = to_var(x_adv)
+                out = self.model(x_adv_var)
+                _,predicted = torch.max(out.data, 1)  
+                adv_acc = np.mean(list(predicted.eq(y.data).cpu()))
+                loss_adv =  F.cross_entropy(out, y.data)
+                loss = (loss + loss_adv) / 2   
+                accuracy =  (accuracy + adv_acc)/2
 
-        adv_loss = F.cross_entropy(out, y.data)
-        adv_loss = adv_loss.item()
-        self.optimizer.zero_grad()
-        loss = (clean_loss + lambda_weight*adv_loss )*1/((1+lambda_weight)*x.shape[0])
-        loss.backward()                                 # Store gradient w.r.t to the perturbed examples
-
-        self.optimizer.step()                           # Update the network's parameters
-
-        _, predicted = torch.max(out.data, 1)           # get argmax of predictions
-        adv_acc = np.mean(list(predicted.eq(y.data).cpu()))
-        accuracy =  (clean_acc + adv_acc)/2
         return loss.data.detach().cpu().numpy(), accuracy
 
     def save_model(self, model_save_dir, model_save_name, model_idx, state):
@@ -310,7 +311,7 @@ class ExperimentBuilder(nn.Module):
                     if(self.adv_train) == False:
                         loss, accuracy = self.run_train_iter(x=x, y=y)  # take a training iter step
                     else:
-                        loss, accuracy = self.run_adv_train_iter(x=x, y=y)  # take a training iter step
+                        loss, accuracy = self.run_adv_train_iter(x=x, y=y,epoch=epoch_idx)  # take a training iter step
                     current_epoch_losses["train_loss"].append(loss)         # add current iter loss to the train loss list
                     current_epoch_losses["train_acc"].append(accuracy)      # add current iter acc to the train acc list
                     pbar_train.update(1)
@@ -321,7 +322,7 @@ class ExperimentBuilder(nn.Module):
                     if(self.adv_train) == False:
                         loss, accuracy = self.run_evaluation_iter(x=x, y=y)  # run a validation iter
                     else:
-                        loss, accuracy = self.run_adv_evaluation_iter(x=x, y=y)  # run a validation iter
+                        loss, accuracy = self.run_adv_evaluation_iter(x=x, y=y,epoch=epoch_idx)  # run a validation iter
                     current_epoch_losses["val_loss"].append(loss)  # add current iter loss to val loss list.
                     current_epoch_losses["val_acc"].append(accuracy)  # add current iter acc to val acc lst.
                     pbar_val.update(1)  # add 1 step to the progress bar
