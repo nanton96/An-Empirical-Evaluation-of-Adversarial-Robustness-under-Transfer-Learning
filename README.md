@@ -12,3 +12,5 @@ PyTorch Implementations of Resnets: https://github.com/pytorch/vision/blob/maste
 Resnet trained on CIFAR10: https://github.com/kuangliu/pytorch-cifar
 
 Proper resnet implementation for CIFAR10: https://github.com/akamaster/pytorch_resnet_cifar10
+
+Adversarial Attacks: https://github.com/wanglouis49/pytorch-adversarial_box/blob/master/mnist_adv_train.py?fbclid=IwAR33o24Orm2MBaIiErR-hxcr6sZX-XXcOtt72r-hTuo3nYBDdtx6Ng_raOM
