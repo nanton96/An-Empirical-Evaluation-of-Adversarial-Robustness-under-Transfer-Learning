@@ -248,7 +248,7 @@ class ExperimentBuilder(nn.Module):
         _,predicted = torch.max(out.data, 1)  
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))
 
-        if(epoch + 1 > self.delay):
+        if epoch + 1 > self.delay:
                 # Prevent label leaking, by using most probable state
                 y_pred  = pred_batch(x,self.model)
 
