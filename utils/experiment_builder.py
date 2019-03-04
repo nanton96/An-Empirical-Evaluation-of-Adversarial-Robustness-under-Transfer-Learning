@@ -55,7 +55,7 @@ class ExperimentBuilder(nn.Module):
         #self.model.reset_parameters()
         
         # Create truncated normal distribution - For details check https://arxiv.org/pdf/1611.01236.pdf
-        lower, upper,mu, sigma = 0, 16,0, 8
+        lower, upper,mu, sigma = 0, 0.125,0, 0.0625
         self.distribution = truncnorm((lower - mu) / sigma, (upper - mu) / sigma, loc=mu, scale=sigma)
         
         
@@ -211,7 +211,7 @@ class ExperimentBuilder(nn.Module):
 
             # Create corresponding adversarial examples for training 
 
-            e = self.distribution.rvs(1)[0] 
+            e = self.distribution.rvs(1)[0]
             advesary =  self.attacker(model=self.model,epsilon = e)
             x_adv = adv_train(x,y_pred, self.model,nn.CrossEntropyLoss(),advesary)
             x_adv_var = to_var(x_adv)

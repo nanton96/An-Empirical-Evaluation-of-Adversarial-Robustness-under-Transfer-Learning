@@ -41,13 +41,14 @@ class FGSMAttack(object):
         grad_sign = X_var.grad.data.cpu().sign().numpy()
 
         X += self.epsilon * grad_sign
-        X = np.clip(X, 0, 1)
+        # Changed from X = np.clip(X, 0, 1) 
+        X = np.clip(X, -1, 1)
 
         return X
 
 
 class LinfPGDAttack(object):
-    def __init__(self, model=None, epsilon=0.3, k=40, a=0.01, random_start=True):
+    def __init__(self, model=None, epsilon=0.3, k=7, a=0.01, random_start=True):
         """
         Attack parameter initialization. The attack performs k steps of
         size a, while always staying within epsilon from the initial
@@ -84,7 +85,8 @@ class LinfPGDAttack(object):
             X += self.a * np.sign(grad)
 
             X = np.clip(X, X_nat - self.epsilon, X_nat + self.epsilon)
-            X = np.clip(X, 0, 1) # ensure valid pixel range
+            # WE changed to [-1,1] X = np.clip(X, 0, 1) 
+            X = np.clip(X, -1, 1) # ensure valid pixel range
 
         return X
 
