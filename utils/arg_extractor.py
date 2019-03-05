@@ -66,6 +66,45 @@ def get_args():
     print(arg_str)
     return args
 
+def get_attack_args():
+    """
+    Returns a namedtuple with arguments extracted from the command line.
+    :return: A namedtuple with arguments
+    """
+    parser = argparse.ArgumentParser(
+        description='Parser for attack.py script')
+
+    parser.add_argument('--batch_size', nargs="?", type=int, default=100, help='Batch_size for experiment')
+    parser.add_argument('--continue_from_epoch', nargs="?", type=int, default=-1, help='Batch_size for experiment')
+    parser.add_argument('--dataset_name', type=str, help='Dataset on which the system will train/eval our model')
+    parser.add_argument('--seed', nargs="?", type=int, default=7112018,
+                        help='Seed to use for random number generator for experiment')
+
+    parser.add_argument('--experiment_name', nargs="?", type=str, default="exp_1",
+                        help='Experiment name - to be used for building the experiment folder')
+    parser.add_argument('--use_gpu', nargs="?", type=str2bool, default=False,
+                        help='A flag indicating whether we will use GPU acceleration or not')
+    parser.add_argument('--gpu_id', type=str, default="None", help="A string indicating the gpu to use")
+
+    parser.add_argument('--source_net', type=str, default="pretrained", help="pretrained/cifar10/cifa100")
+    parser.add_argument('--model', type=str, help='Network architecture for training')
+    
+    parser.add_argument('--adv_train', type=str2bool, default=False, help="Indicates whether or not we perform adversarial training")
+    parser.add_argument('--adversary', type=str, default="fgsm", help="fgsm/pgd")
+
+    parser.add_argument('--epsilon', type=float, default= 0.125, help="parameter for bound of attacks")
+
+    args = parser.parse_args()
+    gpu_id = str(args.gpu_id)
+    if args.filepath_to_arguments_json_file is not None:
+        args = extract_args_from_json(json_file_path=args.filepath_to_arguments_json_file, existing_args_dict=args)
+
+    if gpu_id != "None":
+        args.gpu_id = gpu_id
+
+    arg_str = [(str(key), str(value)) for (key, value) in vars(args).items()]
+    print(arg_str)
+    return args
 
 class AttributeAccessibleDict(object):
     def __init__(self, adict):
