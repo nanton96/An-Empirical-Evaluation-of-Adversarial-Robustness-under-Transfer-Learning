@@ -4,6 +4,19 @@ from torch.autograd import Variable
 import torch.nn as nn
 from torch.utils.data import sampler
 
+def load_net(model, model_path, num_original_classes):
+    if model=='resnet56':
+        from utils.resnets_cifar_adapted import ResNet,BasicBlock
+        net = ResNet(BasicBlock, [9, 9, 9],num_classes= num_original_classes)
+        model_dict = torch.load(f=model_path)
+    elif model=='densenet121':
+        from utils.densenets import DenseNet, Bottleneck
+        net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = num_original_classes)
+        model_dict = torch.load(f=model_path)
+    else:
+        raise ValueError("Model Architecture: " + model + " not supported")
+    net.load_state_dict(state_dict=model_dict['network'])
+    return net
 
 def truncated_normal(mean=0.0, stddev=1.0, m=1):
     '''

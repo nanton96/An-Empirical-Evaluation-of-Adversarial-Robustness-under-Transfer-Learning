@@ -385,8 +385,12 @@ class ExperimentBuilder(nn.Module):
             #                 # save model and best val idx and best val acc, using the model dir, model name and model idx
             #                 model_save_name="train_model", model_idx=epoch_idx, state=self.state)
             # save model and best val idx and best val acc, using the model dir, model name and model idx
+            try:
+                state_dict = self.module.state_dict()
+            except AttributeError:
+                state_dict = self.state_dict()
             self.save_model(model_save_dir=self.experiment_saved_models,
-                            model_save_name="train_model", model_idx='latest', state=self.state)
+                            model_save_name="train_model", model_idx='latest', state=state_dict)
 
            
 
