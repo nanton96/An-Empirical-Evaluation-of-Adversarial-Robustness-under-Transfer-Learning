@@ -11,6 +11,7 @@ from utils.arg_extractor import get_args
 from utils.experiment_builder import ExperimentBuilder
 from utils.storage_utils import dict_load
 from utils.attacks import FGSMAttack,LinfPGDAttack
+from utils.utils import load_net
 
 DATA_DIR=os.environ['DATA_DIR']
 MODELS_DIR=os.environ['MODELS_DIR']
@@ -30,23 +31,7 @@ logging.info('Loading %s model from %s' % (args.source_net, model_path))
 
 model = args.model
 
-def load_model_architecture(model,num_classes):
-    if model=='resnet50':
-        from utils.resnets import ResNet,BasicBlock
-        net=ResNet(BasicBlock, [3, 4, 6, 3],num_classes = num_original_classes)
-        model_dict = dict_load(model_path, parallel=False)
-    elif model=='resnet56':
-        from utils.resnets_cifar_adapted import ResNet,BasicBlock
-        net = ResNet(BasicBlock, [9, 9, 9],num_classes= num_original_classes)
-        model_dict = dict_load(model_path, parallel=False)
-    elif model=='densenet121':
-        from utils.densenets import DenseNet, Bottleneck
-        net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = num_original_classes)
-        # net = torch.nn.DataParallel(net)
-        model_dict = dict_load(model_path, parallel=True)
-    else:
-        raise ValueError("Model Architecture: " + model + " not supported")
-    return net,model_dict
+net, model = load_net(model,model_path,num_output_classes)
 
 ########## PSEUDO CODE ##########
 
@@ -70,3 +55,9 @@ def load_model_architecture(model,num_classes):
     # Evaluate on target
         # # forward pass the x_adv through defender network to generate y'
         # # calculate accuracy and store in dictionary under key 'model_attack_black_box(source)_acc'
+
+experiment_name = 'attack_%s_%s' % (args.model, 
+     args.dataset_name, args.)
+logging.info('Experiment name: %s' %experiment_name)
+
+

@@ -79,18 +79,13 @@ def get_attack_args():
     parser.add_argument('--dataset_name', type=str, help='Dataset on which the system will train/eval our model')
     parser.add_argument('--seed', nargs="?", type=int, default=7112018,
                         help='Seed to use for random number generator for experiment')
-
-    parser.add_argument('--experiment_name', nargs="?", type=str, default="exp_1",
-                        help='Experiment name - to be used for building the experiment folder')
     parser.add_argument('--use_gpu', nargs="?", type=str2bool, default=False,
                         help='A flag indicating whether we will use GPU acceleration or not')
     parser.add_argument('--gpu_id', type=str, default="None", help="A string indicating the gpu to use")
 
-    parser.add_argument('--source_net', type=str, default="pretrained", help="pretrained/cifar10/cifa100")
     parser.add_argument('--model', type=str, help='Network architecture for training')
     
-    parser.add_argument('--adv_train', type=str2bool, default=False, help="Indicates whether or not we perform adversarial training")
-    parser.add_argument('--adversary', type=str, default="fgsm", help="fgsm/pgd")
+    parser.add_argument('--train_adversary', type=str, default="fgsm", help="fgsm/pgd")
 
     parser.add_argument('--epsilon', type=float, default= 0.125, help="parameter for bound of attacks")
 
