@@ -186,14 +186,12 @@ class ExperimentBuilder(nn.Module):
     def run_adv_train_iter(self,x,y):
               
         self.train()
-
         train_stat = {
             'clean_acc':0,
             'clean_loss': 0,
             'adv_acc':0,
             'adv_loss': 0
         }
-
         # convert one hot encoded labels to single integer labels
         if len(y.shape) > 1:
             y = np.argmax(y, axis=1)               
@@ -211,7 +209,7 @@ class ExperimentBuilder(nn.Module):
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))
         loss = F.cross_entropy(input=out, target=y)  # compute loss
         train_stat['clean_acc'] = accuracy
-        train_stat['clean_loss'] = loss
+        train_stat['clean_loss'] = loss.data.detach().cpu().numpy()
         # Prevent label leaking, by using most probable state
         y_pred  = pred_batch(x,self.model)
 
@@ -227,7 +225,7 @@ class ExperimentBuilder(nn.Module):
         
         loss_adv =  F.cross_entropy(out, y.data)
         train_stat['adv_acc'] = adv_acc
-        train_stat['adv_loss'] = loss_adv
+        train_stat['adv_loss'] = loss_adv.data.detach().cpu().numpy()
 
         loss = (loss + loss_adv) / 2
         accuracy =  (accuracy + adv_acc)/2
@@ -265,7 +263,7 @@ class ExperimentBuilder(nn.Module):
         _,predicted = torch.max(out.data, 1)  
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))
         validaton_stat['clean_acc']  = accuracy
-        validaton_stat['clean_loss'] = loss
+        validaton_stat['clean_loss'] = loss.data.detach().cpu().numpy()
         
         # Prevent label leaking, by using most probable state
 
@@ -283,7 +281,7 @@ class ExperimentBuilder(nn.Module):
         loss_adv =  F.cross_entropy(out, y.data)
 
         validaton_stat['adv_acc']  = adv_acc
-        validaton_stat['adv_loss'] = loss_adv
+        validaton_stat['adv_loss'] = loss_adv.data.detach().cpu().numpy()
 
         loss = (loss + loss_adv) / 2   
         accuracy =  (accuracy + adv_acc)/2
