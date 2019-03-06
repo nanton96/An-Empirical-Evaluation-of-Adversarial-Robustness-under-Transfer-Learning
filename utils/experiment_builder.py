@@ -16,7 +16,7 @@ from utils.attacks import FGSMAttack, LinfPGDAttack
 class ExperimentBuilder(nn.Module):
 
     def __init__(self, network_model, experiment_name, num_epochs, train_data, val_data,
-                 test_data, weight_decay_coefficient, use_gpu, gpu_id, scheduler, optimizer, adversary ='fgsm', continue_from_epoch=-1, adv_train= False ):
+                 test_data, weight_decay_coefficient, use_gpu, scheduler, optimizer,device, adversary ='fgsm', continue_from_epoch=-1, adv_train= False ):
         """
         Initializes an ExperimentBuilder object. Such an object takes care of running training and evaluation of a deep net
         on a given dataset. It also takes care of saving per epoch models and automatically inferring the best val model
@@ -32,18 +32,18 @@ class ExperimentBuilder(nn.Module):
         :param continue_from_epoch: An int indicating whether we'll start from scrach (-1) or whether we'll reload a previously saved model of epoch 'continue_from_epoch' and continue training from there.
         """
         super(ExperimentBuilder, self).__init__()
-        if torch.cuda.is_available() and use_gpu:  # checks whether a cuda gpu is available and whether the gpu flag is True
-            if "," in gpu_id:
-                self.device = [torch.device('cuda:{}'.format(idx)) for idx in gpu_id.split(",")]  # sets device to be cuda
-            else:
-                self.device = torch.device('cuda:{}'.format(gpu_id))  # sets device to be cuda
+        # if torch.cuda.is_available() and use_gpu:  # checks whether a cuda gpu is available and whether the gpu flag is True
+        #     if "," in gpu_id:
+        #         self.device = [torch.device('cuda:{}'.format(idx)) for idx in gpu_id.split(",")]  # sets device to be cuda
+        #     else:
+        #         self.device = torch.device('cuda:{}'.format(gpu_id))  # sets device to be cuda
 
-            os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id  # sets the main GPU to be the one at index 0 (on multi gpu machines you can choose which one you want to use by using the relevant GPU ID)
-            print("use GPU")
-            print("GPU ID {}".format(gpu_id))
-        else:
-            print("use CPU")
-            self.device = torch.device('cpu')  # sets the device to be CPU
+        #     os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id  # sets the main GPU to be the one at index 0 (on multi gpu machines you can choose which one you want to use by using the relevant GPU ID)
+        #     print("use GPU")
+        #     print("GPU ID {}".format(gpu_id))
+        # else:
+        #     print("use CPU")
+        #     self.device = torch.device('cpu')  # sets the device to be CPU
 
         self.adv_train = adv_train
         if adv_train:
@@ -53,7 +53,7 @@ class ExperimentBuilder(nn.Module):
                 self.attacker = LinfPGDAttack
         else:
             self.attacker = None
-
+        self.device = device
         self.delay = 15
         self.experiment_name = experiment_name
         self.model = network_model

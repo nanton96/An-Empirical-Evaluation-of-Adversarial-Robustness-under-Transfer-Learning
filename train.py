@@ -10,7 +10,7 @@ from utils.data_utils import getDataProviders
 #from model_architectures import ConvolutionalNetwork
 
 
-args = get_args()  # get arguments from command line
+args,device = get_args()  # get arguments from command line
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
 torch.manual_seed(seed=args.seed) # sets pytorch's seed
 
@@ -39,7 +39,7 @@ conv_experiment = ExperimentBuilder(network_model=net,
                                     num_epochs=args.num_epochs,
                                     adversary = args.adversary,
                                     weight_decay_coefficient=args.weight_decay_coefficient,
-                                    gpu_id=args.gpu_id, use_gpu=args.use_gpu,
+                                    device=device, use_gpu=args.use_gpu,
                                     adv_train = args.adv_train,
                                     continue_from_epoch=args.continue_from_epoch,
                                     train_data=train_data, val_data=val_data,
