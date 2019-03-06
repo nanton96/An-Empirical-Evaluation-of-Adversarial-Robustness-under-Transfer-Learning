@@ -51,7 +51,7 @@ def get_args():
     parser.add_argument('--source_net', type=str, default="pretrained", help="pretrained/cifar10/cifa100")
     parser.add_argument('--feature_extraction', type=str2bool, default=True, help="Feature extraction or finetuning")
     
-    parser.add_argument('--adv_train', type=str2bool, default=False, help="Indicates whether or not we perform adversarial training")
+    parser.add_argument('--adv_train', type=str2bool,default = False, help="specify whether or not to perform adversarial training")
     parser.add_argument('--adversary', type=str, default="fgsm", help="fgsm/pgd")
 
     args = parser.parse_args()
