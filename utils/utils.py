@@ -51,7 +51,11 @@ def to_var(x, requires_grad=False, volatile=False):
     """
     if torch.cuda.is_available():
         x = x.cuda()
-    return Variable(x, requires_grad=requires_grad, volatile=volatile)
+    if volatile:
+        with torch.no_grad():
+            return Variable(x, requires_grad=requires_grad)
+    else:
+        return Variable(x, requires_grad=requires_grad, volatile=volatile)
 
 
 def pred_batch(x, model):
