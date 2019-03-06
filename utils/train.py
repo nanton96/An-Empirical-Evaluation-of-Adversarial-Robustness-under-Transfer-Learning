@@ -15,7 +15,7 @@ from utils.utils import truncated_normal
 
 
 
-def adv_train(X, y, model, criterion, adversary):
+def adv_train(X, y, model_cp, criterion, adversary):
     """
     Adversarial training. Returns pertubed mini batch.
     """
@@ -25,16 +25,21 @@ def adv_train(X, y, model, criterion, adversary):
     # as not to mess up with the optimization step
 
     # model_cp = copy.deepcopy(model)
-    # for p in model_cp.parameters():
-    #     p.requires_grad = False
-    # model_cp.eval()
-    model_cp = model
+    #  model_cp = model
+
+    for p in model_cp.parameters():
+        p.requires_grad = False
+    model_cp.eval()
+    # model_cp.no_grad()
     
     adversary.model = model_cp
     if torch.cuda.is_available():
         X = X.cpu()
     X_adv = adversary.perturb(X.numpy(), y)
-
+    
+    model_cp.train()
+    for p in model_cp.parameters():
+        p.requires_grad = False
     return torch.from_numpy(X_adv)
 
 
