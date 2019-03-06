@@ -20,6 +20,7 @@ from utils.utils import to_var
 
 # --- White-box attacks ---
 
+
 class FGSMAttack(object):
     def __init__(self, model=None, epsilon=None):
         """
