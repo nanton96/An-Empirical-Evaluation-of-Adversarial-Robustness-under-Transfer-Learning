@@ -375,7 +375,7 @@ class ExperimentBuilder(nn.Module):
             if val_mean_accuracy > self.best_val_model_acc:  # if current epoch's mean val acc is greater than the saved best val acc then
                 self.best_val_model_acc = val_mean_accuracy  # set the best val model acc to be current epoch's val accuracy
                 self.best_val_model_idx = epoch_idx  # set the experiment-wise best val idx to be the current epoch's idx
-                self.best_val_model = self.model.state_dict() 
+                self.best_val_model = self.state_dict() 
             for key, value in current_epoch_losses.items():
                 total_losses[key].append(np.mean(
                     value))  # get mean of all metrics of current epoch metrics dict, to get them ready for storage and output on the terminal.
