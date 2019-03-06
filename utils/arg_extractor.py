@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import torch
 import sys
 import GPUtil
 
@@ -100,7 +101,7 @@ def get_args():
                 sys.exit()
 
 
-    import torch
+ 
     args.use_cuda = torch.cuda.is_available()
 
     if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
