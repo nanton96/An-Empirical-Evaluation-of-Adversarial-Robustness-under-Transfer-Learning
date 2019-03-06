@@ -205,9 +205,6 @@ class ExperimentBuilder(nn.Module):
         x = x.to(self.device)
         y = y.to(self.device)     
 
-        self.optimizer.zero_grad()  # set all weight grads from previous training iters to 0
-        
-
         # First half of the attack - Clean examples accuracy 
         out = self.model(x)
         _,predicted = torch.max(out.data, 1)  
@@ -221,8 +218,8 @@ class ExperimentBuilder(nn.Module):
         # Create corresponding adversarial examples for training 
 
         e = self.distribution.rvs(1)[0]
-        advesary =  self.attacker(model=self.model,epsilon = e)
-        x_adv = adv_train(x,y_pred, self.model,nn.CrossEntropyLoss(),advesary)
+        advesary =  self.attacker(epsilon = e)
+        x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,advesary)
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
         _,predicted = torch.max(out.data, 1)  
@@ -263,7 +260,7 @@ class ExperimentBuilder(nn.Module):
         y = y.to(self.device)
 
 
-        out = self.model.forward(x)
+        out = self.model(x)
         loss = F.cross_entropy(input=out, target=y)
         _,predicted = torch.max(out.data, 1)  
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))
@@ -271,14 +268,14 @@ class ExperimentBuilder(nn.Module):
         validaton_stat['clean_loss'] = loss
         
         # Prevent label leaking, by using most probable state
+
         y_pred  = pred_batch(x,self.model)
 
         # Create corresponding adversarial examples for training 
 
         e = self.distribution.rvs(1)[0] 
-        # adversary = FGSMAttack(model=self.model,epsilon = e)
-        adversary = self.attacker(model=self.model,epsilon = e)
-        x_adv = adv_train(x,y_pred, self.model,nn.CrossEntropyLoss(),adversary)
+        adversary = self.attacker(epsilon = e)
+        x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,adversary)
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
         _,predicted = torch.max(out.data, 1)  
