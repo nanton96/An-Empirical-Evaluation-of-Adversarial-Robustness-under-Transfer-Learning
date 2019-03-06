@@ -213,13 +213,13 @@ class ExperimentBuilder(nn.Module):
         train_stat['clean_acc'] = accuracy
         train_stat['clean_loss'] = loss
         # Prevent label leaking, by using most probable state
-        y_pred  = pred_batch(x,self.model)
+        # y_pred  = pred_batch(x,self.model)
 
         # Create corresponding adversarial examples for training 
 
         e = self.distribution.rvs(1)[0]
         advesary =  self.attacker(epsilon = e)
-        x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,advesary)
+        x_adv = adv_train(x,y, self.model,F.cross_entropy,advesary)
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
         _,predicted = torch.max(out.data, 1)  
