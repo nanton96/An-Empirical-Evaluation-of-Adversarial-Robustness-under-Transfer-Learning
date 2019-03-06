@@ -4,6 +4,7 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 import numpy as np
+import torch.nn.functional as F
 import logging
 import os
 from utils.data_utils import getDataProviders
@@ -12,6 +13,7 @@ from utils.experiment_builder import ExperimentBuilder
 from utils.storage_utils import dict_load
 from utils.attacks import FGSMAttack,LinfPGDAttack
 from utils.utils import load_net
+from utils.train import adv_train
 
 DATA_DIR=os.environ['DATA_DIR']
 MODELS_DIR=os.environ['MODELS_DIR']
@@ -47,12 +49,12 @@ torch.manual_seed(seed=0) # sets pytorch's seed
         # # forward pass the x_adv through defender network to generate y'
         # # calculate accuracy and store in dictionary under key 'model_attack_black_box(source)_acc'
 
-models = ['resnet56',]# 'densenet121']
+models = ['resnet56'] # 'densenet121']
 network_names = ['cifar10', 'cifar100', 'cifar100_to_cifar10']
 robust_to = ["", ]# "_fgsm", "_pgd"]
 attacks = ['fgsm', 'pgd']
 
-if torch.cuda.is_available() and use_gpu:  # checks whether a cuda gpu is available and whether the gpu flag is True
+if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
     device = torch.device('cuda')  # sets device to be cuda
     print("use GPU")
 else:
@@ -73,7 +75,7 @@ def run_adv_evaluation(net,adversary,x,y):
         y = y.to(device)
 
 
-        out = net.model.forward(x)
+        out = net.model(x)
         loss = F.cross_entropy(input=out, target=y)
         _,predicted = torch.max(out.data, 1)  
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))
@@ -85,8 +87,7 @@ def run_adv_evaluation(net,adversary,x,y):
 
         # Create corresponding adversarial examples for training 
 
-        # e = 0.25 # net.distribution.rvs(1)[0] 
-        # adversary = net.attacker(model=net.model,epsilon = e)
+        # adversary = net.attacker(epsilon = 0.125)
         x_adv = adv_train(x,y_pred, net.model,nn.CrossEntropyLoss(),adversary)
         x_adv_var = to_var(x_adv)
         out = net.model(x_adv_var)

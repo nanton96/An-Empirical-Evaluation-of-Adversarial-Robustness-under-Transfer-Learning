@@ -238,7 +238,7 @@ class ExperimentBuilder(nn.Module):
        
         return loss.data.detach().cpu().numpy(), accuracy, train_stat
 
-    def run_adv_evaluation_iter(self,x,y,epoch):
+    def run_adv_evaluation_iter(self,x,y):
       
         # ---------------- Testing the given network --------------- #
 
@@ -323,8 +323,7 @@ class ExperimentBuilder(nn.Module):
         :return: The summary current_epoch_losses from starting epoch to total_epochs.
         """
         if self.adv_train:
-            total_losses = {"train_acc": [], "train_loss": [], "val_acc": [],
-                        "val_loss": [], "curr_epoch": []}  # initialize a dict to keep the per-epoch metrics
+            total_losses = {"train_acc": [], "train_loss": [], "val_acc": [], "val_loss": [], "curr_epoch": []}  # initialize a dict to keep the per-epoch metrics
         else:
             total_losses = {"clean_train_acc":[], "adv_train_acc":[], "clean_train_loss":[], "adv_train_loss":[], "train_acc": [], "train_loss": [],
                             "clean_val_acc":[], "adv_val_acc":[], "clean_val_loss":[], "adv_val_loss":[], "val_acc": [], "val_loss": [],
@@ -335,8 +334,8 @@ class ExperimentBuilder(nn.Module):
                 current_epoch_losses = {"clean_train_acc":[], "adv_train_acc":[], "clean_train_loss":[], "adv_train_loss":[], "train_acc": [], "train_loss": [],
                             "clean_val_acc":[], "adv_val_acc":[], "clean_val_loss":[], "adv_val_loss":[], "val_acc": [], "val_loss": [],
                              "curr_epoch": []} 
-            else:
-                current_epoch_losses = {"train_acc": [], "train_loss": [], "val_acc": [], "val_loss": []}
+            else,
+                current_epoch_losses = {"train_acc": [], "train_loss": [], "val_acc": [], "val_loss": [], "curr_epoch": []} 
 
             with tqdm.tqdm(total=len(self.train_data)) as pbar_train:  # create a progress bar for training
                 for idx, (x, y) in enumerate(self.train_data):         # get data batches
@@ -360,7 +359,7 @@ class ExperimentBuilder(nn.Module):
                     if(self.adv_train) == False:
                         loss, accuracy = self.run_evaluation_iter(x=x, y=y)  # run a validation iter
                     else:
-                        loss, accuracy,val_stat = self.run_adv_evaluation_iter(x=x, y=y,epoch=epoch_idx)  # run a validation iter
+                        loss, accuracy,val_stat = self.run_adv_evaluation_iter(x=x, y=y)  # run a validation iter
                         current_epoch_losses["clean_val_acc"].append(val_stat['clean_acc']) 
                         current_epoch_losses["adv_val_acc"].append(val_stat['adv_acc']) 
                         current_epoch_losses["clean_val_loss"].append(val_stat['clean_loss']) 
