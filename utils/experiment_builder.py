@@ -213,7 +213,7 @@ class ExperimentBuilder(nn.Module):
         train_stat['clean_acc'] = accuracy
         train_stat['clean_loss'] = loss
         # Prevent label leaking, by using most probable state
-        # y_pred  = pred_batch(x,self.model)
+        y_pred  = pred_batch(x,self.model)
 
         # Create corresponding adversarial examples for training 
 

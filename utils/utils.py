@@ -51,18 +51,14 @@ def to_var(x, requires_grad=False, volatile=False):
     """
     if torch.cuda.is_available():
         x = x.cuda()
-    if volatile:
-        with torch.no_grad():
-            return Variable(x, requires_grad=requires_grad)
-    else:
-        return Variable(x, requires_grad=requires_grad, volatile=volatile)
+    return Variable(x, requires_grad=requires_grad, volatile=volatile)
 
 
 def pred_batch(x, model):
     """
     batch prediction helper
     """
-    y_pred = np.argmax(model(to_var(x,volatile=True)).data.cpu().numpy(), axis=1)
+    y_pred = np.argmax(model(to_var(x)).data.cpu().numpy(), axis=1)
     return torch.from_numpy(y_pred)
 
 
