@@ -322,31 +322,31 @@ class ExperimentBuilder(nn.Module):
         Runs experiment train and evaluation iterations, saving the model and best val model and val model accuracy after each epoch
         :return: The summary current_epoch_losses from starting epoch to total_epochs.
         """
-        if not self.adv_train:
-            total_losses = {"train_acc": [], "train_loss": [], "val_acc": [], "val_loss": [], "curr_epoch": []}  # initialize a dict to keep the per-epoch metrics
-        else:
+        if self.adv_train:
             total_losses = {"clean_train_acc":[], "adv_train_acc":[], "clean_train_loss":[], "adv_train_loss":[], "train_acc": [], "train_loss": [],
                             "clean_val_acc":[], "adv_val_acc":[], "clean_val_loss":[], "adv_val_loss":[], "val_acc": [], "val_loss": [],
                              "curr_epoch": []}  # initialize a dict to keep the per-epoch metrics
+        else:           
+            total_losses = {"train_acc": [], "train_loss": [], "val_acc": [], "val_loss": [], "curr_epoch": []}  # initialize a dict to keep the per-epoch metrics
+
         for i, epoch_idx in enumerate(range(self.starting_epoch, self.num_epochs)):
             epoch_start_time = time.time()
             if self.adv_train:
                 current_epoch_losses = {"clean_train_acc":[], "adv_train_acc":[], "clean_train_loss":[], "adv_train_loss":[], "train_acc": [], "train_loss": [],
-                            "clean_val_acc":[], "adv_val_acc":[], "clean_val_loss":[], "adv_val_loss":[], "val_acc": [], "val_loss": [],
-                             "curr_epoch": []} 
+                            "clean_val_acc":[], "adv_val_acc":[], "clean_val_loss":[], "adv_val_loss":[], "val_acc": [], "val_loss": [], "curr_epoch": []}
             else:
                 current_epoch_losses = {"train_acc": [], "train_loss": [], "val_acc": [], "val_loss": [], "curr_epoch": []} 
 
             with tqdm.tqdm(total=len(self.train_data)) as pbar_train:  # create a progress bar for training
                 for idx, (x, y) in enumerate(self.train_data):         # get data batches
-                    if(self.adv_train) == False:
-                        loss, accuracy = self.run_train_iter(x=x, y=y)  # take a training iter step
-                    else:
-                        loss,accuracy,train_stat = self.run_adv_train_iter(x=x, y=y,epoch=epoch_idx)  # take a training iter step
+                    if self.adv_train:
+                        loss,accuracy,train_stat = self.run_adv_train_iter(x=x, y=y)  # take a training iter step
                         current_epoch_losses["clean_train_acc"].append(train_stat['clean_acc']) 
                         current_epoch_losses["adv_train_acc"].append(train_stat['adv_acc']) 
                         current_epoch_losses["clean_train_loss"].append(train_stat['clean_loss']) 
-                        current_epoch_losses["adv_train_loss"].append(train_stat[ 'adv_loss']) 
+                        current_epoch_losses["adv_train_loss"].append(train_stat[ 'adv_loss'])                         
+                    else:
+                       loss, accuracy = self.run_train_iter(x=x, y=y)  # take a training iter step
 
                     current_epoch_losses["train_loss"].append(loss)         # add current iter loss to the train loss list
                     current_epoch_losses["train_acc"].append(accuracy)      # add current iter acc to the train acc list
@@ -356,14 +356,14 @@ class ExperimentBuilder(nn.Module):
 
             with tqdm.tqdm(total=len(self.val_data)) as pbar_val:  # create a progress bar for validation
                 for x, y in self.val_data:  # get data batches
-                    if(self.adv_train) == False:
-                        loss, accuracy = self.run_evaluation_iter(x=x, y=y)  # run a validation iter
-                    else:
+                    if self.adv_train :
                         loss, accuracy,val_stat = self.run_adv_evaluation_iter(x=x, y=y)  # run a validation iter
                         current_epoch_losses["clean_val_acc"].append(val_stat['clean_acc']) 
                         current_epoch_losses["adv_val_acc"].append(val_stat['adv_acc']) 
                         current_epoch_losses["clean_val_loss"].append(val_stat['clean_loss']) 
                         current_epoch_losses["adv_val_loss"].append(val_stat[ 'adv_loss']) 
+                    else:
+                        loss, accuracy = self.run_evaluation_iter(x=x, y=y)  # run a validation iter                      
 
                     current_epoch_losses["val_loss"].append(loss)  # add current iter loss to val loss list.
                     current_epoch_losses["val_acc"].append(accuracy)  # add current iter acc to val acc lst.
