@@ -64,10 +64,10 @@ class ExperimentBuilder(nn.Module):
         self.distribution = truncnorm((lower - mu) / sigma, (upper - mu) / sigma, loc=mu, scale=sigma)
         
         
-        if type(self.device) is list:
-            self.model.to(self.device[0])
+        if torch.cuda.device_count() > 1:
+            self.model.to(self.device)
             self.model = nn.DataParallel(module=self.model, device_ids=self.device)
-            self.device = self.device[0]
+            
         else:
             self.model.to(self.device)  # sends the model from the cpu to the gpu
           # re-initialize network parameters
@@ -399,9 +399,9 @@ class ExperimentBuilder(nn.Module):
             #update scheduler
             self.scheduler.step()
 
-            self.save_model(model_save_dir=self.experiment_saved_models,
-                            # save model and best val idx and best val acc, using the model dir, model name and model idx
-                            model_save_name="train_model", model_idx=epoch_idx, state=self.state)
+            # self.save_model(model_save_dir=self.experiment_saved_models,
+            #                 # save model and best val idx and best val acc, using the model dir, model name and model idx
+            #                 model_save_name="train_model", model_idx=epoch_idx, state=self.state)
             
             
             # save model and best val idx and best val acc, using the model dir, model name and model idx
@@ -409,8 +409,8 @@ class ExperimentBuilder(nn.Module):
             #     state_dict = self.model.module.state_dict()
             # except AttributeError:
             #     state_dict = self.model.state_dict()
-            # self.save_model(model_save_dir=self.experiment_saved_models,
-            #                 model_save_name="train_model", model_idx='latest', state=state_dict)
+            self.save_model(model_save_dir=self.experiment_saved_models,
+                            model_save_name="train_model", model_idx='latest', state=state_dict)
 
            
 
