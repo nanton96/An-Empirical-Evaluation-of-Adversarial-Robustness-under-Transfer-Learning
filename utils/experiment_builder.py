@@ -322,7 +322,7 @@ class ExperimentBuilder(nn.Module):
         Runs experiment train and evaluation iterations, saving the model and best val model and val model accuracy after each epoch
         :return: The summary current_epoch_losses from starting epoch to total_epochs.
         """
-        if self.adv_train:
+        if not self.adv_train:
             total_losses = {"train_acc": [], "train_loss": [], "val_acc": [], "val_loss": [], "curr_epoch": []}  # initialize a dict to keep the per-epoch metrics
         else:
             total_losses = {"clean_train_acc":[], "adv_train_acc":[], "clean_train_loss":[], "adv_train_loss":[], "train_acc": [], "train_loss": [],
