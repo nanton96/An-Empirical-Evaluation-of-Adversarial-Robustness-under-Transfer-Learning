@@ -410,7 +410,7 @@ class ExperimentBuilder(nn.Module):
             # except AttributeError:
             #     state_dict = self.model.state_dict()
             self.save_model(model_save_dir=self.experiment_saved_models,
-                            model_save_name="train_model", model_idx='latest', state=state_dict)
+                            model_save_name="train_model", model_idx='latest', state=self.state)
 
            
 
