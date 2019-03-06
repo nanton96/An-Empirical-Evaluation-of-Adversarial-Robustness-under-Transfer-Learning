@@ -334,7 +334,7 @@ class ExperimentBuilder(nn.Module):
                 current_epoch_losses = {"clean_train_acc":[], "adv_train_acc":[], "clean_train_loss":[], "adv_train_loss":[], "train_acc": [], "train_loss": [],
                             "clean_val_acc":[], "adv_val_acc":[], "clean_val_loss":[], "adv_val_loss":[], "val_acc": [], "val_loss": [],
                              "curr_epoch": []} 
-            else,
+            else:
                 current_epoch_losses = {"train_acc": [], "train_loss": [], "val_acc": [], "val_loss": [], "curr_epoch": []} 
 
             with tqdm.tqdm(total=len(self.train_data)) as pbar_train:  # create a progress bar for training
