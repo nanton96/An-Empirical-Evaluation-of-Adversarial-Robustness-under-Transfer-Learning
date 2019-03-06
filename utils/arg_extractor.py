@@ -51,7 +51,8 @@ def get_args():
     parser.add_argument('--source_net', type=str, default="pretrained", help="pretrained/cifar10/cifa100")
     parser.add_argument('--feature_extraction', type=str2bool, default=True, help="Feature extraction or finetuning")
     
-    parser.add_argument('--adv_train', type    parser.add_argument('--use_gpu', nargs="?", type=str2bool, default=False,
+    parser.add_argument('--adv_train', type=str2bool,default = False, help="specify whether or not to perform adversarial training")
+    parser.add_argument('--use_gpu', nargs="?", type=str2bool, default=False,
                         help='A flag indicating whether we will use GPU acceleration or not')
     parser.add_argument('--gpu_id', type=str, default="None", help="A string indicating the gpu to use")
     parser.add_argument('--weight_decay_coefficient', nargs="?", type=float, de=str2bool, default=False, help="Indicates whether or not we perform adversarial training")
