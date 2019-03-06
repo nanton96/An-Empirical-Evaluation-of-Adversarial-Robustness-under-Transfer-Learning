@@ -183,7 +183,7 @@ class ExperimentBuilder(nn.Module):
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
         return loss.data.detach().cpu().numpy(), accuracy
 
-    def run_adv_train_iter(self,x,y,epoch):
+    def run_adv_train_iter(self,x,y):
               
         self.train()
 
