@@ -58,7 +58,9 @@ def pred_batch(x, model):
     """
     batch prediction helper
     """
-    y_pred = np.argmax(model(to_var(x)).data.cpu().numpy(), axis=1)
+    with torch.no_grad():
+        out = model(to_var(x))
+        y_pred = np.argmax(out.data.cpu().numpy(), axis=1)
     return torch.from_numpy(y_pred)
 
 
