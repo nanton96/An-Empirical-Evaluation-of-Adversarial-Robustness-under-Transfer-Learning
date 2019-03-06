@@ -24,10 +24,11 @@ def adv_train(X, y, model, criterion, adversary):
     # the model at each batch to compute grad, so 
     # as not to mess up with the optimization step
 
-    model_cp = copy.deepcopy(model)
-    for p in model_cp.parameters():
-        p.requires_grad = False
-    model_cp.eval()
+    # model_cp = copy.deepcopy(model)
+    # for p in model_cp.parameters():
+    #     p.requires_grad = False
+    # model_cp.eval()
+    model_cp = model
     
     adversary.model = model_cp
     if torch.cuda.is_available():
