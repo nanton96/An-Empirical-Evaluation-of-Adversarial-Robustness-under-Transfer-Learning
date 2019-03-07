@@ -73,26 +73,45 @@ def test(model, loader, blackbox=False, hold_out_size=None):
     """
     Check model accuracy on model based on loader (train or test)
     """
-    model.eval()
+    # model.eval()
 
-    num_correct, num_samples = 0, len(loader.dataset)
+    # num_correct, num_samples = 0, len(loader.dataset)
 
-    if blackbox:
-        num_samples -= hold_out_size
+    # if blackbox:
+    #     num_samples -= hold_out_size
 
-    for x, y in loader:
-        x_var = to_var(x, volatile=True)
-        scores = model(x_var)
-        _, preds = scores.data.cpu().max(1)
-        num_correct += (preds == y).sum()
+    # for x, y in loader:
+    #     x_var = to_var(x, volatile=True)
+    #     scores = model(x_var)
+    #     _, preds = scores.data.cpu().max(1)
+    #     num_correct += (preds == y).sum()
 
-    acc = float(num_correct)/float(num_samples)
-    print('Got %d/%d correct (%.2f%%) on the clean data' 
-        % (num_correct, num_samples, 100 * acc))
+    # acc = float(num_correct)/float(num_samples)
+    # print('Got %d/%d correct (%.2f%%) on the clean data' 
+    #     % (num_correct, num_samples, 100 * acc))
 
-    return acc
+    # return acc
 
 
+    for x,y in loader:
+
+        model.eval()
+        if len(y.shape) > 1:
+            y = np.argmax(y, axis=1)  # convert one hot encoded labels to single integer labels
+        if type(x) is np.ndarray:
+            x, y = torch.Tensor(x).float().to(device=device), torch.Tensor(y).long().to(
+            device=device)  # convert data to pytorch tensors and send to the computation device
+        x = x.to(device)
+        y = y.to(device)
+        
+        out = self.model.forward(x)  # forward the data in the model
+        
+        _, predicted = torch.max(out.data, 1)  # get argmax of predictions
+        
+        accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
+        print("Accuracy on clean data",acc * 100)
+    return accuracy
+    
 def attack_over_test_data(model, adversary, param, loader_test, oracle=None):
     """
     Given target model computes accuracy on perturbed data
