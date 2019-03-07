@@ -13,7 +13,6 @@ from utils.utils import pred_batch,to_var
 from utils.train import adv_train, FGSM_train_rnd
 from utils.attacks import FGSMAttack, LinfPGDAttack
 import GPUtil
-import logging
 
 class ExperimentBuilder(nn.Module):
 
@@ -46,7 +45,6 @@ class ExperimentBuilder(nn.Module):
         # else:
         #     print("use CPU")
         #     self.device = torch.device('cpu')  # sets the device to be CPU
-        logging.basicConfig(format='%(message)s',level=logging.INFO)
 
         self.adv_train = adv_train
         if adv_train:
@@ -278,9 +276,9 @@ class ExperimentBuilder(nn.Module):
 
         # Create corresponding adversarial examples for training 
 
-        e = self.distribution.rvs(1)[0] 
+        e = self.distribution.rvs(1)[0]
         adversary = self.attacker(epsilon = e)
-        x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,adversary)
+        x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,adversary) 
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
         _,predicted = torch.max(out.data, 1)  
@@ -310,14 +308,6 @@ class ExperimentBuilder(nn.Module):
         state['network'] = self.best_val_model  # save network parameter and other variables.
         torch.save(state, f=os.path.join(model_save_dir, "{}_{}".format(model_save_name, str(
             model_idx))))  # save state at prespecified filepath
-
-    def save_readable_model(self, model_save_dir, state_dict):
-        """
-        """
-        state ={'network': state_dict} # save network parameter and other variables.
-        fname = os.path.join(model_save_dir, "train_model_best_readable")
-        print('Saving state in ', fname)
-        torch.save(state, f=fname)  # save state at prespecified filepath
 
     def load_model(self, model_save_dir, model_save_name, model_idx):
         """
@@ -417,6 +407,12 @@ class ExperimentBuilder(nn.Module):
             #                 # save model and best val idx and best val acc, using the model dir, model name and model idx
             #                 model_save_name="train_model", model_idx=epoch_idx, state=self.state)
             
+            
+            # save model and best val idx and best val acc, using the model dir, model name and model idx
+            # try:
+            #     state_dict = self.model.module.state_dict()
+            # except AttributeError:
+            #     state_dict = self.model.state_dict()
             self.save_model(model_save_dir=self.experiment_saved_models,
                             model_save_name="train_model", model_idx='latest', state=self.state)
 
@@ -424,13 +420,6 @@ class ExperimentBuilder(nn.Module):
 
         # self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx=epoch_idx, state=self.state)
         self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx="best", state=self.state)
-
-        # Save a generic readable model format
-        try:
-            state_dict = self.model.module.state_dict()
-        except AttributeError:
-            state_dict = self.model.state_dict()
-        self.save_readable_model(model_save_dir=self.experiment_saved_models, state=state_dict)
 
         print("Generating test set evaluation metrics")
         self.load_model(model_save_dir=self.experiment_saved_models, model_idx="best", model_save_name="train_model")
