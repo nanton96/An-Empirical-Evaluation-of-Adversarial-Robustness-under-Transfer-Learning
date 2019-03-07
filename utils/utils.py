@@ -69,7 +69,7 @@ def pred_batch(x, model):
     return torch.from_numpy(y_pred)
 
 
-def test(model, loader, blackbox=False, hold_out_size=None):
+def test(model, loader,device, blackbox=False, hold_out_size=None):
     """
     Check model accuracy on model based on loader (train or test)
     """

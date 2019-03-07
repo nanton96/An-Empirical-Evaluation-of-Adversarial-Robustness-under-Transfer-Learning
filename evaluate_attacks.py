@@ -57,7 +57,7 @@ for trained_dataset in trained_datasets:
                 adversary = attack(epsilon = 0.125)
                 adversary.model = net
                 acc = attack_over_test_data(model=net, adversary=adversary, param=None, loader_test=test_data, oracle=None)
-
+                acc = test(model,test_data,device)
 
 
 
