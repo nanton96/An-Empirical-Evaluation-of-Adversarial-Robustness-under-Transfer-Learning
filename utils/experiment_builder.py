@@ -421,6 +421,16 @@ class ExperimentBuilder(nn.Module):
         # self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx=epoch_idx, state=self.state)
         self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx="best", state=self.state)
 
+<<<<<<< HEAD
+=======
+        # Save a generic readable model format
+        try:
+            state_dict = self.model.module.state_dict()
+        except AttributeError:
+            state_dict = self.model.state_dict()
+        self.save_readable_model(self.experiment_saved_models, state_dict)
+
+>>>>>>> e8e43d50743a8adb4f0fb3439ab1e3884f5758f0
         print("Generating test set evaluation metrics")
         self.load_model(model_save_dir=self.experiment_saved_models, model_idx="best", model_save_name="train_model")
         
