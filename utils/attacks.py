@@ -59,7 +59,8 @@ class FGSMAttack(object):
         return X
 
 class LinfPGDAttack(object):
-    def __init__(self, model=None, epsilon=0.3, k=7, a=0.01, random_start=True):
+    # Change the random_start to False, as Tsipras indicated 
+    def __init__(self, model=None, epsilon=0.125, k=7, a=0.008, random_start=False):
         """
         Attack parameter initialization. The attack performs k steps of
         size a, while always staying within epsilon from the initial
