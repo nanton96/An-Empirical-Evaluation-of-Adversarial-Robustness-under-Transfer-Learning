@@ -210,8 +210,11 @@ class ExperimentBuilder(nn.Module):
         loss = F.cross_entropy(input=out, target=y)  # compute loss
         train_stat['clean_acc'] = accuracy
         train_stat['clean_loss'] = loss.data.detach().cpu().numpy()
+
+
         # Prevent label leaking, by using most probable state
         y_pred  = pred_batch(x,self.model)
+
 
         # Create corresponding adversarial examples for training 
 
