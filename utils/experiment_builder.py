@@ -430,7 +430,7 @@ class ExperimentBuilder(nn.Module):
             state_dict = self.model.module.state_dict()
         except AttributeError:
             state_dict = self.model.state_dict()
-        self.save_readable_model(model_save_dir=self.experiment_saved_models, state_dict)
+        self.save_readable_model(model_save_dir=self.experiment_saved_models, state=state_dict)
 
         print("Generating test set evaluation metrics")
         self.load_model(model_save_dir=self.experiment_saved_models, model_idx="best", model_save_name="train_model")
