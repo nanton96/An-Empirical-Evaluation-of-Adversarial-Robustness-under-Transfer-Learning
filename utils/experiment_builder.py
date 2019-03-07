@@ -315,7 +315,9 @@ class ExperimentBuilder(nn.Module):
         """
         """
         state ={'network': state_dict} # save network parameter and other variables.
-        torch.save(state, f=os.path.join(model_save_dir, "train_model_best_readable"))  # save state at prespecified filepath
+        fname = os.path.join(model_save_dir, "train_model_best_readable")
+        print('Saving state in ', fname)
+        torch.save(state, f=fname)  # save state at prespecified filepath
 
     def load_model(self, model_save_dir, model_save_name, model_idx):
         """
