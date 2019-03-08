@@ -91,7 +91,7 @@ def test(model, loader,device, blackbox=False, hold_out_size=None):
     #     % (num_correct, num_samples, 100 * acc))
 
     # return acc
-
+    accs = []
 
     for x,y in loader:
 
@@ -104,13 +104,15 @@ def test(model, loader,device, blackbox=False, hold_out_size=None):
         x = x.to(device)
         y = y.to(device)
         
-        out = self.model.forward(x)  # forward the data in the model
+        out = model.forward(x)  # forward the data in the model
         
         _, predicted = torch.max(out.data, 1)  # get argmax of predictions
         
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
-        print("Accuracy on clean data",acc * 100)
-    return accuracy
+        accs += [accuracy]
+    acc = np.mean(accs)
+    print("Accuracy on clean data",acc * 100)
+    return acc
     
 def attack_over_test_data(model, adversary, param, loader_test, oracle=None):
     """

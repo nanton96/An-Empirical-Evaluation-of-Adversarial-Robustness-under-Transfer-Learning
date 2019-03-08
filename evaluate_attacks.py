@@ -9,7 +9,6 @@ import logging
 import os
 from utils.data_utils import getDataProviders
 from utils.arg_extractor import get_args
-from utils.experiment_builder import ExperimentBuilder
 from utils.storage_utils import dict_load
 from utils.attacks import FGSMAttack,LinfPGDAttack
 from utils.utils import load_net, test, attack_over_test_data
@@ -51,13 +50,13 @@ for trained_dataset in trained_datasets:
             model_path =os.path.join(MODELS_DIR, "%s_%s%s/saved_models/train_model_best" % (model, trained_dataset, robust))
             logging.info('Loading model from %s' % (model_path))
             net = load_net(model, model_path, num_output_classes)
-            
+            acc = test(net,test_data,device)
             # Attack FGSM
             for attack in attacks:
                 adversary = attack(epsilon = 0.125)
                 adversary.model = net
-                acc = attack_over_test_data(model=net, adversary=adversary, param=None, loader_test=test_data, oracle=None)
-                acc = test(model,test_data,device)
+                #   acc = attack_over_test_data(model=net, adversary=adversary, param=None, loader_test=test_data, oracle=None)
+                
 
 
 
