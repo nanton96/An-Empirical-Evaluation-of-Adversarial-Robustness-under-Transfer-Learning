@@ -13,6 +13,7 @@ from utils.utils import pred_batch,to_var
 from utils.train import adv_train, FGSM_train_rnd
 from utils.attacks import FGSMAttack, LinfPGDAttack
 import GPUtil
+import copy
 
 class ExperimentBuilder(nn.Module):
 
@@ -386,7 +387,7 @@ class ExperimentBuilder(nn.Module):
             if val_mean_accuracy > self.best_val_model_acc:  # if current epoch's mean val acc is greater than the saved best val acc then
                 self.best_val_model_acc = val_mean_accuracy  # set the best val model acc to be current epoch's val accuracy
                 self.best_val_model_idx = epoch_idx  # set the experiment-wise best val idx to be the current epoch's idx
-                self.best_val_model = self.state_dict() 
+                self.best_val_model = copy.deepcopy(self.state_dict()) 
             for key, value in current_epoch_losses.items():
                 total_losses[key].append(np.mean(
                     value))  # get mean of all metrics of current epoch metrics dict, to get them ready for storage and output on the terminal.
@@ -415,8 +416,9 @@ class ExperimentBuilder(nn.Module):
 
 
         print("Generating test set evaluation metrics")
-        self.load_model(model_save_dir=self.experiment_saved_models, model_idx="best", model_save_name="train_model")
-        self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx="best", state=self.state)
+        self.save_model(model_save_dir=self.experiment_saved_models, model_save_name="train_model", model_idx="best", state=self.best_val_model)
+        self.load_model(model_save_dir=self.experiment_saved_models, model_save_name="train_model", model_idx="best")
+
         # Save a generic readable model format
         try:
             state_dict = self.model.module.state_dict()
@@ -424,7 +426,6 @@ class ExperimentBuilder(nn.Module):
             state_dict = self.model.state_dict()
         self.save_readable_model(self.experiment_saved_models, state_dict)
 
-        
         current_epoch_losses = {"test_acc": [], "test_loss": []}  # initialize a statistics dict
         with tqdm.tqdm(total=len(self.test_data)) as pbar_test:  # ini a progress bar
             for x, y in self.test_data:  # sample batch
