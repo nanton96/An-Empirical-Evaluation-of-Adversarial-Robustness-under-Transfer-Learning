@@ -309,6 +309,13 @@ class ExperimentBuilder(nn.Module):
         torch.save(state, f=os.path.join(model_save_dir, "{}_{}".format(model_save_name, str(
             model_idx))))  # save state at prespecified filepath
 
+    def save_readable_model(self, model_save_dir, state_dict):
+        state ={'network': state_dict} # save network parameter and other variables.
+        fname = os.path.join(model_save_dir, "train_model_best_readable")
+        print('Saving state in ', fname)
+        torch.save(state, f=fname)  # save state at prespecified filepath
+
+
     def load_model(self, model_save_dir, model_save_name, model_idx):
         """
         Load the network parameter state and the best val model idx and best val acc to be compared with the future val accuracies, in order to choose the best val model
@@ -403,26 +410,13 @@ class ExperimentBuilder(nn.Module):
             #update scheduler
             self.scheduler.step()
 
-            # self.save_model(model_save_dir=self.experiment_saved_models,
-            #                 # save model and best val idx and best val acc, using the model dir, model name and model idx
-            #                 model_save_name="train_model", model_idx=epoch_idx, state=self.state)
-            
-            
-            # save model and best val idx and best val acc, using the model dir, model name and model idx
-            # try:
-            #     state_dict = self.model.module.state_dict()
-            # except AttributeError:
-            #     state_dict = self.model.state_dict()
             self.save_model(model_save_dir=self.experiment_saved_models,
                             model_save_name="train_model", model_idx='latest', state=self.state)
 
-           
 
-        # self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx=epoch_idx, state=self.state)
+        print("Generating test set evaluation metrics")
+        self.load_model(model_save_dir=self.experiment_saved_models, model_idx="best", model_save_name="train_model")
         self.save_model(model_save_dir=self.experiment_saved_models,model_save_name="train_model", model_idx="best", state=self.state)
-
-<<<<<<< HEAD
-=======
         # Save a generic readable model format
         try:
             state_dict = self.model.module.state_dict()
@@ -430,9 +424,6 @@ class ExperimentBuilder(nn.Module):
             state_dict = self.model.state_dict()
         self.save_readable_model(self.experiment_saved_models, state_dict)
 
->>>>>>> e8e43d50743a8adb4f0fb3439ab1e3884f5758f0
-        print("Generating test set evaluation metrics")
-        self.load_model(model_save_dir=self.experiment_saved_models, model_idx="best", model_save_name="train_model")
         
         current_epoch_losses = {"test_acc": [], "test_loss": []}  # initialize a statistics dict
         with tqdm.tqdm(total=len(self.test_data)) as pbar_test:  # ini a progress bar
