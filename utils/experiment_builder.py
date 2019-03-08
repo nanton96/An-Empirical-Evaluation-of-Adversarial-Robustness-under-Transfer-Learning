@@ -416,7 +416,7 @@ class ExperimentBuilder(nn.Module):
 
 
         print("Generating test set evaluation metrics")
-        self.save_model(model_save_dir=self.experiment_saved_models, model_save_name="train_model", model_idx="best", state=self.best_val_model)
+        self.save_model(model_save_dir=self.experiment_saved_models, model_save_name="train_model", model_idx="best", state=self.state)
         self.load_model(model_save_dir=self.experiment_saved_models, model_save_name="train_model", model_idx="best")
 
         # Save a generic readable model format
