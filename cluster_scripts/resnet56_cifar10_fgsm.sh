@@ -2,7 +2,7 @@
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
 #SBATCH --partition=Standard
-#SBATCH --gres=gpu:4
+#SBATCH --gres=gpu:1
 #SBATCH --mem=12000  # memory in Mb
 #SBATCH --time=0-7:59:59
 
@@ -38,13 +38,13 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd ..
 mkdir experiments_results
 
-python train.py --batch_size 800 \
+python train.py --batch_size 200 \
          		--num_epochs 200 \
           		--model resnet56 \
           		--dataset_name "cifar10" \
           		--adv_train True \
          		--adversary "fgsm" \
-          		--experiment_name 'resnet56_cifar10_fgsm' \
+          		--experiment_name 'resnet56_cifar10_fgsm_1gpu_200b' \
           		--use_gpu "True" \
           		--lr 0.1 \
 				--continue_from_epoch -1 \

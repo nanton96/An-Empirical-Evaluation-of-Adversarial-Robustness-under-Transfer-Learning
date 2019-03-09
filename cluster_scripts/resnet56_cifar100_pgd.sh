@@ -2,9 +2,9 @@
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
 #SBATCH --partition=LongJobs
-#SBATCH --gres=gpu:4
+#SBATCH --gres=gpu:1
 #SBATCH --mem=12000  # memory in Mb
-#SBATCH --time=0-79:59:59
+#SBATCH --time=0-7:59:59
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 
@@ -38,13 +38,13 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd ..
 mkdir experiments_results
 
-python train.py --batch_size 800 \
+python train.py --batch_size 100 \
 				--num_epochs 200 \
 				--model resnet56 \
 				--dataset_name "cifar100" \
 				--adv_train True \
 				--adversary "pgd" \
-				--experiment_name 'resnet56_cifar100_pgd' \
+				--experiment_name 'resnet56_cifar100_pgd_1gpu_100b' \
 				--use_gpu "True" \
 				--lr 0.1 \
 				--continue_from_epoch -1 \
