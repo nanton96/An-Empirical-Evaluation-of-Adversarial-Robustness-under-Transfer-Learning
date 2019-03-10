@@ -36,10 +36,10 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 trained_networks =  {
                     'resnet56_cifar10': 'cifar10'
-                    'resner56_cifar100': 'cifar100', 
-                    'resnet56_cifar100_to_cifar10': 'cifar10'
-                    'resnet56_cifar10_1gpu_100': 'cifar10'
-                    'resnet56_cifar10_fgsm_1gpu_100': 'cifar10'
+                    # 'resner56_cifar100': 'cifar100', 
+                    # 'resnet56_cifar100_to_cifar10': 'cifar10'
+                    # 'resnet56_cifar10_1gpu_100': 'cifar10'
+                    # 'resnet56_cifar10_fgsm_1gpu_100': 'cifar10'
                     ### Add more
                     }
 
@@ -58,7 +58,8 @@ for trained_network, dataset_name, in trained_networks:
     for attack in attacks:
         adversary = attack(epsilon = 0.125) # afto thelei ftiaximo??
         adversary.model = net
-        #   acc = attack_over_test_data(model=net, adversary=adversary, param=None, loader_test=test_data, oracle=None)
+        # prepei na valoume to attack tou antoniou? kati eixes kanei niko p einai?
+          # acc = attack_over_test_data(model=net, adversary=adversary, param=None, loader_test=test_data, oracle=None)
         
 
 
