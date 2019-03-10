@@ -17,6 +17,7 @@ from utils.utils import load_net,freeze_layers_resnet
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 args,device = get_args()  # get arguments from command line
+print("Will train for", args.num_epochs)
 
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
 torch.manual_seed(seed=args.seed) # sets pytorch's seed
@@ -48,7 +49,6 @@ logging.info('Experiment name: %s' %experiment_name)
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.1)
-
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=experiment_name,
                                     num_epochs=args.num_epochs,
