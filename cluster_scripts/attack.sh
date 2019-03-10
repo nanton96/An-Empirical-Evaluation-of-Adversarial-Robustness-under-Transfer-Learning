@@ -31,9 +31,4 @@ rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlpcw4/
-python attack.py  --batch_size 100 --continue_from_epoch -1 --seed 0 \
-					--model "resnet56" \
-					--use_gpu "True" --gpu_id="0,1,2,3" \
-					--dataset_name "cifar10" \
-                   --train_adversary "fgsm"\
-                   --epsilon 0.125\
+python evaluate_attacks.py
