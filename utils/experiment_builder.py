@@ -390,7 +390,7 @@ class ExperimentBuilder(nn.Module):
             for key, value in current_epoch_losses.items():
                 total_losses[key].append(np.mean(value))  # get mean of all metrics of current epoch metrics dict, to get them ready for storage and output on the terminal.
 
-            total_losses['curr_epoch'].append(epoch_idx)
+            total_losses['curr_epoch'] = epoch_idx
             save_statistics(experiment_log_dir=self.experiment_logs, filename='summary.csv', stats_dict=total_losses, current_epoch=epoch_idx,
                             continue_from_mode=True if (self.starting_epoch != 0 or i > 0) else False) # save statistics to stats file.
 
