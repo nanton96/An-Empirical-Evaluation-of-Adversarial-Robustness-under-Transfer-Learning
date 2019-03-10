@@ -43,8 +43,7 @@ trained_networks =  {
                     ### Add more
                     }
 results = {}
-with open('data.json', 'w') as outfile:
-    json.dump(results, outfile)
+
 for trained_network, dataset_name, in trained_networks.items():
     model = trained_network.split('_')[0]
     logging.info('\nLoading dataset: %s' %dataset_name)
