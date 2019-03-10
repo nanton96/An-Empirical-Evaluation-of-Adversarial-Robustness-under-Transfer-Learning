@@ -150,7 +150,7 @@ def attack_over_test_data(model, adversary, param, loader, device,oracle=None):
         accs += [accuracy]
 
     acc = np.mean(accs)
-    print(adversary.name,"accuracy on adversarial data",acc * 100)
+    print(adversary.name, "accuracy on adversarial data",acc * 100)
     return acc
 
 def freeze_layers_resnet(net,number_of_layers,number_of_out_classes):
