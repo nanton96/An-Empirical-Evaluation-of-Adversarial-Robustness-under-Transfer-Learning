@@ -36,7 +36,7 @@ else:
 
 trained_networks =  {
                     'resnet56_cifar10': 'cifar10',
-                    'resner56_cifar100': 'cifar100', 
+                    'resnet56_cifar100': 'cifar100', 
                     'resnet56_cifar100_to_cifar10': 'cifar10'
                     # 'resnet56_cifar10_1gpu_100': 'cifar10'
                     # 'resnet56_cifar10_fgsm_1gpu_100': 'cifar10'
@@ -61,6 +61,7 @@ for trained_network, dataset_name, in trained_networks.items():
     for attack in attacks:
         adversary = attack(epsilon = 0.3)
         adversary.model = net
+        
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
         results[model+"_"+dataset_name+"_"+adversary.name] = acc
 

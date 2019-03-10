@@ -48,7 +48,7 @@ class FGSMAttack(object):
 
         X_var = to_var(torch.from_numpy(X), requires_grad=True)
         y_var = to_var(torch.LongTensor(y))
-
+        
         scores = self.model(X_var)
         loss = self.loss_fn(scores, y_var)
         loss.backward()
