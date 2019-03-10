@@ -22,10 +22,12 @@ export PATH=${CUDA_HOME}/bin:${PATH}
 
 export PYTHON_PATH=$PATH
 
-export MODELS_DIR=/home/${STUDENT_ID}/mlpcw4/experiments_results
 
 mkdir -p /disk/scratch/${STUDENT_ID}/
+
+export MODELS_DIR=/home/${STUDENT_ID}/mlpcw4/experiments_results
 export DATA_DIR=/disk/scratch/${STUDENT_ID}/data $DATA_DIR
+
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ 
 
 

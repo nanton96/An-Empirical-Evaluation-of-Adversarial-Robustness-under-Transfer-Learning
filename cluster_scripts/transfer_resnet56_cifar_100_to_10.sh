@@ -32,6 +32,9 @@ mkdir -p ${TMP}/datasets/
 export DATASET_DIR=${TMP}/datasets/
 # Activate the relevant virtual environment:
 
+export MODELS_DIR=/home/${STUDENT_ID}/mlpcw4/experiments_results
+export DATA_DIR=/disk/scratch/${STUDENT_ID}/data $DATA_DIR
+
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID}/data
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
