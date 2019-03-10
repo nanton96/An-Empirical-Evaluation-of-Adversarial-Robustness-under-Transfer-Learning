@@ -57,13 +57,13 @@ for trained_network, dataset_name, in trained_networks.items():
     net = load_net(model, model_path, num_output_classes)
     net.to(device)
     acc = test(net,test_data,device)
-    results[model+"_"+dataset_name+"_clean"] = acc
+    results[trained_network+"_clean"] = acc
     # Attack FGSM
     for attack in attacks:
         adversary = attack(epsilon = 0.3)
         adversary.model = net
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
-        results[model+"_"+dataset_name+"_"+adversary.name] = acc
+        results[trained_network+"_"+adversary.name] = acc
 
 with open('data.json', 'w') as outfile:
     json.dump(results, outfile)        
