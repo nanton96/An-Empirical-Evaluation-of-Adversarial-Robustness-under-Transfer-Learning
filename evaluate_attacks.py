@@ -55,6 +55,7 @@ for trained_network, dataset_name, in trained_networks.items():
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (trained_network))
     logging.info('Loading model from %s' % (model_path))
     net = load_net(model, model_path, num_output_classes)
+    net.to(device)
     acc = test(net,test_data,device)
     results[model+"_"+dataset_name+"_clean"] = acc
     # Attack FGSM
