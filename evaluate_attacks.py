@@ -7,6 +7,7 @@ import numpy as np
 import torch.nn.functional as F
 import logging
 import os
+import json
 from utils.data_utils import getDataProviders
 from utils.arg_extractor import get_args
 from utils.storage_utils import dict_load
@@ -14,7 +15,7 @@ from utils.attacks import FGSMAttack,LinfPGDAttack
 from utils.utils import load_net, test, attack_over_test_data
 from utils.train import adv_train
 
-DATA_DIR=os.environ['DATA_DIR']
+# DATA_DIR=os.environ['DATA_DIR']
 MODELS_DIR=os.environ['MODELS_DIR']
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
@@ -41,7 +42,9 @@ trained_networks =  {
                     # 'resnet56_cifar10_fgsm_1gpu_100': 'cifar10'
                     ### Add more
                     }
-
+results = {}
+with open('data.json', 'w') as outfile:
+    json.dump(results, outfile)
 for trained_network, dataset_name, in trained_networks.items():
     model = trained_network.split('_')[0]
     logging.info('\nLoading dataset: %s' %dataset_name)
@@ -49,15 +52,18 @@ for trained_network, dataset_name, in trained_networks.items():
     experiment_name = 'attack_%s' % (trained_network)
     logging.info('Experiment name: %s' %experiment_name)
 
-    model_path =os.path.join(MODELS_DIR, "%s/saved_models/train_model_best" % (trained_network))
+    model_path =os.path.join(MODELS_DIR, "experiments_results/%s/saved_models/train_model_best_readable" % (trained_network))
     logging.info('Loading model from %s' % (model_path))
     net = load_net(model, model_path, num_output_classes)
     acc = test(net,test_data,device)
+    results[model+"_"+dataset_name+"_clean"] = acc
     # Attack FGSM
     for attack in attacks:
-        adversary = attack(epsilon = 0.125) # afto thelei ftiaximo??
+        adversary = attack(epsilon = 0.3)
         adversary.model = net
-        # prepei na valoume to attack tou antoniou? kati eixes kanei niko p einai?
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
-        
+        results[model+"_"+dataset_name+"_"+adversary.name] = acc
+
+with open('data.json', 'w') as outfile:
+    json.dump(results, outfile)        
 

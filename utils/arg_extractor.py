@@ -53,6 +53,10 @@ def get_args():
                          help='')
     parser.add_argument('--source_net', type=str, default="pretrained", help="pretrained/cifar10/cifa100")
     parser.add_argument('--feature_extraction', type=str2bool, default=True, help="Feature extraction or finetuning")
+
+
+    
+    parser.add_argument('--unfrozen_layers', type=int, default=5, help="number of layers to be trained on transfer learning. HINT: they will freeze 2 times the number of layers")
     
     parser.add_argument('--adv_train', type=str2bool,default = False, help="specify whether or not to perform adversarial training")
     parser.add_argument('--adversary', type=str, default="fgsm", help="fgsm/pgd")

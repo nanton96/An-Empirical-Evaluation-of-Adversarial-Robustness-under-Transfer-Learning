@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from torch.autograd import Variable
 import torch.nn as nn
+import pickle
 from torch.utils.data import sampler
 
 def load_net(model, model_path, num_original_classes):
@@ -149,4 +150,13 @@ def attack_over_test_data(model, adversary, param, loader, device,oracle=None):
     print(adversary.name,"accuracy on adversarial data",acc * 100)
     return acc
 
-     
+def freeze_layers_resnet(net,number_of_layers,number_of_out_classes):
+    for param in net.parameters():
+        param.requires_grad = False
+    for i in range(9-number_of_layers,9):
+        for param in net.layer3[i].parameters():
+            param.requires_grad = True
+    num_ftrs = net.linear.in_features
+    net.linear = nn.Linear(num_ftrs, number_of_out_classes)
+    return net
+    
