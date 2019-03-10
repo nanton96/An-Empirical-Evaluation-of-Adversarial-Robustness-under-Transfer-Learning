@@ -47,7 +47,7 @@ for trained_network, dataset_name, in trained_networks:
     model = trained_network.split('_')[0]
     logging.info('\nLoading dataset: %s' %dataset_name)
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
-    experiment_name = 'attack_%s_%s' % (model, trained_network)
+    experiment_name = 'attack_%s' % (trained_network)
     logging.info('Experiment name: %s' %experiment_name)
 
     model_path =os.path.join(MODELS_DIR, "%s/saved_models/train_model_best" % (trained_network))
