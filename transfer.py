@@ -17,7 +17,7 @@ from utils.utils import load_net,freeze_layers_resnet
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 args,device = get_args()  # get arguments from command line
-print("Will train for", args.num_epochs)
+logging.info("Will train for", args.num_epochs)
 
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
 torch.manual_seed(seed=args.seed) # sets pytorch's seed
@@ -32,8 +32,6 @@ logging.info('Loading %s model from %s' % (args.source_net, model_path))
 net = load_net(args.model, model_path, num_original_classes)
 
 
-num_ftrs = net.linear.in_features
-net.linear = nn.Linear(num_ftrs, num_output_classes)
 
 if args.model == "resnet56":
     net= freeze_layers_resnet(net=net,number_of_out_classes=num_output_classes,number_of_layers=args.unfrozen_layers)
