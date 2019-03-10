@@ -34,15 +34,15 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 
 trained_networks =  {
-                    'resnet56_cifar10': 'cifar10'
-                    # 'resner56_cifar100': 'cifar100', 
-                    # 'resnet56_cifar100_to_cifar10': 'cifar10'
+                    'resnet56_cifar10': 'cifar10',
+                    'resner56_cifar100': 'cifar100', 
+                    'resnet56_cifar100_to_cifar10': 'cifar10'
                     # 'resnet56_cifar10_1gpu_100': 'cifar10'
                     # 'resnet56_cifar10_fgsm_1gpu_100': 'cifar10'
                     ### Add more
                     }
 
-for trained_network, dataset_name, in trained_networks:
+for trained_network, dataset_name, in trained_networks.items():
     model = trained_network.split('_')[0]
     logging.info('\nLoading dataset: %s' %dataset_name)
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
@@ -58,30 +58,6 @@ for trained_network, dataset_name, in trained_networks:
         adversary = attack(epsilon = 0.125) # afto thelei ftiaximo??
         adversary.model = net
         # prepei na valoume to attack tou antoniou? kati eixes kanei niko p einai?
-          # acc = attack_over_test_data(model=net, adversary=adversary, param=None, loader_test=test_data, oracle=None)
+        acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
         
 
-
-
-########## PSEUDO CODE ##########
-
-# Iterate over models and attacks
-    # LOAD MODEL
-        # # load model architecture, dict
-    # ATTACK 
-        # # x_adv = apply attack on test_set wrt to model params
-        # # forward pass the x_adv through the network to generate y'
-        # # calculate accuracy and store in dictionary under key 'model_attack_acc'
-# SAVE
-    # dump dictionary into pickle file
-
-
-# For black_box
-
-    # LOAD source Model, defence Model
-
-    # Attack source
-        # x_adv = apply attack on test_set wrt to source model params
-    # Evaluate on target
-        # # forward pass the x_adv through defender network to generate y'
-        # # calculate accuracy and store in dictionary under key 'model_attack_black_box(source)_acc'

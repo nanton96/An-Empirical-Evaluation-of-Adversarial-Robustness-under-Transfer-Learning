@@ -30,6 +30,8 @@ class FGSMAttack(object):
         self.model = model
         self.epsilon = epsilon
         self.loss_fn = F.cross_entropy
+        self.name = "fgsm"
+    
 
     def perturb(self, X_nat, y, epsilons=None):
 
@@ -70,6 +72,7 @@ class LinfPGDAttack(object):
         self.model = model
         self.epsilon = epsilon
         self.k = k
+        self.name = "pgd"
         self.a = a
         self.rand = random_start
         self.loss_fn = nn.CrossEntropyLoss()
