@@ -26,8 +26,6 @@ torch.manual_seed(seed=0) # sets pytorch's seed
 
 
 models = ['resnet56'] # 'densenet121']
-trained_datasets = ['cifar10','cifar100', 'cifar100_to_cifar10']
-robust_to = ["", ]# "_fgsm", "_pgd"]
 attacks = [FGSMAttack,LinfPGDAttack] 
 
 if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
@@ -36,27 +34,32 @@ if torch.cuda.is_available():  # checks whether a cuda gpu is available and whet
 else:
     print("use CPU")
     device = torch.device('cpu')  # sets the device to be CPU
-dataset_for_each_network =  {'cifar10': 'cifar10', 'cifar100': 'cifar100', 'cifar100_to_cifar10': 'cifar10'}
+trained_networks =  {
+                    'resnet56_cifar10': 'cifar10'
+                    'resner56_cifar100': 'cifar100', 
+                    'resnet56_cifar100_to_cifar10': 'cifar10'
+                    'resnet56_cifar10_1gpu_100': 'cifar10'
+                    'resnet56_cifar10_fgsm_1gpu_100': 'cifar10'
+                    ### Add more
+                    }
 
-for trained_dataset in trained_datasets:
-    dataset_name =dataset_for_each_network[trained_dataset]
+for trained_network, dataset_name, in trained_networks:
+    model = trained_network.split('_')[0]
     logging.info('\nLoading dataset: %s' %dataset_name)
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
-    for model in models:
-        for robust in robust_to:
-            experiment_name = 'attack_%s_%s%s' % (model, trained_dataset, robust)
-            logging.info('Experiment name: %s' %experiment_name)
+    experiment_name = 'attack_%s_%s' % (model, trained_network)
+    logging.info('Experiment name: %s' %experiment_name)
 
-            model_path =os.path.join(MODELS_DIR, "%s_%s%s/saved_models/train_model_best" % (model, trained_dataset, robust))
-            logging.info('Loading model from %s' % (model_path))
-            net = load_net(model, model_path, num_output_classes)
-            acc = test(net,test_data,device)
-            # Attack FGSM
-            for attack in attacks:
-                adversary = attack(epsilon = 0.125)
-                adversary.model = net
-                #   acc = attack_over_test_data(model=net, adversary=adversary, param=None, loader_test=test_data, oracle=None)
-                
+    model_path =os.path.join(MODELS_DIR, "%s/saved_models/train_model_best" % (trained_network))
+    logging.info('Loading model from %s' % (model_path))
+    net = load_net(model, model_path, num_output_classes)
+    acc = test(net,test_data,device)
+    # Attack FGSM
+    for attack in attacks:
+        adversary = attack(epsilon = 0.125) # afto thelei ftiaximo??
+        adversary.model = net
+        #   acc = attack_over_test_data(model=net, adversary=adversary, param=None, loader_test=test_data, oracle=None)
+        
 
 
 
