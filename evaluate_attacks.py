@@ -24,8 +24,6 @@ rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
 torch.manual_seed(seed=0) # sets pytorch's seed
 # load data_set (only need test set...)
 
-
-models = ['resnet56'] # 'densenet121']
 attacks = [FGSMAttack,LinfPGDAttack] 
 
 if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
@@ -34,6 +32,7 @@ if torch.cuda.is_available():  # checks whether a cuda gpu is available and whet
 else:
     print("use CPU")
     device = torch.device('cpu')  # sets the device to be CPU
+
 trained_networks =  {
                     'resnet56_cifar10': 'cifar10'
                     # 'resner56_cifar100': 'cifar100', 
