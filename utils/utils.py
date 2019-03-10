@@ -142,6 +142,8 @@ def attack_over_test_data(model, adversary, param, loader, device,oracle=None):
             x = x.cpu()
         x_adv = adversary.perturb(x.numpy(), y_pred)  
         x_adv = torch.from_numpy(x_adv)
+        if torch.cuda.is_available():
+            x_adv = x_adv.cuda()
         out = model(x_adv)
         _,predicted = torch.max(out.data, 1)  
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
