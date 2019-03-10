@@ -211,7 +211,7 @@ class ExperimentBuilder(nn.Module):
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))
         loss = F.cross_entropy(input=out, target=y)  # compute loss
         train_stat['clean_acc'] = accuracy
-        train_stat['clean_loss'] = loss.data.detach().cpu().numpy()
+        train_stat['clean_loss'] = np.asscalar(loss.data.detach().cpu().numpy())
 
 
         # Prevent label leaking, by using most probable state
@@ -230,7 +230,7 @@ class ExperimentBuilder(nn.Module):
         
         loss_adv =  F.cross_entropy(out, y.data)
         train_stat['adv_acc'] = adv_acc
-        train_stat['adv_loss'] = loss_adv.data.detach().cpu().numpy()
+        train_stat['adv_loss'] = np.asscalar(loss_adv.data.detach().cpu().numpy())
 
         loss = (loss + loss_adv) / 2
         accuracy =  (accuracy + adv_acc)/2
@@ -240,7 +240,7 @@ class ExperimentBuilder(nn.Module):
         self.optimizer.step()  
 
         GPUtil.showUtilization()
-        return loss.data.detach().cpu().numpy(), accuracy, train_stat
+        return np.asscalar(loss.data.detach().cpu().numpy()), accuracy, train_stat
 
     def run_adv_evaluation_iter(self,x,y):
       
@@ -269,7 +269,7 @@ class ExperimentBuilder(nn.Module):
         _,predicted = torch.max(out.data, 1)  
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))
         validaton_stat['clean_acc']  = accuracy
-        validaton_stat['clean_loss'] = loss.data.detach().cpu().numpy()
+        validaton_stat['clean_loss'] = np.asscalar(loss.data.detach().cpu().numpy())
         
         # Prevent label leaking, by using most probable state
 
@@ -287,13 +287,13 @@ class ExperimentBuilder(nn.Module):
         loss_adv =  F.cross_entropy(out, y.data)
 
         validaton_stat['adv_acc']  = adv_acc
-        validaton_stat['adv_loss'] = loss_adv.data.detach().cpu().numpy()
+        validaton_stat['adv_loss'] = np.asscalar(loss_adv.data.detach().cpu().numpy())
 
         loss = (loss + loss_adv) / 2   
         accuracy =  (accuracy + adv_acc)/2
 
         GPUtil.showUtilization()
-        return loss.data.detach().cpu().numpy(), accuracy, validaton_stat
+        return np.asscalar(loss.data.detach().cpu().numpy()), accuracy, validaton_stat
 
     def save_model(self, model_save_dir, model_save_name, model_idx, state):
         """
@@ -316,7 +316,6 @@ class ExperimentBuilder(nn.Module):
         print('Saving state in ', fname)
         torch.save(state, f=fname)  # save state at prespecified filepath
 
-
     def load_model(self, model_save_dir, model_save_name, model_idx):
         """
         Load the network parameter state and the best val model idx and best val acc to be compared with the future val accuracies, in order to choose the best val model
@@ -334,6 +333,7 @@ class ExperimentBuilder(nn.Module):
         Runs experiment train and evaluation iterations, saving the model and best val model and val model accuracy after each epoch
         :return: The summary current_epoch_losses from starting epoch to total_epochs.
         """
+        print("adversarial training flag is:",self.adv_train)
         if self.adv_train:
             total_losses = {"clean_train_acc":[], "adv_train_acc":[], "clean_train_loss":[], "adv_train_loss":[], "train_acc": [], "train_loss": [],
                             "clean_val_acc":[], "adv_val_acc":[], "clean_val_loss":[], "adv_val_loss":[], "val_acc": [], "val_loss": [],
@@ -359,6 +359,7 @@ class ExperimentBuilder(nn.Module):
                         current_epoch_losses["adv_train_loss"].append(train_stat[ 'adv_loss'])                         
                     else:
                        loss, accuracy = self.run_train_iter(x=x, y=y)  # take a training iter step
+                
 
                     current_epoch_losses["train_loss"].append(loss)         # add current iter loss to the train loss list
                     current_epoch_losses["train_acc"].append(accuracy)      # add current iter acc to the train acc list
@@ -381,16 +382,13 @@ class ExperimentBuilder(nn.Module):
                     current_epoch_losses["val_acc"].append(accuracy)  # add current iter acc to val acc lst.
                     pbar_val.update(1)  # add 1 step to the progress bar
                     pbar_val.set_description("val loss: {:.4f}, accuracy: {:.4f}".format(loss, accuracy))
-
-
             val_mean_accuracy = np.mean(current_epoch_losses['val_acc'])
             if val_mean_accuracy > self.best_val_model_acc:  # if current epoch's mean val acc is greater than the saved best val acc then
                 self.best_val_model_acc = val_mean_accuracy  # set the best val model acc to be current epoch's val accuracy
                 self.best_val_model_idx = epoch_idx  # set the experiment-wise best val idx to be the current epoch's idx
                 self.best_val_model = copy.deepcopy(self.state_dict()) 
             for key, value in current_epoch_losses.items():
-                total_losses[key].append(np.mean(
-                    value))  # get mean of all metrics of current epoch metrics dict, to get them ready for storage and output on the terminal.
+                total_losses[key].append(np.mean(value))  # get mean of all metrics of current epoch metrics dict, to get them ready for storage and output on the terminal.
 
             total_losses['curr_epoch'].append(epoch_idx)
             save_statistics(experiment_log_dir=self.experiment_logs, filename='summary.csv',
