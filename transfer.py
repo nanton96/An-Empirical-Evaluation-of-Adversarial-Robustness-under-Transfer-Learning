@@ -11,7 +11,7 @@ from utils.arg_extractor import get_args
 from utils.experiment_builder import ExperimentBuilder
 from utils.utils import load_net,freeze_layers_resnet
 
-# DATA_DIR=os.environ['DATA_DIR']
+DATA_DIR=os.environ['DATA_DIR']
 MODELS_DIR=os.environ['MODELS_DIR']
 
 logging.basicConfig(format='%(message)s',level=logging.INFO)
