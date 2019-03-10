@@ -44,7 +44,7 @@ python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
                  --adversary "fgsm" \
                  --lr 0.1 --model 'resnet56' \
                  --source_net cifar100 \
-                 --num_epochs 1 --experiment_name 'adv_transfer_resnet56_cifar100_to_10' \
+                 --num_epochs 1 --experiment_name 'adv_transfer_fgsm_resnet56_cifar100_to_10' \
                  --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 \
                  --unfrozen_layers 5 \
                  --dataset_name "cifar10"

@@ -15,7 +15,7 @@ from utils.attacks import FGSMAttack,LinfPGDAttack
 from utils.utils import load_net, test, attack_over_test_data
 from utils.train import adv_train
 
-# DATA_DIR=os.environ['DATA_DIR']
+DATA_DIR=os.environ['DATA_DIR']
 MODELS_DIR=os.environ['MODELS_DIR']
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
