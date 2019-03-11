@@ -26,9 +26,8 @@ rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
 torch.manual_seed(seed=0) # sets pytorch's seed
 # load data_set (only need test set...)
 
-attacks = [LinfPGDAttack] 
+attacks = [FGSMAttack(epsilon=0.3),LinfPGDAttack(epsilon=0.3,k=20)] 
 
-#[FGSMAttack,LinfPGDAttack] 
 
 if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
     device = torch.device('cuda')  # sets device to be cuda
@@ -62,7 +61,7 @@ for trained_network, dataset_name, in trained_networks.items():
     results[trained_network+"_clean"] = acc
     # Attack FGSM
     for attack in attacks:
-        adversary = attack(epsilon = 0.3,k=20)
+        adversary = attack
         adversary.model = net
         
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
