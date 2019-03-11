@@ -1,10 +1,10 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=Standard
-#SBATCH --gres=gpu:4
+#SBATCH --partition=Short
+#SBATCH --gres=gpu:1
 #SBATCH --mem=12000  # memory in Mb
-#SBATCH --time=0-04:00:00
+#SBATCH --time=0-01:00:00
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 
@@ -22,13 +22,19 @@ export PATH=${CUDA_HOME}/bin:${PATH}
 
 export PYTHON_PATH=$PATH
 
-export MODELS_DIR=/home/${STUDENT_ID}/mlpcw4/experiments_results
 
 mkdir -p /disk/scratch/${STUDENT_ID}/
+
+export MODELS_DIR=/home/${STUDENT_ID}/mlpcw4/experiments_results
 export DATA_DIR=/disk/scratch/${STUDENT_ID}/data $DATA_DIR
+
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ 
 
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlpcw4/
+<<<<<<< HEAD
 python evaluate_attacks.py 
+=======
+python evaluate_attacks.py
+>>>>>>> 3f91e674f8f310ba816670119ee752d1e6d5f0d0

@@ -15,7 +15,8 @@ from utils.attacks import FGSMAttack,LinfPGDAttack
 from utils.utils import load_net, test, attack_over_test_data
 from utils.train import adv_train
 
-# DATA_DIR=os.environ['DATA_DIR']
+
+DATA_DIR=os.environ['DATA_DIR']
 MODELS_DIR=os.environ['MODELS_DIR']
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
@@ -36,15 +37,17 @@ else:
 
 trained_networks =  {
                     'resnet56_cifar10': 'cifar10',
+<<<<<<< HEAD
                     'resnet56_cifar100': 'cifar100', 
+=======
+                    'resnet56_cifar100': 'cifar100',
+>>>>>>> 3f91e674f8f310ba816670119ee752d1e6d5f0d0
                     'resnet56_cifar100_to_cifar10': 'cifar10'
-                    # 'resnet56_cifar10_1gpu_100': 'cifar10'
                     # 'resnet56_cifar10_fgsm_1gpu_100': 'cifar10'
                     ### Add more
                     }
 results = {}
-with open('data.json', 'w') as outfile:
-    json.dump(results, outfile)
+
 for trained_network, dataset_name, in trained_networks.items():
     model = trained_network.split('_')[0]
     logging.info('\nLoading dataset: %s' %dataset_name)
@@ -52,18 +55,19 @@ for trained_network, dataset_name, in trained_networks.items():
     experiment_name = 'attack_%s' % (trained_network)
     logging.info('Experiment name: %s' %experiment_name)
 
-    model_path =os.path.join(MODELS_DIR, "experiments_results/%s/saved_models/train_model_best_readable" % (trained_network))
+    model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (trained_network))
     logging.info('Loading model from %s' % (model_path))
     net = load_net(model, model_path, num_output_classes)
+    net.to(device)
     acc = test(net,test_data,device)
-    results[model+"_"+dataset_name+"_clean"] = acc
+    results[trained_network+"_clean"] = acc
     # Attack FGSM
     for attack in attacks:
         adversary = attack(epsilon = 0.3)
         adversary.model = net
         
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
-        results[model+"_"+dataset_name+"_"+adversary.name] = acc
+        results[trained_network+"_"+adversary.name] = acc
 
 with open('data.json', 'w') as outfile:
     json.dump(results, outfile)        

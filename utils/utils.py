@@ -138,17 +138,20 @@ def attack_over_test_data(model, adversary, param, loader, device,oracle=None):
        
         y_pred  = pred_batch(x,model)
 
-        # Create corresponding adversarial examples for training 
-
+        # Create corresponding adversarial examples for training
+        if(torch.cuda.is_available()):
+            x = x.cpu()
         x_adv = adversary.perturb(x.numpy(), y_pred)  
         x_adv = torch.from_numpy(x_adv)
+        if torch.cuda.is_available():
+            x_adv = x_adv.cuda()
         out = model(x_adv)
         _,predicted = torch.max(out.data, 1)  
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
         accs += [accuracy]
 
     acc = np.mean(accs)
-    print(adversary.name,"accuracy on adversarial data",acc * 100)
+    print(adversary.name, "accuracy on adversarial data",acc * 100)
     return acc
 
 def freeze_layers_resnet(net,number_of_layers,number_of_out_classes):
@@ -161,3 +164,41 @@ def freeze_layers_resnet(net,number_of_layers,number_of_out_classes):
     net.linear = nn.Linear(num_ftrs, number_of_out_classes)
     return net
     
+
+def black_box_attack(source_net,target_networks,adversary,loader,num_output_classes,device):
+
+    accs = {}   
+            
+    for x,y in loader:
+        source_net.eval()
+        if len(y.shape) > 1:
+            y = np.argmax(y, axis=1)  # convert one hot encoded labels to single integer labels
+        if type(x) is np.ndarray:
+            x, y = torch.Tensor(x).float().to(device=device), torch.Tensor(y).long().to(
+            device=device)  # convert data to pytorch tensors and send to the computation device
+        x = x.to(device)
+        y = y.to(device)       
+
+        out = source_net(x)
+       
+        y_pred  = pred_batch(x,source_net)
+
+        # Create corresponding adversarial examples for training
+        if(torch.cuda.is_available()):
+            x = x.cpu()
+        
+        adversary.model = source_net 
+        x_adv = adversary.perturb(x.numpy(), y_pred)  
+        x_adv = torch.from_numpy(x_adv)
+        if torch.cuda.is_available():
+            x_adv = x_adv.cuda()
+
+        for target_name,target_net in target_nets:
+            out = target_net(x_adv)
+            _,predicted = torch.max(out.data, 1)  
+            accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
+            
+            accs[target_name] += [accuracy]
+            
+    results = {target_name+'attacked by ' + adversary.name +'_acc':np.mean(accs[target_name]) for target_name in accs.keys()}
+    return results

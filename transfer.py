@@ -12,11 +12,12 @@ from utils.experiment_builder import ExperimentBuilder
 from utils.utils import load_net,freeze_layers_resnet
 
 # DATA_DIR=os.environ['DATA_DIR']
-MODELS_DIR=os.environ['MODELS_DIR']
+# MODELS_DIR=os.environ['MODELS_DIR']
 
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 args,device = get_args()  # get arguments from command line
+logging.info("Will train for", args.num_epochs)
 
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
 torch.manual_seed(seed=args.seed) # sets pytorch's seed
@@ -25,14 +26,12 @@ torch.manual_seed(seed=args.seed) # sets pytorch's seed
 num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=args.dataset_name, rng = rng, batch_size = args.batch_size)
 num_original_classes = 10 if args.source_net == 'cifar10' else 100
 
-model_path =os.path.join(MODELS_DIR, "experiments_results/%s_%s/saved_models/train_model_best_readable" % (args.model, args.source_net))
+model_path =os.path.join("", "experiments_results/%s_%s/saved_models/train_model_best_readable" % (args.model, args.source_net))
 logging.info('Loading %s model from %s' % (args.source_net, model_path))
 
 net = load_net(args.model, model_path, num_original_classes)
 
 
-num_ftrs = net.linear.in_features
-net.linear = nn.Linear(num_ftrs, num_output_classes)
 
 if args.model == "resnet56":
     net= freeze_layers_resnet(net=net,number_of_out_classes=num_output_classes,number_of_layers=args.unfrozen_layers)
@@ -48,7 +47,6 @@ logging.info('Experiment name: %s' %experiment_name)
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.1)
-
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=experiment_name,
                                     num_epochs=args.num_epochs,
