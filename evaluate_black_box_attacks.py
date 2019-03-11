@@ -16,8 +16,8 @@ from utils.utils import load_net,black_box_attack
 from utils.train import adv_train
 
 
-DATA_DIR=os.environ['DATA_DIR']
-MODELS_DIR=os.environ['MODELS_DIR']
+# DATA_DIR=os.environ['DATA_DIR']
+# MODELS_DIR=os.environ['MODELS_DIR']
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 batch_size = 100
