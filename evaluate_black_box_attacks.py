@@ -35,8 +35,8 @@ else:
     print("use CPU")
     device = torch.device('cpu')  # sets the device to be CPU
 
-source_networks = { 'cifar10': 'resnet56',
-                    'cifar100': 'resnet56',
+source_networks = { 'cifar10': 'resnet56_cifar10',
+                    'cifar100': 'resnet56_cifar100',
 }
 
 target_networks =  {
@@ -52,15 +52,17 @@ for dataset_name,source_network in source_networks.items():
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
 
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (source_network))
-    source_net = load_net(source_network, model_path, num_output_classes)
+    source_architecture = source_network.split('_')[0]
+    source_net = load_net(source_architecture, model_path, num_output_classes)
     
     target_nets = {}
-    for target in target_networks[dataset_name]:
+    for target_network in target_networks[dataset_name]:
         model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (target_network))
-        target_nets[target] = load_net(source_networks, model_path, num_output_classes)
+        target_architecture = target_network.split('_')[0]
+        target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes)
     for adversary in attacks:
         results = black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device)
-        logging.info("blackbox attack for adversary:",adversary.name,"completed")
+        logging.info("blackbox attack for adversary: %s completed" %adversary.name)
 
 with open('black_box_results.json', 'w') as outfile:
     json.dump(results, outfile)        
