@@ -39,7 +39,7 @@ cd ..
 mkdir experiments_results
 
 python train.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
-                                                    --lr 0.1 --model densenet121\
+                                                      --lr 0.1 --model densenet121\
                                                       --num_epochs 200 --experiment_name 'densenet121_cifar100' \
                                                       --use_gpu "False" --gpu_id "0,1" --weight_decay_coefficient 0.0002 \
                                                       --dataset_name "cifar100"
