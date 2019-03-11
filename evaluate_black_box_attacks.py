@@ -47,6 +47,8 @@ results = {}
 
 
 for dataset_name,source_network in source_networks.items():
+    logging.info('\nLoading dataset: %s' %dataset_name)
+
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
 
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (source_network))
@@ -58,7 +60,7 @@ for dataset_name,source_network in source_networks.items():
         target_nets[target] = load_net(source_networks, model_path, num_output_classes)
     for adversary in attacks:
         results = black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device)
-
+        logging.info("blackbox attack for adversary:",adversary.name,"completed")
 
 with open('black_box_results.json', 'w') as outfile:
     json.dump(results, outfile)        
