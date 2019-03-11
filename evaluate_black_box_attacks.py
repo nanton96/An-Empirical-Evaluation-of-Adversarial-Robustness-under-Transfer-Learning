@@ -35,8 +35,8 @@ else:
     print("use CPU")
     device = torch.device('cpu')  # sets the device to be CPU
 
-source_networks = { 'cifar10': 'resnet56_cifar10',
-                    'cifar100': 'resnet56_cifar100',
+source_networks = { 'cifar10': 'resnet56',
+                    'cifar100': 'resnet56',
 }
 
 target_networks =  {
