@@ -52,7 +52,7 @@ for dataset_name,source_network in source_networks.items():
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
 
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (source_network))
-    source_net = load_net(source_networks, model_path, num_output_classes)
+    source_net = load_net(source_network, model_path, num_output_classes)
     
     target_nets = {}
     for target in target_networks[dataset_name]:
