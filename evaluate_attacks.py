@@ -16,8 +16,8 @@ from utils.utils import load_net, test, attack_over_test_data
 from utils.train import adv_train
 
 
-DATA_DIR=os.environ['DATA_DIR']
-MODELS_DIR=os.environ['MODELS_DIR']
+DATA_DIR='data'
+MODELS_DIR='experiments_results'
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 batch_size = 100
@@ -51,7 +51,8 @@ for trained_network, dataset_name, in trained_networks.items():
     experiment_name = 'attack_%s' % (trained_network)
     logging.info('Experiment name: %s' %experiment_name)
 
-    model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (trained_network))
+
+    model_path =os.path.join(MODELS_DIR, "%s/saved_models/train_model_" % (trained_network))
     logging.info('Loading model from %s' % (model_path))
     net = load_net(model, model_path, num_output_classes)
     net.to(device)
