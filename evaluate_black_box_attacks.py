@@ -46,7 +46,7 @@ target_networks =  {
 results = {}
 
 
-for dataset_name,source_network in source_networks:
+for dataset_name,source_network in source_networks.items():
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
 
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (source_network))
