@@ -43,7 +43,7 @@ target_networks =  {
                     'cifar10': ['resnet56_cifar10'],#,'resnet56_cifar10_fgsm','resnet56_cifar10_pgd'],
                     'cifar100': ['resnet56_cifar100']#,'resnet56_cifar100_fgsm','resnet56_cifar100_pgd']
                     }
-results = {}
+results = []
 
 
 for dataset_name,source_network in source_networks.items():
@@ -53,15 +53,16 @@ for dataset_name,source_network in source_networks.items():
 
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (source_network))
     source_architecture = source_network.split('_')[0]
-    source_net = load_net(source_architecture, model_path, num_output_classes)
+    source_net = load_net(source_architecture, model_path, num_output_classes).to(device)
     
     target_nets = {}
     for target_network in target_networks[dataset_name]:
         model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (target_network))
         target_architecture = target_network.split('_')[0]
-        target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes)
+        target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes).to(device)
     for adversary in attacks:
-        results = black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device)
+        adversary = adversary(epsilon = 0.3)
+        results.append(black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device))
         logging.info("blackbox attack for adversary: %s completed" %adversary.name)
 
 with open('black_box_results.json', 'w') as outfile:

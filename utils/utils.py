@@ -185,6 +185,8 @@ def black_box_attack(source_net,target_networks,adversary,loader,num_output_clas
         # Create corresponding adversarial examples for training
         if(torch.cuda.is_available()):
             x = x.cpu()
+        
+        adversary.model = source_net 
         x_adv = adversary.perturb(x.numpy(), y_pred)  
         x_adv = torch.from_numpy(x_adv)
         if torch.cuda.is_available():
