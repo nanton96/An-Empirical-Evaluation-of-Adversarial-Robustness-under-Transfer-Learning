@@ -112,6 +112,6 @@ def getDataProviders(dataset_name,rng,batch_size):
 
     else:
 
-        raise ValueError("Dataset"+ dataset_name +" name not supported")
+        raise ValueError("Dataset "+ dataset_name +" name not supported")
 
     return num_output_classes,train_data,val_data,test_data
