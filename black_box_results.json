@@ -1,0 +1,1 @@
+{"cifar10": [{"resnet56_cifar10_attacked_by_fgsm_acc": 0.27140000000000003}], "cifar100": [{"resnet56_cifar100_attacked_by_fgsm_acc": 0.11379999999999998}]}

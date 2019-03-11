@@ -167,8 +167,8 @@ def freeze_layers_resnet(net,number_of_layers,number_of_out_classes):
 
 def black_box_attack(source_net,target_networks,adversary,loader,num_output_classes,device):
 
-    accs = {}   
-            
+    accs = {target_name:[] for target_name in target_networks.keys()}   
+    adversary.model = source_net 
     for x,y in loader:
         source_net.eval()
         if len(y.shape) > 1:
@@ -179,26 +179,27 @@ def black_box_attack(source_net,target_networks,adversary,loader,num_output_clas
         x = x.to(device)
         y = y.to(device)       
 
-        out = source_net(x)
-       
+        # Prevent label leaking        
         y_pred  = pred_batch(x,source_net)
 
         # Create corresponding adversarial examples for training
         if(torch.cuda.is_available()):
             x = x.cpu()
         
-        adversary.model = source_net 
         x_adv = adversary.perturb(x.numpy(), y_pred)  
         x_adv = torch.from_numpy(x_adv)
+
         if torch.cuda.is_available():
             x_adv = x_adv.cuda()
 
-        for target_name,target_net in target_nets:
-            out = target_net(x_adv)
-            _,predicted = torch.max(out.data, 1)  
-            accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
+        for target_name,target_net in target_networks.items():
+            with torch.no_grad():
+                target_net.eval()
+                out = target_net(x_adv)
+                _,predicted = torch.max(out.data, 1)  
+                accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
+                
+                accs[target_name] += [accuracy]
             
-            accs[target_name] += [accuracy]
-            
-    results = {target_name+'attacked by ' + adversary.name +'_acc':np.mean(accs[target_name]) for target_name in accs.keys()}
+    results = {target_name+'_attacked_by_' + adversary.name +'_acc':np.mean(accs[target_name]) for target_name in accs.keys()}
     return results

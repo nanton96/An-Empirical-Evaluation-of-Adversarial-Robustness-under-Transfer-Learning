@@ -26,7 +26,9 @@ rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
 torch.manual_seed(seed=0) # sets pytorch's seed
 # load data_set (only need test set...)
 
-attacks = [FGSMAttack,LinfPGDAttack] 
+attacks = [LinfPGDAttack] 
+
+#[FGSMAttack,LinfPGDAttack] 
 
 if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
     device = torch.device('cuda')  # sets device to be cuda
@@ -37,11 +39,7 @@ else:
 
 trained_networks =  {
                     'resnet56_cifar10': 'cifar10',
-<<<<<<< HEAD
-                    'resnet56_cifar100': 'cifar100', 
-=======
                     'resnet56_cifar100': 'cifar100',
->>>>>>> 3f91e674f8f310ba816670119ee752d1e6d5f0d0
                     'resnet56_cifar100_to_cifar10': 'cifar10'
                     # 'resnet56_cifar10_fgsm_1gpu_100': 'cifar10'
                     ### Add more
@@ -56,7 +54,7 @@ for trained_network, dataset_name, in trained_networks.items():
     logging.info('Experiment name: %s' %experiment_name)
 
 
-    model_path =os.path.join(MODELS_DIR, "%s/saved_models/train_model_" % (trained_network))
+    model_path =os.path.join(MODELS_DIR, "%s/saved_models/train_model_best_readable" % (trained_network))
     logging.info('Loading model from %s' % (model_path))
     net = load_net(model, model_path, num_output_classes)
     net.to(device)
@@ -64,12 +62,12 @@ for trained_network, dataset_name, in trained_networks.items():
     results[trained_network+"_clean"] = acc
     # Attack FGSM
     for attack in attacks:
-        adversary = attack(epsilon = 0.3)
+        adversary = attack(epsilon = 0.3,k=20)
         adversary.model = net
         
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
-        results[trained_network+"_"+adversary.name] = acc
+        results[trained_network+"_attacked_by_"+adversary.name] = acc
 
-with open('data.json', 'w') as outfile:
+with open('white_box_attacks.json', 'w') as outfile:
     json.dump(results, outfile)        
 
