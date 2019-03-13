@@ -31,9 +31,9 @@ attacks = [FGSMAttack(epsilon=0.3),LinfPGDAttack(epsilon=0.3,k=20)]
 
 if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
     device = torch.device('cuda')  # sets device to be cuda
-    print("use GPU")
+    logging.info("use GPU")
 else:
-    print("use CPU")
+    logging.info("use CPU")
     device = torch.device('cpu')  # sets the device to be CPU
 
 trained_networks =  {
@@ -70,6 +70,6 @@ for trained_network, dataset_name, in trained_networks.items():
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
         results[trained_network+"_attacked_by_"+adversary.name] = acc
 
-with open('white_box_attacks.json', 'w') as outfile:
+with open('white_box_attacks.json' % , 'w') as outfile:
     json.dump(results, outfile)        
 
