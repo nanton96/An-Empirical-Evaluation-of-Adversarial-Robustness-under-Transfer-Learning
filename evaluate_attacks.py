@@ -37,13 +37,15 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 
 trained_networks =  {
-                    'resnet56_cifar10': 'cifar10',
-                    'resnet56_cifar10_fgsm': 'cifar10',
-                    'resnet56_cifar10_pgd': 'cifar10',
+                    # 'resnet56_cifar10': 'cifar10',
+                    # 'resnet56_cifar10_fgsm': 'cifar10',
+                    # 'resnet56_cifar10_pgd': 'cifar10',
 
-                    'resnet56_cifar100': 'cifar100',
-                    'resnet56_cifar100_fgsm': 'cifar100',
+                    # 'resnet56_cifar100': 'cifar100',
+                    # 'resnet56_cifar100_fgsm': 'cifar100',
                     'resnet56_cifar100_pgd': 'cifar100',
+
+                    'resnet56_cifar100_to_cifar10': 'cifar10',
 
                     'densenet121_cifar10': 'cifar10',
                     # 'densenet121_cifar10_fgsm': 'cifar10',
@@ -53,7 +55,6 @@ trained_networks =  {
                     # 'densenet121_cifar100_fgsm': 'cifar100',
                     # 'densenet121_cifar1000_pgd': 'cifar100',
 
-                    'resnet56_cifar100_to_cifar10': 'cifar10',
                     }
 
 for trained_network, dataset_name, in trained_networks.items():
