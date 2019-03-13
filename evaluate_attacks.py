@@ -43,7 +43,7 @@ trained_networks =  {
 
                     'resnet56_cifar100': 'cifar100',
                     'resnet56_cifar100_fgsm': 'cifar100',
-                    'resnet56_cifar1000_pgd': 'cifar100',
+                    'resnet56_cifar100_pgd': 'cifar100',
 
                     'densenet121_cifar10': 'cifar10',
                     # 'densenet121_cifar10_fgsm': 'cifar10',
