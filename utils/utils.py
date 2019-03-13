@@ -11,7 +11,7 @@ def load_net(model, model_path, num_original_classes):
         net = ResNet(BasicBlock, [9, 9, 9],num_classes= num_original_classes)
     elif model=='densenet121':
         from utils.densenets import DenseNet, Bottleneck
-        net = DenseNet(Bottleneck, [6,12,24,16], growth_rate=12,num_classes = classes)
+        net = DenseNet(Bottleneck, [6,12,24,16], growth_rate=12,num_classes = num_original_classes)
 
         # net=DenseNet(Bottleneck, [6,12,24,16], growth_rate=32,num_classes = num_original_classes)
     else:

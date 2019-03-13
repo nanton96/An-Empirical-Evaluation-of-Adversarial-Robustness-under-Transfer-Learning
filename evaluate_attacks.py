@@ -46,9 +46,9 @@ trained_networks =  {
                     'densenet121_cifar100': 'cifar100',
                     ### Add more
                     }
-results = {}
 
 for trained_network, dataset_name, in trained_networks.items():
+    results = {}
     model = trained_network.split('_')[0]
     logging.info('\nLoading dataset: %s' %dataset_name)
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
@@ -70,6 +70,6 @@ for trained_network, dataset_name, in trained_networks.items():
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
         results[trained_network+"_attacked_by_"+adversary.name] = acc
 
-with open('white_box_attacks.json' , 'w') as outfile:
-    json.dump(results, outfile)        
+    with open('white_box_attacks_%s.json' % trained_network, 'w') as outfile:
+        json.dump(results, outfile)        
 
