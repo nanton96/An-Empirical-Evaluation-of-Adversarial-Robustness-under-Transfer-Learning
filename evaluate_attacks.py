@@ -17,7 +17,7 @@ from utils.train import adv_train
 
 
 DATA_DIR='data'
-MODELS_DIR='experiments_results'
+MODELS_DIR='experiments_results/nets_to_attack'
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 batch_size = 100
