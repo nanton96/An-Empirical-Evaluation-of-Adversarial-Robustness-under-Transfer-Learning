@@ -38,9 +38,12 @@ else:
 
 trained_networks =  {
                     'resnet56_cifar10': 'cifar10',
+                    'resnet56_cifar10_fgsm': 'cifar10',
                     'resnet56_cifar100': 'cifar100',
-                    'resnet56_cifar100_to_cifar10': 'cifar10'
-                    # 'resnet56_cifar10_fgsm_1gpu_100': 'cifar10'
+                    'resnet56_cifar100_fgsm': 'cifar100',
+                    'resnet56_cifar100_to_cifar10': 'cifar10',
+                    'densenet121_cifar10': 'cifar10',
+                    'densenet121_cifar100': 'cifar100',
                     ### Add more
                     }
 results = {}
