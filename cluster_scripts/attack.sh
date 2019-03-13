@@ -33,8 +33,4 @@ rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlpcw4/
-<<<<<<< HEAD
 python evaluate_attacks.py 
-=======
-python evaluate_attacks.py
->>>>>>> 3f91e674f8f310ba816670119ee752d1e6d5f0d0

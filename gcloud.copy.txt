@@ -1,0 +1,2 @@
+gcloud compute scp --recurse  mlpractical-1:~/mlpcw4/experiments_results/resnet56_cifar10_fgsm/ .  --zone "europe-west1-b" --project "s1680171-mlpractical"
+gcloud compute scp --recurse  mlpractical-2:~/mlpcw4/experiments_results/resnet56_cifar100_fgsm/ .  --zone "europe-west1-b" --project "s1680171-mlpractical"
