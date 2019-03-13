@@ -26,7 +26,7 @@ rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
 torch.manual_seed(seed=0) # sets pytorch's seed
 # load data_set (only need test set...)
 
-attacks = [FGSMAttack(epsilon=0.03),LinfPGDAttack(epsilon=0.03,k=20)] 
+attacks = [FGSMAttack(epsilon=0.06),LinfPGDAttack(epsilon=0.06,k=20)] 
 
 
 if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
