@@ -26,7 +26,7 @@ rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
 torch.manual_seed(seed=0) # sets pytorch's seed
 # load data_set (only need test set...)
 
-attacks = [FGSMAttack(epsilon=0.3),LinfPGDAttack(epsilon=0.3,k=20)] 
+attacks = [FGSMAttack(epsilon=0.03),LinfPGDAttack(epsilon=0.03,k=20)] 
 
 
 if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
@@ -38,10 +38,14 @@ else:
 
 trained_networks =  {
                     'resnet56_cifar10': 'cifar10',
-                    'resnet56_cifar10_fgsm': 'cifar10',
-                    'resnet56_cifar100': 'cifar100',
-                    'resnet56_cifar100_fgsm': 'cifar100',
                     'resnet56_cifar100_to_cifar10': 'cifar10',
+                    'resnet56_cifar10_pgd':'cifar10',
+                    'resnet56_cifar10_fgsm': 'cifar10',
+
+                    'resnet56_cifar100': 'cifar100',
+                    'resnet56_cifar100_pgd':'cifar100',
+                    'resnet56_cifar100_fgsm': 'cifar100',
+                    
                     'densenet121_cifar10': 'cifar10',
                     'densenet121_cifar100': 'cifar100',
                     ### Add more
