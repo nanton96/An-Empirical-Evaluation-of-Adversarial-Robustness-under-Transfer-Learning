@@ -23,12 +23,12 @@ export PATH=${CUDA_HOME}/bin:${PATH}
 export PYTHON_PATH=$PATH
 
 
-mkdir -p /disk/scratch/${STUDENT_ID}/
+# mkdir -p /disk/scratch/${STUDENT_ID}/
 
-export MODELS_DIR=/home/${STUDENT_ID}/mlpcw4/experiments_results
-export DATA_DIR=/disk/scratch/${STUDENT_ID}/data $DATA_DIR
+# export MODELS_DIR=/home/${STUDENT_ID}/mlpcw4/experiments_results
+# export DATA_DIR=/disk/scratch/${STUDENT_ID}/data $DATA_DIR
 
-rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ 
+# rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ 
 
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
