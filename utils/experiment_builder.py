@@ -292,7 +292,7 @@ class ExperimentBuilder(nn.Module):
         loss = (loss + loss_adv) / 2   
         accuracy =  (accuracy + adv_acc)/2
 
-        GPUtil.showUtilization()
+        # GPUtil.showUtilization()
         return np.asscalar(loss.data.detach().cpu().numpy()), accuracy, validaton_stat
 
     def save_model(self, model_save_dir, model_save_name, model_idx, state):

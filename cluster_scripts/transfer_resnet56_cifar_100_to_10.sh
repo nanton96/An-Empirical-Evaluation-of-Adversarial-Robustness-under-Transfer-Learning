@@ -52,14 +52,13 @@ python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
                  --unfrozen_layers 5 \
                  --dataset_name "cifar10"
 
-
 python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
                  --adv_train False \
                  --num_epochs 25 \
                  --adversary "fgsm" \
-                 --lr 0.1 --model 'densetnet121' \
+                 --lr 0.1 --model 'densenet121' \
                  --source_net cifar100 \
-                 --experiment_name 'transfer_densetnet121_cifar100_to_10' \
+                 --experiment_name 'transfer_densenet121_cifar100_to_10' \
                  --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 \
                  --unfrozen_layers 5 \
                  --dataset_name "cifar10"

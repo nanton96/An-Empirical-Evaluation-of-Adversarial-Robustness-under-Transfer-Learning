@@ -9,7 +9,7 @@ import os
 from utils.data_utils import getDataProviders
 from utils.arg_extractor import get_args
 from utils.experiment_builder import ExperimentBuilder
-from utils.utils import load_net,freeze_layers_resnet
+from utils.utils import load_net,freeze_layers_resnet,freeze_layers_densenet
 
 # DATA_DIR=os.environ['DATA_DIR']
 # MODELS_DIR=os.environ['MODELS_DIR']
@@ -35,8 +35,10 @@ net = load_net(args.model, model_path, num_original_classes)
 
 if args.model == "resnet56":
     net= freeze_layers_resnet(net=net,number_of_out_classes=num_output_classes,number_of_layers=args.unfrozen_layers)
+elif args.model == "densenet121":
+    net= freeze_layers_densenet(net=net,number_of_out_classes=num_output_classes,number_of_layers=args.unfrozen_layers)
 else:
-    pass
+    raise AssertionError
 
 experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f_%s' % (args.model, args.source_net, args.dataset_name, args.lr, str(args.unfrozen_layers)+'_layers')
 logging.info('Experiment name: %s' %experiment_name)
