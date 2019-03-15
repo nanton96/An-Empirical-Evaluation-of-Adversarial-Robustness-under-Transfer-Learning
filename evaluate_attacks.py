@@ -14,7 +14,7 @@ from utils.storage_utils import dict_load
 from utils.attacks import FGSMAttack,LinfPGDAttack
 from utils.utils import load_net, test, attack_over_test_data
 from utils.train import adv_train
-
+from scipy.stats import truncnorm
 
 DATA_DIR='data'
 MODELS_DIR='experiments_results/nets_to_attack'
@@ -26,8 +26,9 @@ rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
 torch.manual_seed(seed=0) # sets pytorch's seed
 # load data_set (only need test set...)
 
-attacks = [FGSMAttack(epsilon=0.06),LinfPGDAttack(epsilon=0.06,k=20)] 
-
+attacks = [FGSMAttack,LinfPGDAttack(k=20)] 
+lower, upper,mu, sigma = 0, 0.125,0, 0.0625
+distribution = truncnorm((lower - mu) / sigma, (upper - mu) / sigma, loc=mu, scale=sigma)
 
 if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
     device = torch.device('cuda')  # sets device to be cuda
@@ -74,9 +75,9 @@ for trained_network, dataset_name, in trained_networks.items():
     results[trained_network+"_clean"] = acc
     # Attack FGSM
     for attack in attacks:
-        adversary = attack
+        e = distribution.rvs(1)[0]
+        adversary = attack(epsilon = e)
         adversary.model = net
-        
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
         results[trained_network+"_attacked_by_"+adversary.name] = acc
 
