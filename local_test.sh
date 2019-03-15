@@ -22,4 +22,3 @@ mkdir experiments_results
                      --use_gpu "False" --gpu_id "0" --weight_decay_coefficient 0.00005 \
                      --unfrozen_layers 4 \
                      --dataset_name 'cifar10'
-
