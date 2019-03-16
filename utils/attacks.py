@@ -62,7 +62,7 @@ class FGSMAttack(object):
 
 class LinfPGDAttack(object):
     # Change the random_start to False, as Tsipras indicated 
-    def __init__(self, model=None, epsilon=0.125, k=7, a=0.008, random_start=False):
+    def __init__(self, model=None, epsilon=0.125, k=7, a=0.03, random_start=False):
         """
         Attack parameter initialization. The attack performs k steps of
         size a, while always staying within epsilon from the initial
@@ -82,6 +82,9 @@ class LinfPGDAttack(object):
         Given examples (X_nat, y), returns adversarial
         examples within epsilon of X_nat in l_infinity norm.
         """
+        # Tsipras value 
+        self.a = self.epsilon / 4
+
         if self.rand:
             X = X_nat + np.random.uniform(-self.epsilon, self.epsilon,
                 X_nat.shape).astype('float32')

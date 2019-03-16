@@ -1,0 +1,55 @@
+MLP Coursework 3 - Interim Report
+
+February 2019
+
+FEEDBACK:
+
+
+Abstract and Introduction
+
+You abstract is well motivated and states the research questions to be covered in the report.
+It is also sufficiently large and uses short and concise sentences which is great.
+It does not, however, cover very extensively or clearly what the report really is, it is an interim document that 
+clearly defines the problem, shows some baselines that motivate your hypothesis and present 
+a plan of work.
+
+Research questions and objectives
+This chapter has been written clearly and precisely. Good job!
+You could have made a better use of literature referencing as you have omitted this at a few places.
+In addition, there are some typos across the introduction. I would have also moved parts of the abstract in the 
+introduction as it seems a bit more relevant a place.
+
+
+Data set and task
+The dataset is presented clearly. You specify the features of the datasets used
+and discuss the training/validation split which again is great!
+You could have added some extra information describing more of the properties of
+the dataset, such as the types of classes, or provided some figures with examples. You should have provided references to
+the literature if you claim something as a standard. Further, you do not explain what the actual task is. Which is the source
+set which one is the target, what are you transferring, what are the similarties between the classess across both datasets 
+etc. 
+
+Methodology
+The methodology is clear and concise which is great. It is clear what you are doing and how you intend to approach it.
+The methods chosen are sensible and relevant for the course span.
+In terms of evaluation it isn't very clear why you would expect that Sec_c is going to be more secure than Sec_b, or maybe I am missing something.
+
+Experiments
+Appropriate baseline experiments have been carried out, you have conducted clear presentation of results. However, you provide
+very little discussion over the experiments you have conducted. It would have 
+been nice if you had analysed the poorer performance from the transferred weights a little bit more. This could then give insight
+on potential pitfalls and aspects of problems you might face in future. Nevertheless, all experiments are reproducible and 
+the stated hypotheses for all experiments are clear.
+
+Interim conclusions
+The work done so far matches the objectives nicely. The task at hand is quite extensive and rather open ended
+which might make it difficult to complete in the scope of the course. However, there is an opportunity
+for completing an interesting and sufficient study nevertheless. No changes seem to be necessary and all conclusions 
+are clearly expressed.
+
+
+Plan
+There is a clear plan for the remainder of the project. Potential risks been discussed and 
+there are a couple of good and well formulated backup plans. 
+The project is feasible given time and resources.
+

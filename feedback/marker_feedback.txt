@@ -1,0 +1,41 @@
+MLP Coursework 3 - Interim Report
+
+February 2019
+
+FEEDBACK:
+
+(please note that comment categories do not have to match to sections in the submitted report)
+
+Abstract and Introduction
+- You spent too much space on introduce DNN and transfer learning. It would be better that you can make the abstract more succinct.
+
+- Good introduction. However, you spent too long on introducing some basic concepts. Additionally, the paper should be carefully proofread.
+
+Research questions and objectives
+- Interesting questions and objectives.
+
+
+Data set and task
+- Some example figures should be added for clearer illustraction
+
+
+Methodology
+- In this section, you should form your own framework and clearly present in your own words rather than detailing the experiment steps. Illustration figures of your method are necessary. 
+
+
+Experiments
+- It would be clearer that you can report the results in terms of tables or figures.
+
+
+
+Interim conclusions
+- Looking forward to your updates.
+
+
+Plan
+- Looking forward to your updates.
+
+
+Other Comments
+- You should have a more precise title
+
