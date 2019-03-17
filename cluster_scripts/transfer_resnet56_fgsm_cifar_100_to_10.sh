@@ -39,9 +39,10 @@ cd ..
 
 
 python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
-                 --adv_train True \
+                 --adv_train False \
                  --num_epochs 50 \
                  --adversary "fgsm" \
+                 --trained_on "fgsm" \
                  --lr 0.1 --model 'resnet56' \
                  --source_net cifar100 \
                  --experiment_name 'transfer_resnet56_fgsm_cifar100_to_10' \

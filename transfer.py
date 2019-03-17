@@ -26,6 +26,8 @@ torch.manual_seed(seed=args.seed) # sets pytorch's seed
 num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=args.dataset_name, rng = rng, batch_size = args.batch_size)
 num_original_classes = 10 if args.source_net == 'cifar10' else 100
 
+if args.trained_on:
+    args.source_net +='_'+args.trained_on
 model_path =os.path.join("", "experiments_results/%s_%s/saved_models/train_model_best_readable" % (args.model, args.source_net))
 logging.info('Loading %s model from %s' % (args.source_net, model_path))
 
