@@ -55,13 +55,14 @@ trained_networks =  {
                     # 'densenet121_cifar100': 'cifar100',
                     # 'densenet121_cifar100_fgsm': 'cifar100',
                     # 'densenet121_cifar1000_pgd': 'cifar100',
-                    'adv_transfer_fgsm_densenet121_cifar100_to_10' : ('cifar10','densenet121'),
-                    'adv_transfer_fgsm_resnet56_cifar100_to_10': ('cifar10', 'densenet121'),
-                    'transfer_densenet121_fgsm_cifar100_to_10': ('cifar10', 'densenet121'), 
-                    'transfer_resnet56_fgsm_cifar100_to_10': ('cifar10', 'resnet56'),
-                    'transfer_densenet121_cifar100_to_cifar10_lr_0.10000_6_layers': ('cifar10', 'densenet121'),
-                    'transfer_resnet56_cifar100_to_cifar10_lr_0.10000_6_layers': ('cifar10', 'resnet56')
-
+                    'transfer_densenet121_fgsm_nat' : ('cifar10','densenet121'),
+                    'transfer_densenet121_nat_fgsm': ('cifar10', 'densenet121'),
+                    'transfer_densenet121_nat_nat': ('cifar10', 'densenet121'), 
+                    'transfer_densenet121_nat_nat_all_layers': ('cifar10', 'densenet121'), 
+                    'transfer_resnet56_fgsm_nat': ('cifar10', 'resnet56'),
+                    'transfer_resnet56_nat_fgsm': ('cifar10', 'resnet56'),
+                    'transfer_resnet56_nat_nat': ('cifar10', 'resnet56'),
+                    'transfer_resnet56_nat_nat_all_layers': ('cifar10', 'resnet56')
                     }
 
 for trained_network, (dataset_name, model) in trained_networks.items():
@@ -87,7 +88,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
         results[trained_network+"_attacked_by_"+adversary.name] = acc
 
-    path = os.path.join('attack_results', 'white_box_attacks_%s.json' % trained_network)
+    path = os.path.join(MODELS_DIR, 'white_box_attacks_%s.json' % trained_network)
     with open(path, 'w') as outfile:
         json.dump(results, outfile)        
 
