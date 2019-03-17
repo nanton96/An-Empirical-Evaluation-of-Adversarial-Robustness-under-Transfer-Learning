@@ -31,11 +31,9 @@ logging.info('Loading %s model from %s' % (args.source_net, model_path))
 
 net = load_net(args.model, model_path, num_original_classes)
 
-
-
-if args.model == "resnet56":
+if args.model == "resnet56" or  args.model == "resnet56_fgsm" or args.model == "resnet56_pgd":
     net= freeze_layers_resnet(net=net,number_of_out_classes=num_output_classes,number_of_layers=args.unfrozen_layers)
-elif args.model == "densenet121":
+elif args.model == "densenet121" or args.model == "densenet121_fgsm" or args.model == "densenet121_pgd":
     net= freeze_layers_densenet(net=net,number_of_out_classes=num_output_classes,number_of_layers=args.unfrozen_layers)
 else:
     raise AssertionError
