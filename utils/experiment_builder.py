@@ -239,7 +239,6 @@ class ExperimentBuilder(nn.Module):
         loss.backward()
         self.optimizer.step()  
 
-        GPUtil.showUtilization()
         return np.asscalar(loss.data.detach().cpu().numpy()), accuracy, train_stat
 
     def run_adv_evaluation_iter(self,x,y):
@@ -292,7 +291,6 @@ class ExperimentBuilder(nn.Module):
         loss = (loss + loss_adv) / 2   
         accuracy =  (accuracy + adv_acc)/2
 
-        # GPUtil.showUtilization()
         return np.asscalar(loss.data.detach().cpu().numpy()), accuracy, validaton_stat
 
     def save_model(self, model_save_dir, model_save_name, model_idx, state):

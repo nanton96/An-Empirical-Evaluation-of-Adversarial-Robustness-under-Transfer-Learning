@@ -40,17 +40,17 @@ elif args.model == "densenet121":
 else:
     raise AssertionError
 
-experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f_%s' % (args.model, args.source_net, args.dataset_name, args.lr, str(args.unfrozen_layers)+'_layers')
-logging.info('Experiment name: %s' %experiment_name)
+#experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f_%s' % (args.model, args.source_net, args.dataset_name, args.lr, str(args.unfrozen_layers)+'_layers')
+#logging.info('Experiment name: %s' %experiment_name)
 
 # for name,param in net.named_parameters():
 #     if param.requires_grad == True:
 #         logging.info("REQUIRES GRAD: %s" % name)
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
-scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.1)
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.5)
 conv_experiment = ExperimentBuilder(network_model=net,
-                                    experiment_name=experiment_name,
+                                    experiment_name=args.experiment_name,
                                     num_epochs=args.num_epochs,
                                     adv_train=args.adv_train,
                                     adversary=args.adversary,
