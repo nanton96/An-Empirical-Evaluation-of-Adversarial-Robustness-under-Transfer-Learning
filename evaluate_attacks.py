@@ -17,7 +17,7 @@ from utils.train import adv_train
 from scipy.stats import truncnorm
 
 DATA_DIR='data'
-MODELS_DIR='experiments_results/nets_to_attack'
+MODELS_DIR='experiments_results/transfer'
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 batch_size = 100
@@ -38,23 +38,29 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 
 trained_networks =  {
-                    'resnet56_cifar10': 'cifar10',
-                    'resnet56_cifar10_fgsm': 'cifar10',
-                    'resnet56_cifar10_pgd': 'cifar10',
+                    # 'resnet56_cifar10': 'cifar10',
+                    # 'resnet56_cifar10_fgsm': 'cifar10',
+                    # 'resnet56_cifar10_pgd': 'cifar10',
 
-                    'resnet56_cifar100': 'cifar100',
-                    'resnet56_cifar100_fgsm': 'cifar100',
-                    'resnet56_cifar100_pgd': 'cifar100',
+                    # 'resnet56_cifar100': 'cifar100',
+                    # 'resnet56_cifar100_fgsm': 'cifar100',
+                    # 'resnet56_cifar100_pgd': 'cifar100',
 
-                    'resnet56_cifar100_to_cifar10': 'cifar10',
+                    # 'resnet56_cifar100_to_cifar10': 'cifar10',
 
-                    'densenet121_cifar10': 'cifar10',
-                    'densenet121_cifar10_fgsm': 'cifar10',
-                    'densenet121_cifar10_pgd': 'cifar10',
+                    # 'densenet121_cifar10': 'cifar10',
+                    # 'densenet121_cifar10_fgsm': 'cifar10',
+                    # 'densenet121_cifar10_pgd': 'cifar10',
 
-                    'densenet121_cifar100': 'cifar100',
-                    'densenet121_cifar100_fgsm': 'cifar100',
-                    'densenet121_cifar1000_pgd': 'cifar100',
+                    # 'densenet121_cifar100': 'cifar100',
+                    # 'densenet121_cifar100_fgsm': 'cifar100',
+                    # 'densenet121_cifar1000_pgd': 'cifar100',
+                    'adv_transfer_fgsm_densenet121_cifar100_to_10' : 'cifar10',
+                    'adv_transfer_fgsm_resnet56_cifar100_to_10': 'cifar10',
+                    'transfer_densenet121_fgsm_cifar100_to_10': 'cifar10',
+                    'transfer_resnet56_fgsm_cifar100_to_10': 'cifar10',
+                    'transfer_densenet121_cifar100_to_cifar10_lr_0.10000_6_layers': 'cifar10',
+                    'transfer_resnet56_cifar100_to_cifar10_lr_0.10000_6_layers':'cifar10'
 
                     }
 
@@ -81,7 +87,7 @@ for trained_network, dataset_name, in trained_networks.items():
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
         results[trained_network+"_attacked_by_"+adversary.name] = acc
 
-    path = os.path.join(MODELS_DIR, 'white_box_attacks_%s.json' % trained_network)
+    path = os.path.join('attack_results', 'white_box_attacks_%s.json' % trained_network)
     with open(path, 'w') as outfile:
         json.dump(results, outfile)        
 
