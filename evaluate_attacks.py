@@ -55,18 +55,18 @@ trained_networks =  {
                     # 'densenet121_cifar100': 'cifar100',
                     # 'densenet121_cifar100_fgsm': 'cifar100',
                     # 'densenet121_cifar1000_pgd': 'cifar100',
-                    'adv_transfer_fgsm_densenet121_cifar100_to_10' : 'cifar10',
-                    'adv_transfer_fgsm_resnet56_cifar100_to_10': 'cifar10',
-                    'transfer_densenet121_fgsm_cifar100_to_10': 'cifar10',
-                    'transfer_resnet56_fgsm_cifar100_to_10': 'cifar10',
-                    'transfer_densenet121_cifar100_to_cifar10_lr_0.10000_6_layers': 'cifar10',
-                    'transfer_resnet56_cifar100_to_cifar10_lr_0.10000_6_layers':'cifar10'
+                    'adv_transfer_fgsm_densenet121_cifar100_to_10' : ('cifar10','densenet121'),
+                    'adv_transfer_fgsm_resnet56_cifar100_to_10': ('cifar10', 'densenet121'),
+                    'transfer_densenet121_fgsm_cifar100_to_10': ('cifar10', 'densenet121'), 
+                    'transfer_resnet56_fgsm_cifar100_to_10': ('cifar10', 'resnet56'),
+                    'transfer_densenet121_cifar100_to_cifar10_lr_0.10000_6_layers': ('cifar10', 'densenet121'),
+                    'transfer_resnet56_cifar100_to_cifar10_lr_0.10000_6_layers': ('cifar10', 'resnet56')
 
                     }
 
-for trained_network, dataset_name, in trained_networks.items():
+for trained_network, (dataset_name, model) in trained_networks.items():
     results = {}
-    model = trained_network.split('_')[0]
+    # model = trained_network.split('_')[0]
     logging.info('\nLoading dataset: %s' %dataset_name)
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
     experiment_name = 'attack_%s' % (trained_network)
