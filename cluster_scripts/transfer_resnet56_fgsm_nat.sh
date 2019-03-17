@@ -1,10 +1,10 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=Interactive
+#SBATCH --partition=Short
 #SBATCH --gres=gpu:1
 #SBATCH --mem=12000  # memory in Mb
-#SBATCH --time=0-01:59:00
+#SBATCH --time=0-03:59:00
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 
@@ -41,11 +41,10 @@ cd ..
 python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
                  --adv_train False \
                  --num_epochs 50 \
-                 --adversary "fgsm" \
-                 --trained_on "fgsm" \
+                 -- trained_on "fgsm" \
                  --lr 0.1 --model 'densenet121' \
                  --source_net cifar100 \
-                 --experiment_name 'transfer_densenet121_fgsm_cifar100_to_10' \
+                 --experiment_name 'transfer_densenet121_fgsm_nat' \
                  --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 \
                  --unfrozen_layers 6 \
                  --dataset_name "cifar10"
