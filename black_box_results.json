@@ -1,1 +1,1 @@
-{"cifar10": [{"resnet56_cifar10_attacked_by_fgsm_acc": 0.27140000000000003}], "cifar100": [{"resnet56_cifar100_attacked_by_fgsm_acc": 0.11379999999999998}]}
+{"cifar10": [{"resnet56_cifar10_attacked_by_fgsm_acc": 0.7375, "resnet56_cifar10_fgsm_attacked_by_fgsm_acc": 0.8281000000000001, "densenet121_cifar10_fgsm_attacked_by_fgsm_acc": 0.8494999999999999}], "cifar100": [{"resnet56_cifar100_attacked_by_fgsm_acc": 0.3143, "resnet56_cifar100_fgsm_attacked_by_fgsm_acc": 0.5026, "densenet121_cifar100_fgsm_attacked_by_fgsm_acc": 0.5310000000000001}]}
