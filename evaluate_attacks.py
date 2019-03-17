@@ -26,7 +26,7 @@ rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
 torch.manual_seed(seed=0) # sets pytorch's seed
 # load data_set (only need test set...)
 
-attacks = [FGSMAttack,LinfPGDAttack(k=20)] 
+attacks = [FGSMAttack,lambda epsilon: LinfPGDAttack(epsilon=epsilon, k=20)] 
 lower, upper,mu, sigma = 0, 0.125,0, 0.0625
 distribution = truncnorm((lower - mu) / sigma, (upper - mu) / sigma, loc=mu, scale=sigma)
 
