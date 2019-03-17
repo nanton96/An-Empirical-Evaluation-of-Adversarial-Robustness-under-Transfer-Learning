@@ -72,10 +72,10 @@ for dataset_name,substitute_network in substitute_networks.items():
         target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes).to(device)
 
     for adversary in attacks:
-        e = distribution.rvs(1)[0]
+        e = 0.125 # distribution.rvs(1)[0]
         adversary = adversary(epsilon=e)
         results[dataset_name].append(black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device))
         logging.info("blackbox attack for adversary: %s completed" %adversary.name)
 
-with open('black_box_results.json', 'w') as outfile:
+with open('black_box_results_e_0125.json', 'w') as outfile:
     json.dump(results, outfile)        
