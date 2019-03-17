@@ -27,6 +27,8 @@ def get_args():
     parser.add_argument('--dataset_name', type=str, help='Dataset on which the system will train/eval our model')
     parser.add_argument('--seed', nargs="?", type=int, default=7112018,
                         help='Seed to use for random number generator for experiment')
+    parser.add_argument('--trained_on', type=str, default="None", help="A string indicating the methods under which the network sas adversarially trained")
+                        
     #parser.add_argument('--image_num_channels', nargs="?", type=int, default=1,
     #                    help='The channel dimensionality of our image-data')
     #parser.add_argument('--image_height', nargs="?", type=int, default=28, help='Height of image data')
