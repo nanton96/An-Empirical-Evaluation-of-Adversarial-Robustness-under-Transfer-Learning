@@ -14,12 +14,15 @@ from utils.storage_utils import dict_load
 from utils.attacks import FGSMAttack,LinfPGDAttack
 from utils.utils import load_net,black_box_attack
 from utils.train import adv_train
+from scipy.stats import truncnorm
 
 
 # DATA_DIR=os.environ['DATA_DIR']
 # MODELS_DIR=os.environ['MODELS_DIR']
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
+lower, upper,mu, sigma = 0, 0.125,0, 0.0625
+distribution = truncnorm((lower - mu) / sigma, (upper - mu) / sigma, loc=mu, scale=sigma)
 batch_size = 100
 
 rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
@@ -35,13 +38,13 @@ else:
     print("use CPU")
     device = torch.device('cpu')  # sets the device to be CPU
 
-substitute_networks = { 'cifar10': 'resnet56_cifar10',
-                    'cifar100': 'resnet56_cifar100',
+substitute_networks = { 'cifar10':  'densenet121_cifar10',
+                        'cifar100': 'densenet121_cifar100',
 }
 
 target_networks =  {
-                    'cifar10': ['resnet56_cifar10'],    #,'resnet56_cifar10_fgsm','resnet56_cifar10_pgd'],
-                    'cifar100': ['resnet56_cifar100']#,'resnet56_cifar100_fgsm','resnet56_cifar100_pgd']
+                    'cifar10':  ['resnet56_cifar10',  'resnet56_cifar10_fgsm',  'densenet121_cifar10_fgsm' ],   
+                    'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm']
                     }
 results = {}
 
@@ -69,7 +72,8 @@ for dataset_name,substitute_network in substitute_networks.items():
         target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes).to(device)
 
     for adversary in attacks:
-        adversary = adversary(epsilon = 0.3)
+        e = distribution.rvs(1)[0]
+        adversary = adversary(epsilon=e)
         results[dataset_name].append(black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device))
         logging.info("blackbox attack for adversary: %s completed" %adversary.name)
 

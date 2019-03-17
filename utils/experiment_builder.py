@@ -12,7 +12,7 @@ from utils.storage_utils import save_statistics
 from utils.utils import pred_batch,to_var
 from utils.train import adv_train, FGSM_train_rnd
 from utils.attacks import FGSMAttack, LinfPGDAttack
-import GPUtil
+# import GPUtil
 import copy
 
 class ExperimentBuilder(nn.Module):
@@ -238,7 +238,6 @@ class ExperimentBuilder(nn.Module):
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()  
-
         return np.asscalar(loss.data.detach().cpu().numpy()), accuracy, train_stat
 
     def run_adv_evaluation_iter(self,x,y):
