@@ -17,7 +17,7 @@ from utils.train import adv_train
 from scipy.stats import truncnorm
 
 DATA_DIR='data'
-MODELS_DIR='experiments_results/transfer'
+MODELS_DIR='experiments_results/attack_results'
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 batch_size = 100
