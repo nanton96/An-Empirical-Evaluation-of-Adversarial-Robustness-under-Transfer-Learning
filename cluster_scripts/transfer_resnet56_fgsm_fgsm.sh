@@ -39,7 +39,7 @@ cd ..
 
 
 python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
-				 --step_size 50 --gamma 0.1 \
+				 --step_size 20 --gamma 0.4 \
                  --num_epochs 50 \
                  --lr 0.1  \
                  --experiment_name 'transfer_resnet56_fgsm_fgsm' \
