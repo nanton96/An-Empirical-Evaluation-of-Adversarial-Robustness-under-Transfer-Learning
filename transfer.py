@@ -29,6 +29,8 @@ experiments =  {
         'transfer_resnet56_fgsm_fgsm':   ('resnet56_cifar100_fgsm', 'resnet56', 'fgsm', True, 6), 
         'transfer_resnet56_fgsm_nat':    ('resnet56_cifar100_fgsm', 'resnet56', 'nat', False, 6),
         'transfer_resnet56_nat_fgsm':    ('resnet56_cifar100',      'resnet56', 'fgsm', True, 6),
+        'transfer_resnet56_nat_nat':    ('resnet56_cifar100',      'resnet56', 'fgsm', True, 6),
+        'transfer_densenet121_nat_nat':    ('resnet56_cifar100',      'resnet56', 'fgsm', True, 6)
         }
 
 experiment, model, adversary, adv_train, unfrozen_layers = experiments[args.experiment_name]
