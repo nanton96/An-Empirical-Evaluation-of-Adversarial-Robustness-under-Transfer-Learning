@@ -48,7 +48,7 @@ else:
 #         logging.info("REQUIRES GRAD: %s" % name)
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
-scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.5)
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=20, gamma=0.1)
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=args.experiment_name,
                                     num_epochs=args.num_epochs,
