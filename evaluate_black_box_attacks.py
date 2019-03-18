@@ -88,6 +88,8 @@ for dataset_name,substitute_network in substitute_networks.items():
     for target_network in target_networks[dataset_name]:
         model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (target_network))
         target_architecture = target_network.split('_')[0]
+        if target_architecture == 'transfer':
+            target_architecture = target_network.split('_')[1]
         target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes).to(device)
 
     for adversary in attacks:
