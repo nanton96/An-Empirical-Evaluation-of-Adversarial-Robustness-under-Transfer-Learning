@@ -56,11 +56,11 @@ trained_networks =  {
                     'transfer_densenet121_fgsm_fgsm' : ('cifar10','densenet121'),
                     'transfer_densenet121_fgsm_nat': ('cifar10', 'densenet121'),
                     'transfer_densenet121_nat_nat': ('cifar10', 'densenet121'), 
-                    'transfer_densenet121_nat_nat_all_layers': ('cifar10', 'densenet121'), 
+                    # 'transfer_densenet121_nat_nat_all_layers': ('cifar100', 'densenet121'), 
                     'transfer_resnet56_fgsm_fgsm': ('cifar10', 'resnet56'),
                     'transfer_resnet56_fgsm_nat': ('cifar10', 'resnet56'),
                     'transfer_resnet56_nat_nat': ('cifar10', 'resnet56'),
-                    'transfer_resnet56_nat_nat_all_layers': ('cifar10', 'resnet56')
+                    # 'transfer_resnet56_nat_nat_all_layers': ('cifar100', 'resnet56')
                     }
 
 for trained_network, (dataset_name, model) in trained_networks.items():
