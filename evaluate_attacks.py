@@ -44,7 +44,7 @@ trained_networks =  {
                     # 'resnet56_cifar100_fgsm': 'cifar100',
                     'resnet56_cifar100_pgd': ('cifar100','resnet56'),
 
-                    # 'resnet56_cifar100_to_cifar10': 'cifar10',
+                    # 'resnet56 _cifar100_to_cifar10': 'cifar10',
 
                     # 'densenet121_cifar10': 'cifar10',
                     # 'densenet121_cifar10_fgsm': 'cifar10',
@@ -72,7 +72,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
     logging.info('Experiment name: %s' %experiment_name)
 
 
-    model_path =os.path.join('./experiments_results/transfer', "%s/saved_models/train_model_best_readable" % (trained_network))
+    model_path =os.path.join('./experiments_results/', "%s/saved_models/train_model_best_readable" % (trained_network))
     logging.info('Loading model from %s' % (model_path))
     net = load_net(model, model_path, num_output_classes)
     net.to(device)
