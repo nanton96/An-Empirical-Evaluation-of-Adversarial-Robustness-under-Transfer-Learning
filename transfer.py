@@ -17,41 +17,46 @@ from utils.utils import load_net,freeze_layers_resnet,freeze_layers_densenet
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 args,device = get_args()  # get arguments from command line
-logging.info("Will train for", args.num_epochs)
+logging.info("Will train for %d", args.num_epochs)
 
 rng = np.random.RandomState(seed=args.seed)  # set the seeds for the experiment
 torch.manual_seed(seed=args.seed) # sets pytorch's seed
 
+experiments =  {
+        'transfer_densenet121_fgsm_fgsm':   ('densenet121_cifar100_fgsm', 'densenet121', 'fgsm', True, 6), 
+        'transfer_densenet121_fgsm_nat':    ('densenet121_cifar100_fgsm', 'densenet121', 'nat', False, 6),
+        'transfer_densenet121_nat_fgsm':    ('densenet121_cifar100',      'densenet121', 'fgsm', True, 6),
+        'transfer_resnet56_fgsm_fgsm':   ('resnet56_cifar100_fgsm', 'resnet56', 'fgsm', True, 6), 
+        'transfer_resnet56_fgsm_nat':    ('resnet56_cifar100_fgsm', 'resnet56', 'nat', False, 6),
+        'transfer_resnet56_nat_fgsm':    ('resnet56_cifar100',      'resnet56', 'fgsm', True, 6),
+        }
 
-num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=args.dataset_name, rng = rng, batch_size = args.batch_size)
-num_original_classes = 10 if args.source_net == 'cifar10' else 100
+experiment, model, adversary, adv_train, unfrozen_layers = experiments[args.experiment_name]
 
-if args.trained_on:
-    args.source_net +='_'+args.trained_on
-model_path =os.path.join("", "experiments_results/%s_%s/saved_models/train_model_best_readable" % (args.model, args.source_net))
-logging.info('Loading %s model from %s' % (args.source_net, model_path))
+num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name='cifar10', rng = rng, batch_size = args.batch_size)
+num_original_classes = 100
 
-net = load_net(args.model, model_path, num_original_classes)
 
-if args.model == "resnet56" or  args.model == "resnet56_fgsm" or args.model == "resnet56_pgd":
-    net= freeze_layers_resnet(net=net,number_of_out_classes=num_output_classes,number_of_layers=args.unfrozen_layers)
-elif args.model == "densenet121" or args.model == "densenet121_fgsm" or args.model == "densenet121_pgd":
-    net= freeze_layers_densenet(net=net,number_of_out_classes=num_output_classes,number_of_layers=args.unfrozen_layers)
+model_path = './experiments_results/%s/saved_models/train_model_best_readable' % experiment
+logging.info('Loading model from %s' % model_path)
+
+net = load_net(model, model_path, num_original_classes)
+
+
+if model == "resnet56":
+    net= freeze_layers_resnet(net=net,number_of_out_classes=num_output_classes,number_of_layers=unfrozen_layers)
+elif model == "densenet121":
+    net= freeze_layers_densenet(net=net,number_of_out_classes=num_output_classes,number_of_layers=unfrozen_layers)
 else:
-    raise AssertionError
-
-
-experiments()
-
-
+    raise AssertionError('Model must be either resnet or densenet121')
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=20, gamma=0.1)
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=args.experiment_name,
                                     num_epochs=args.num_epochs,
-                                    adv_train=args.adv_train,
-                                    adversary=args.adversary,
+                                    adv_train=adv_train,
+                                    adversary=adversary,
                                     device=device,
                                     use_gpu = args.use_gpu,
                                     weight_decay_coefficient=args.weight_decay_coefficient,
