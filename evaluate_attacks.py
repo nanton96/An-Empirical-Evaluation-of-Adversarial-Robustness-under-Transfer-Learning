@@ -42,7 +42,7 @@ trained_networks =  {
 
                     # 'resnet56_cifar100': 'cifar100',
                     # 'resnet56_cifar100_fgsm': 'cifar100',
-                    'resnet56_cifar100_pgd': ('cifar100','resnet56'),
+                   
 
                     # 'resnet56 _cifar100_to_cifar10': 'cifar10',
 
@@ -52,15 +52,19 @@ trained_networks =  {
 
                     # 'densenet121_cifar100': ('cifar100','densenet121'),
                     # 'densenet121_cifar100_fgsm': 'cifar100',
-                    'densenet121_cifar100_pgd': ('cifar100','densenet121'),
+                    
                     'transfer_densenet121_fgsm_fgsm' : ('cifar10','densenet121'),
                     'transfer_densenet121_fgsm_nat': ('cifar10', 'densenet121'),
+                    'transfer_densenet121_nat_fgsm': ('cifar10', 'densenet121'),
                     # 'transfer_densenet121_nat_nat': ('cifar100', 'densenet121'), 
                     # 'transfer_densenet121_nat_nat_all_layers': ('cifar100', 'densenet121'), 
                     'transfer_resnet56_fgsm_fgsm': ('cifar10', 'resnet56'),
                     'transfer_resnet56_fgsm_nat': ('cifar10', 'resnet56'),
+                    'transfer_resnet56_nat_fgsm': ('cifar10', 'resnet56'),
                     # 'transfer_resnet56_nat_nat': ('cifar100', 'resnet56'),
                     # 'transfer_resnet56_nat_nat_all_layers': ('cifar100', 'resnet56')
+                    'densenet121_cifar100_pgd': ('cifar100','densenet121'),
+                    'resnet56_cifar100_pgd': ('cifar100','resnet56'),
                     }
 
 for trained_network, (dataset_name, model) in trained_networks.items():
