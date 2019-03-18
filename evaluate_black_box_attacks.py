@@ -43,8 +43,24 @@ substitute_networks = { 'cifar10':  'densenet121_cifar10',
 }
 
 target_networks =  {
-                    'cifar10':  ['resnet56_cifar10',  'resnet56_cifar10_fgsm',  'densenet121_cifar10_fgsm' ],   
+                    'cifar10':  
+                    [
+                    'resnet56_cifar10',  
+                    'resnet56_cifar10_fgsm',  
+                    'densenet121_cifar10_fgsm',
+                    'transfer_densenet121_fgsm_fgsm',
+                    'transfer_densenet121_fgsm_nat',
+                    'transfer_densenet121_nat_nat', 
+                    'transfer_densenet121_nat_nat_all_layers', 
+                    'transfer_resnet56_fgsm_fgsm',
+                    'transfer_resnet56_fgsm_nat',
+                    'transfer_resnet56_nat_nat',
+                    'transfer_resnet56_nat_nat_all_layers'
+                    ],
+
                     'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm']
+                    
+                    
                     }
 results = {}
 
@@ -60,6 +76,9 @@ for dataset_name,substitute_network in substitute_networks.items():
     # Black-box network 
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (substitute_network))
     source_architecture = substitute_network.split('_')[0]
+    if source_architecture == 'transfer':
+        source_architecture = substitute_network.split('_')[1]
+    
     source_net = load_net(source_architecture, model_path, num_output_classes).to(device)
     
     # We will save here the networks to be attacked
