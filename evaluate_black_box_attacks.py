@@ -50,12 +50,12 @@ target_networks =  {
                     'densenet121_cifar10_fgsm',
                     'transfer_densenet121_fgsm_fgsm',
                     'transfer_densenet121_fgsm_nat',
-                    'transfer_densenet121_nat_nat', 
-                    'transfer_densenet121_nat_nat_all_layers', 
+                    # 'transfer_densenet121_nat_nat', 
+                    # 'transfer_densenet121_nat_nat_all_layers', 
                     'transfer_resnet56_fgsm_fgsm',
                     'transfer_resnet56_fgsm_nat',
-                    'transfer_resnet56_nat_nat',
-                    'transfer_resnet56_nat_nat_all_layers'
+                    # 'transfer_resnet56_nat_nat',
+                    # 'transfer_resnet56_nat_nat_all_layers'
                     ],
 
                     'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm']
