@@ -16,8 +16,6 @@ from utils.utils import load_net, test, attack_over_test_data
 from utils.train import adv_train
 from scipy.stats import truncnorm
 
-DATA_DIR='data'
-MODELS_DIR='experiments_results/attack_results'
 logging.basicConfig(format='%(message)s',level=logging.INFO)
 
 batch_size = 100
@@ -74,7 +72,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
     logging.info('Experiment name: %s' %experiment_name)
 
 
-    model_path =os.path.join(MODELS_DIR, "%s/saved_models/train_model_best_readable" % (trained_network))
+    model_path =os.path.join('./experiments_results/transfer', "%s/saved_models/train_model_best_readable" % (trained_network))
     logging.info('Loading model from %s' % (model_path))
     net = load_net(model, model_path, num_output_classes)
     net.to(device)
@@ -88,7 +86,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
         results[trained_network+"_attacked_by_"+adversary.name] = acc
 
-    path = os.path.join(MODELS_DIR, 'white_box_attacks_%s.json' % trained_network)
+    path = './experiments_results/attack_results/white_box_attacks_%s.json' % trained_network
     with open(path, 'w') as outfile:
         json.dump(results, outfile)        
 

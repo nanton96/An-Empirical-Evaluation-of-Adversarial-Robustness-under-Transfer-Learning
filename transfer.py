@@ -40,12 +40,10 @@ elif args.model == "densenet121" or args.model == "densenet121_fgsm" or args.mod
 else:
     raise AssertionError
 
-#experiment_name = 'transfer_%s_%s_to_%s_lr_%.5f_%s' % (args.model, args.source_net, args.dataset_name, args.lr, str(args.unfrozen_layers)+'_layers')
-#logging.info('Experiment name: %s' %experiment_name)
 
-# for name,param in net.named_parameters():
-#     if param.requires_grad == True:
-#         logging.info("REQUIRES GRAD: %s" % name)
+experiments()
+
+
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=20, gamma=0.1)
