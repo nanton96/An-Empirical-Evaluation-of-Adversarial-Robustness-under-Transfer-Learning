@@ -80,7 +80,7 @@ for dataset_name,substitute_network in substitute_networks.items():
         source_architecture = substitute_network.split('_')[1]
     
     source_net = load_net(source_architecture, model_path, num_output_classes).to(device)
-    
+            
     # We will save here the networks to be attacked
     target_nets = {}
 
