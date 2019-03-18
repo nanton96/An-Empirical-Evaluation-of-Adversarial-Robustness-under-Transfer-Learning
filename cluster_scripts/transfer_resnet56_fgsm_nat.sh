@@ -41,10 +41,10 @@ cd ..
 python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
                  --adv_train False \
                  --num_epochs 50 \
-                 -- trained_on "fgsm" \
-                 --lr 0.1 --model 'densenet121' \
+                 --trained_on "fgsm" \
+                 --lr 0.1 --model 'resnet56' \
                  --source_net cifar100 \
-                 --experiment_name 'transfer_densenet121_fgsm_nat' \
+                 --experiment_name 'transfer_resnet56_fgsm_nat' \
                  --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 \
                  --unfrozen_layers 6 \
                  --dataset_name "cifar10"
