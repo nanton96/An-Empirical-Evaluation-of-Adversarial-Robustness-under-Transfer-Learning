@@ -53,7 +53,7 @@ trained_networks =  {
                     # 'densenet121_cifar100': ('cifar100','densenet121'),
                     # 'densenet121_cifar100_fgsm': ('cifar100','densenet121'),
                     
-                    'transfer_densenet121_fgsm_fgsm' : ('cifar10','densenet121'),
+                    'transfer_densenet121_fgsm_fgsm' : ('cifar10','densenet121')
                     
                     
                     # 'transfer_densenet121_fgsm_nat': ('cifar10', 'densenet121'),
