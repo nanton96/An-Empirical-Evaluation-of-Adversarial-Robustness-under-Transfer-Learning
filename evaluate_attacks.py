@@ -36,22 +36,22 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 
 trained_networks =  {
-                    'resnet56_cifar10': 'cifar10',
-                    'resnet56_cifar10_fgsm': 'cifar10',
+                    'resnet56_cifar10':('cifar10','resnet56'),
+                    'resnet56_cifar10_fgsm': ('cifar10','resnet56'),
                     'resnet56_cifar10_pgd': ('cifar10','resnet56'),
 
-                    'resnet56_cifar100': 'cifar100',
-                    'resnet56_cifar100_fgsm': 'cifar100',
+                    'resnet56_cifar100': ('cifar100','resnet56'),
+                    'resnet56_cifar100_fgsm': ('cifar100','resnet56'),
                    
 
-                    'resnet56 _cifar100_to_cifar10': 'cifar10',
+                    # 'resnet56 _cifar100_to_cifar10': ('cifar10','resnet56'),
 
-                    'densenet121_cifar10': 'cifar10',
-                    'densenet121_cifar10_fgsm': 'cifar10',
+                    'densenet121_cifar10': ('cifar10', 'densenet121'),
+                    'densenet121_cifar10_fgsm': ('cifar10', 'densenet121'),
                     'densenet121_cifar10_pgd': ('cifar10', 'densenet121'),
 
                     'densenet121_cifar100': ('cifar100','densenet121'),
-                    'densenet121_cifar100_fgsm': 'cifar100',
+                    'densenet121_cifar100_fgsm': ('cifar100','densenet121'),
                     
                     # 'transfer_densenet121_fgsm_fgsm' : ('cifar10','densenet121'),
                     'transfer_densenet121_fgsm_nat': ('cifar10', 'densenet121'),
@@ -90,7 +90,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
         acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
         results[trained_network+"_attacked_by_"+adversary.name] = acc
 
-    path = './experiments_results/attack_results/white_box_attacks_pgd_7_%s.json' % trained_network
+    path = './experiments_results/attack_results_pgd_7/white_box_attacks_pgd_7_%s.json' % trained_network
     with open(path, 'w') as outfile:
         json.dump(results, outfile)        
 
