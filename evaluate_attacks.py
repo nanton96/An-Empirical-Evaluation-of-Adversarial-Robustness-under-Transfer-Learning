@@ -53,12 +53,12 @@ trained_networks =  {
                     # 'densenet121_cifar100': 'cifar100',
                     # 'densenet121_cifar100_fgsm': 'cifar100',
                     # 'densenet121_cifar1000_pgd': 'cifar100',
-                    'transfer_densenet121_fgsm_nat' : ('cifar10','densenet121'),
-                    'transfer_densenet121_nat_fgsm': ('cifar10', 'densenet121'),
+                    'transfer_densenet121_fgsm_fgsm' : ('cifar10','densenet121'),
+                    'transfer_densenet121_fgsm_nat': ('cifar10', 'densenet121'),
                     'transfer_densenet121_nat_nat': ('cifar10', 'densenet121'), 
                     'transfer_densenet121_nat_nat_all_layers': ('cifar10', 'densenet121'), 
+                    'transfer_resnet56_fgsm_fgsm': ('cifar10', 'resnet56'),
                     'transfer_resnet56_fgsm_nat': ('cifar10', 'resnet56'),
-                    'transfer_resnet56_nat_fgsm': ('cifar10', 'resnet56'),
                     'transfer_resnet56_nat_nat': ('cifar10', 'resnet56'),
                     'transfer_resnet56_nat_nat_all_layers': ('cifar10', 'resnet56')
                     }
