@@ -71,11 +71,11 @@ target_networks =  {
                     
                     'transfer_resnet56_pgd_pgd',
                     'transfer_resnet56_pgd_nat',
-                    'transfer_resnet56_nat_pgd',
+                    'transfer_resnet56_nat_pgd'
                     
                     ],
 
-                    'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm','resnet56_cifar100_pgd', 'densenet121_cifar100_pgd']]
+                    'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm','resnet56_cifar100_pgd', 'densenet121_cifar100_pgd']
                     
                     
                     }
