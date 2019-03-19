@@ -63,7 +63,7 @@ target_networks =  {
                     'transfer_densenet121_pgd_pgd',
                     'transfer_densenet121_pgd_nat',
                     'transfer_densenet121_nat_pgd',
-                    'transfer_densenet121_nat_nat',
+                    # 'transfer_densenet121_nat_nat',
                     
                     'transfer_resnet56_fgsm_fgsm',
                     'transfer_resnet56_pgd_pgd',
