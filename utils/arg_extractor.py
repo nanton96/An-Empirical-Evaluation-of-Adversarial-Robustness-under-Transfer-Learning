@@ -62,6 +62,9 @@ def get_args():
     
     parser.add_argument('--adv_train', type=str2bool,default = False, help="specify whether or not to perform adversarial training")
     parser.add_argument('--adversary', type=str, default="fgsm", help="fgsm/pgd")
+    parser.add_argument('--gamma', type=float, default=0.1, help="optimizer lr gamma")
+    parser.add_argument('--step_size', type=int, default=25, help="optimizer step size to apply gamma")
+
 
     args = parser.parse_args()
     gpu_id = str(args.gpu_id)

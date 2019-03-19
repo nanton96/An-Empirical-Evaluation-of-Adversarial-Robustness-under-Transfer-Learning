@@ -39,6 +39,7 @@ cd ..
 
 
 python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
+				 --step_size 25 --gamma 0.1 \
                  --num_epochs 50 \
                  --lr 0.1 \
                  --experiment_name 'transfer_densenet121_fgsm_fgsm' \
