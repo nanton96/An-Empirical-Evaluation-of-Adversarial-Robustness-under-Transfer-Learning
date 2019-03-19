@@ -35,7 +35,7 @@ experiments =  {
         'transfer_resnet56_nat_nat':        ('resnet56_cifar100',      'resnet56', 'nat', False, 6),
 
 
-        'transfer_densenet121_pgd_pgd':   ('densenet121_cifar100_pgd', 'densenet121', 'pgd ', True, 6), 
+        'transfer_densenet121_pgd_pgd':   ('densenet121_cifar100_pgd', 'densenet121', 'pgd', True, 6), 
         'transfer_densenet121_pgd_nat':   ('densenet121_cifar100_pgd', 'densenet121', 'nat', False, 6),
         'transfer_densenet121_nat_pgd':   ('densenet121_cifar100',     'densenet121', 'pgd', True, 6),
         
