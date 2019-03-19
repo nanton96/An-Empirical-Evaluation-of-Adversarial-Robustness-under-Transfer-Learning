@@ -1,0 +1,13 @@
+\begin{tabular}{lrrr}
+\toprule
+{} &  clean &  fgsm &   pgd \\
+\midrule
+densenet121 cifar10 fgsm & 91.0% & 55.0% & 16.1% \\ 
+densenet121 cifar10 pgd & 87.9% & 51.2% & 19.6% \\ 
+transfer densenet121 nat fgsm & 87.1% & 51.1% & 7.9% \\ 
+transfer densenet121 fgsm fgsm & 85.9% & 46.0% & 12.7% \\ 
+transfer densenet121 pgd nat & 85.6% & 41.1% & 12.0% \\ 
+transfer densenet121 nat pgd & 83.6% & 52.2% & 10.6% \\ 
+transfer densenet121 pgd pgd & 82.7% & 50.3% & 16.5% \\ 
+\bottomrule
+\end{tabular}
