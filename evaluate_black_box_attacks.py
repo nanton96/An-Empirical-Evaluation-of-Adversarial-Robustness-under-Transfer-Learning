@@ -86,7 +86,7 @@ for dataset_name,substitute_network in substitute_networks.items():
     
     # Dataset loading
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
-
+    
     # Black-box network 
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (substitute_network))
     source_architecture = substitute_network.split('_')[0]
