@@ -66,7 +66,7 @@ else:
     raise AssertionError('Model must be either resnet or densenet121')
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay_coefficient)
-scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=15, gamma=0.1)
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=20, gamma=0.1)
 conv_experiment = ExperimentBuilder(network_model=net,
                                     experiment_name=args.experiment_name,
                                     num_epochs=args.num_epochs,
