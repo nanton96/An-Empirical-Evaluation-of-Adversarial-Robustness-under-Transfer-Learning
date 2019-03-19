@@ -45,22 +45,37 @@ substitute_networks = { 'cifar10':  'densenet121_cifar10',
 target_networks =  {
                     'cifar10':  
                     [
-                    'resnet56_cifar10',  
+                    'resnet56_cifar10', 
+                    
                     'resnet56_cifar10_fgsm',  
+                    'resnet56_cifar10_pgd',  
+
                     'densenet121_cifar10_fgsm',
-                    'transfer_densenet121_fgsm_fgsm',
+                    'densenet121_cifar10_pgd',
+            
+                    
+                    'transfer_densenet121_nat_nat', 
+                    
                     'transfer_densenet121_fgsm_nat',
                     'transfer_densenet121_nat_fgsm',
-                    'transfer_resnet56_nat_fgsm',
-                    # 'transfer_densenet121_nat_nat', 
-                    # 'transfer_densenet121_nat_nat_all_layers', 
+                    'transfer_densenet121_fgsm_fgsm',
+                    'transfer_densenet121_pgd_pgd',
+                    'transfer_densenet121_pgd_nat',
+                    'transfer_densenet121_nat_pgd',
+
+                    'transfer_resnet56_nat_nat',
+
                     'transfer_resnet56_fgsm_fgsm',
-                    'transfer_resnet56_fgsm_nat',
-                    # 'transfer_resnet56_nat_nat',
-                    # 'transfer_resnet56_nat_nat_all_layers'
+                    'transfer_resnet56_fgsm_nat',        
+                    'transfer_resnet56_nat_fgsm',
+                    
+                    'transfer_resnet56_pgd_pgd',
+                    'transfer_resnet56_pgd_nat',
+                    'transfer_resnet56_nat_pgd'
+                    
                     ],
 
-                    'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm']
+                    'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm','resnet56_cifar100_pgd', 'densenet121_cifar100_pgd']
                     
                     
                     }
@@ -74,7 +89,7 @@ for dataset_name,substitute_network in substitute_networks.items():
     
     # Dataset loading
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
-
+    
     # Black-box network 
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (substitute_network))
     source_architecture = substitute_network.split('_')[0]
