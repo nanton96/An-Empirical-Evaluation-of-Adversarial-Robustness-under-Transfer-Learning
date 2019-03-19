@@ -45,34 +45,37 @@ substitute_networks = { 'cifar10':  'densenet121_cifar10',
 target_networks =  {
                     'cifar10':  
                     [
-                    # 'resnet56_cifar10',  
-                    # 'resnet56_cifar10_fgsm',  
-                    # 'densenet121_cifar10_fgsm',
-                    # 'transfer_densenet121_fgsm_fgsm',
-                    # 'transfer_densenet121_fgsm_nat',
-                    # 'transfer_densenet121_nat_fgsm',
-                    # 'transfer_resnet56_nat_fgsm',
-                    # 'transfer_densenet121_nat_nat', 
-                    # 'transfer_densenet121_nat_nat_all_layers', 
-                    'transfer_resnet56_fgsm_fgsm',
-                    # 'transfer_resnet56_fgsm_nat',
-                    # 'transfer_resnet56_nat_nat',
-                    # 'transfer_resnet56_nat_nat_all_layers'
+                    'resnet56_cifar10', 
+                    
+                    'resnet56_cifar10_fgsm',  
+                    'resnet56_cifar10_pgd',  
 
+                    'densenet121_cifar10_fgsm',
+                    'densenet121_cifar10_pgd',
+            
+                    
+                    'transfer_densenet121_nat_nat', 
+                    
+                    'transfer_densenet121_fgsm_nat',
+                    'transfer_densenet121_nat_fgsm',
                     'transfer_densenet121_fgsm_fgsm',
                     'transfer_densenet121_pgd_pgd',
                     'transfer_densenet121_pgd_nat',
                     'transfer_densenet121_nat_pgd',
-                    # 'transfer_densenet121_nat_nat',
-                    
+
+                    'transfer_resnet56_nat_nat'
+
                     'transfer_resnet56_fgsm_fgsm',
+                    'transfer_resnet56_fgsm_nat',        
+                    'transfer_resnet56_nat_fgsm',
+                    
                     'transfer_resnet56_pgd_pgd',
                     'transfer_resnet56_pgd_nat',
                     'transfer_resnet56_nat_pgd',
-                    'transfer_resnet56_nat_nat'
+                    
                     ],
 
-                    'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm']
+                    'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm','resnet56_cifar100_pgd', 'densenet121_cifar100_pgd']]
                     
                     
                     }
