@@ -54,7 +54,7 @@ target_networks =  {
                     'densenet121_cifar10_pgd',
             
                     
-                    'transfer_densenet121_nat_nat', 
+                    # 'transfer_densenet121_nat_nat', 
                     
                     'transfer_densenet121_fgsm_nat',
                     'transfer_densenet121_nat_fgsm',
@@ -63,7 +63,7 @@ target_networks =  {
                     'transfer_densenet121_pgd_nat',
                     'transfer_densenet121_nat_pgd',
 
-                    'transfer_resnet56_nat_nat',
+                    # 'transfer_resnet56_nat_nat',
 
                     'transfer_resnet56_fgsm_fgsm',
                     'transfer_resnet56_fgsm_nat',        
