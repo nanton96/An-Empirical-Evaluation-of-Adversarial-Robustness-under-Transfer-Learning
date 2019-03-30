@@ -9,7 +9,7 @@ import os
 from utils.data_utils import getDataProviders
 from utils.arg_extractor import get_args
 from utils.experiment_builder import ExperimentBuilder
-from utils.utils import load_net,freeze_layers_resnet,freeze_layers_densenet
+from utils.helper_functions import load_net,freeze_layers_resnet,freeze_layers_densenet
 
 # DATA_DIR=os.environ['DATA_DIR']
 # MODELS_DIR=os.environ['MODELS_DIR']

@@ -9,9 +9,9 @@ import time
 import random
 from scipy.stats import truncnorm
 from utils.storage_utils import save_statistics
-from utils.utils import pred_batch,to_var
+from utils.helper_functions import pred_batch,to_var
 from utils.train import adv_train, FGSM_train_rnd
-from utils.attacks import FGSMAttack, LinfPGDAttack
+from utils.evaluation_functions import FGSMAttack, LinfPGDAttack
 # import GPUtil
 import copy
 

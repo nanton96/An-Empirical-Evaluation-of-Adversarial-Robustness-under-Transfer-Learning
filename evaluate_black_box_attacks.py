@@ -11,8 +11,8 @@ import json
 from utils.data_utils import getDataProviders
 from utils.arg_extractor import get_args
 from utils.storage_utils import dict_load
-from utils.attacks import FGSMAttack,LinfPGDAttack
-from utils.utils import load_net,black_box_attack
+from utils.evaluation_functions import FGSMAttack,LinfPGDAttack,black_box_attack
+from utils.helper_functions import load_net
 from utils.train import adv_train
 from scipy.stats import truncnorm
 
