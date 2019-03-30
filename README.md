@@ -27,3 +27,4 @@ Build with
 * Matplotlib
 * Numpy
 * Pytorch
+* tqdm
