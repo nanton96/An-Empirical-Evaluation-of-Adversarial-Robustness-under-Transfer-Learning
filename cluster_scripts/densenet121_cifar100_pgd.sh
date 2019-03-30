@@ -1,10 +1,10 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=Short
+#SBATCH --partition=LongJobs
 #SBATCH --gres=gpu:1
 #SBATCH --mem=12000  # memory in Mb
-#SBATCH --time=0-03:59:00
+#SBATCH --time=0-49:59:59
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 
@@ -36,11 +36,16 @@ rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd ..
+mkdir experiments_results
 
-
-python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
-				 --step_size 20 --gamma 0.4 \
-                 --experiment_name 'transfer_resnet56_fgsm_nat' \
-                 --num_epochs 50 \
-                 --lr 0.1 \
-                 --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 
+python train.py --batch_size 100 \
+         		--num_epochs 200 \
+          		--model densenet121 \
+          		--dataset_name "cifar100" \
+          		--adv_train True \
+         		--adversary "pgd" \
+          		--experiment_name 'densenet121_cifar100_pgd' \
+          		--use_gpu "True" \
+          		--lr 0.1 \
+				--continue_from_epoch -1 \
+				--seed 0 

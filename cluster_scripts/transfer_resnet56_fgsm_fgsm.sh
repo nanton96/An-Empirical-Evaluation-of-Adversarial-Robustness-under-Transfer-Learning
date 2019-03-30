@@ -39,13 +39,8 @@ cd ..
 
 
 python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
-                 --adv_train True \
+				 --step_size 20 --gamma 0.4 \
                  --num_epochs 50 \
-                 --adversary "fgsm" \
-                 --trained_on "fgsm" \
-                 --lr 0.1 --model 'resnet56' \
-                 --source_net cifar100 \
+                 --lr 0.1  \
                  --experiment_name 'transfer_resnet56_fgsm_fgsm' \
-                 --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 \
-                 --unfrozen_layers 6 \
-                 --dataset_name "cifar10"
+                 --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 

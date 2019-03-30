@@ -29,7 +29,7 @@ rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
 torch.manual_seed(seed=0) # sets pytorch's seed
 # load data_set (only need test set...)
 
-attacks = [FGSMAttack]#,LinfPGDAttack] 
+attacks = [FGSMAttack ,lambda epsilon: LinfPGDAttack(epsilon=epsilon, k=7)] 
 
 if torch.cuda.is_available():  # checks whether a cuda gpu is available and whether the gpu flag is True
     device = torch.device('cuda')  # sets device to be cuda
@@ -43,8 +43,41 @@ substitute_networks = { 'cifar10':  'densenet121_cifar10',
 }
 
 target_networks =  {
-                    'cifar10':  ['resnet56_cifar10',  'resnet56_cifar10_fgsm',  'densenet121_cifar10_fgsm' ],   
-                    'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm']
+                    'cifar10':  
+                    [
+                    'resnet56_cifar10', 
+                    
+                    'resnet56_cifar10_fgsm',  
+                    'resnet56_cifar10_pgd',  
+
+                    'densenet121_cifar10_fgsm',
+                    'densenet121_cifar10_pgd',
+            
+                    
+                    # 'transfer_densenet121_nat_nat', 
+                    
+                    'transfer_densenet121_fgsm_nat',
+                    'transfer_densenet121_nat_fgsm',
+                    'transfer_densenet121_fgsm_fgsm',
+                    'transfer_densenet121_pgd_pgd',
+                    'transfer_densenet121_pgd_nat',
+                    'transfer_densenet121_nat_pgd',
+
+                    # 'transfer_resnet56_nat_nat',
+
+                    'transfer_resnet56_fgsm_fgsm',
+                    'transfer_resnet56_fgsm_nat',        
+                    'transfer_resnet56_nat_fgsm',
+                    
+                    'transfer_resnet56_pgd_pgd',
+                    'transfer_resnet56_pgd_nat',
+                    'transfer_resnet56_nat_pgd'
+                    
+                    ],
+
+                    'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm','resnet56_cifar100_pgd', 'densenet121_cifar100_pgd']
+                    
+                    
                     }
 results = {}
 
@@ -56,12 +89,15 @@ for dataset_name,substitute_network in substitute_networks.items():
     
     # Dataset loading
     num_output_classes, train_data,val_data,test_data = getDataProviders(dataset_name=dataset_name,rng = rng, batch_size = batch_size)
-
+    
     # Black-box network 
     model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (substitute_network))
     source_architecture = substitute_network.split('_')[0]
-    source_net = load_net(source_architecture, model_path, num_output_classes).to(device)
+    if source_architecture == 'transfer':
+        source_architecture = substitute_network.split('_')[1]
     
+    source_net = load_net(source_architecture, model_path, num_output_classes).to(device)
+
     # We will save here the networks to be attacked
     target_nets = {}
 
@@ -69,6 +105,8 @@ for dataset_name,substitute_network in substitute_networks.items():
     for target_network in target_networks[dataset_name]:
         model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (target_network))
         target_architecture = target_network.split('_')[0]
+        if target_architecture == 'transfer':
+            target_architecture = target_network.split('_')[1]
         target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes).to(device)
 
     for adversary in attacks:

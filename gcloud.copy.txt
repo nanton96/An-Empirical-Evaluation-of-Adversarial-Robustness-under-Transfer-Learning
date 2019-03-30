@@ -6,5 +6,5 @@ gcloud compute scp --recurse  mlpractical-3:~/mlpcw4/experiments_results/resnet5
 
 gcloud compute scp --recurse  mlpractical-4:~/mlpcw4/experiments_results/resnet56_cifar100_pgd/ .  --zone "europe-west1-b" --project "s1680171-mlpractical"
 
+gcloud compute scp --recurse  mlpractical-3:~/mlpcw4/experiments_results/* ~/GoogleDrive/MLP/ --zone "europe-west1-b" --project "s1680171-mlpractical"
 
-gcloud compute scp --recurse  mlpractical-3:~/mlpcw4/experiments_results/nets_to_attack/ ~/GoogleDrive/MLP/nets_to_attack --zone "europe-west1-b" --project "s1680171-mlpractical"
