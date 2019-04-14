@@ -42,5 +42,5 @@ python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
 				 --step_size 25 --gamma 0.1 \
                  --num_epochs 50 \
                  --lr 0.1  \
-                 --experiment_name 'transfer_all_layers_resnet56_nat_nat' \
+                 --experiment_name 'transfer_all_layers_resnet56_fgsm_fgsm' \
                  --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 
