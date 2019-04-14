@@ -10,8 +10,7 @@ from scipy.stats import truncnorm
 import torch
 import torch.nn as nn
 
-from utils.attacks import FGSMAttack, LinfPGDAttack
-from utils.utils import truncated_normal
+from utils.evaluation_functions import FGSMAttack, LinfPGDAttack, truncated_normal
 
 
 
