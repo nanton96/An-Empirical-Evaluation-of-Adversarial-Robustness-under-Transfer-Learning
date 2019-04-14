@@ -53,21 +53,23 @@ def pred_batch(x, model):
 
 
 def freeze_layers_resnet(net,number_of_layers,number_of_out_classes):
-    for param in net.parameters():
-        param.requires_grad = False
-    for i in range(9-number_of_layers,9):
-        for param in net.layer3[i].parameters():
-            param.requires_grad = True
+    if number_of_layers > 0:
+        for param in net.parameters():
+            param.requires_grad = False
+        for i in range(9-number_of_layers,9):
+            for param in net.layer3[i].parameters():
+                param.requires_grad = True
     num_ftrs = net.linear.in_features
     net.linear = nn.Linear(num_ftrs, number_of_out_classes)
     return net
 
 def freeze_layers_densenet(net,number_of_layers,number_of_out_classes):
-    for param in net.parameters():
-        param.requires_grad = False
-    for i in range(15-number_of_layers,15):
-        for param in net.dense4[i].parameters():       
-            param.requires_grad = True
+    if number_of_layers > 0:
+        for param in net.parameters():
+            param.requires_grad = False
+        for i in range(15-number_of_layers,15):
+            for param in net.dense4[i].parameters():       
+                param.requires_grad = True
     num_ftrs = net.linear.in_features
     net.linear = nn.Linear(num_ftrs, number_of_out_classes)
     return net

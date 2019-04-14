@@ -28,6 +28,7 @@ experiments =  {
         'transfer_densenet121_fgsm_nat':    ('densenet121_cifar100_fgsm', 'densenet121', 'nat', False, 6),
         'transfer_densenet121_nat_fgsm':    ('densenet121_cifar100',      'densenet121', 'fgsm', True, 6),
         'transfer_densenet121_nat_nat':     ('densenet121_cifar100',      'densenet121', 'nat', False, 6),
+        'transfer_all_layers_densenet121_nat_nat':     ('densenet121_cifar100',      'densenet121', 'nat', False, -1),
 
 
         'transfer_densenet121_pgd_pgd':   ('densenet121_cifar100_pgd', 'densenet121', 'pgd', True, 6), 
@@ -39,6 +40,7 @@ experiments =  {
         'transfer_resnet56_fgsm_nat':       ('resnet56_cifar100_fgsm', 'resnet56', 'nat', False, 6),
         'transfer_resnet56_nat_fgsm':       ('resnet56_cifar100',      'resnet56', 'fgsm', True, 6),
         'transfer_resnet56_nat_nat':        ('resnet56_cifar100',      'resnet56', 'nat', False, 6),
+        'transfer_all_layers_resnet56_nat_nat':        ('resnet56_cifar100',      'resnet56', 'nat', False, -1),
 
 
         
