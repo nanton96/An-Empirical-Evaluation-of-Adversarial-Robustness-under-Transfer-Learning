@@ -11,8 +11,8 @@ import json
 from utils.data_utils import getDataProviders
 from utils.arg_extractor import get_args
 from utils.storage_utils import dict_load
-from utils.attacks import FGSMAttack,LinfPGDAttack
-from utils.utils import load_net, test, attack_over_test_data
+from utils.helper_functions import load_net
+from utils.evaluation_functions import test, attack_over_test_data, FGSMAttack, LinfPGDAttack
 from utils.train import adv_train
 from scipy.stats import truncnorm
 
@@ -36,40 +36,30 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 
 trained_networks =  {
-                    'resnet56_cifar10':('cifar10','resnet56'),
-                    'resnet56_cifar10_fgsm': ('cifar10','resnet56'),
-                    'resnet56_cifar10_pgd': ('cifar10','resnet56'),
-
-                    # 'resnet56_cifar100': ('cifar100','resnet56'),
-                    # 'resnet56_cifar100_fgsm': ('cifar100','resnet56'),
-                   
-
-                    # 'resnet56 _cifar100_to_cifar10': ('cifar10','resnet56'),
-
-                    'densenet121_cifar10': ('cifar10', 'densenet121'),
-                    'densenet121_cifar10_fgsm': ('cifar10', 'densenet121'),
-                    'densenet121_cifar10_pgd': ('cifar10', 'densenet121'),
-
-                    # 'densenet121_cifar100': ('cifar100','densenet121'),
-                    # 'densenet121_cifar100_fgsm': ('cifar100','densenet121'),
-                    
-                    # 'transfer_densenet121_fgsm_fgsm' : ('cifar10','densenet121'),
-                    # 'transfer_densenet121_nat_fgsm': ('cifar10', 'densenet121'),
-                    # 'transfer_densenet121_pgd_pgd': ('cifar10', 'densenet121'),
-                    # 'transfer_densenet121_pgd_nat': ('cifar10', 'densenet121'),
-                    # 'transfer_densenet121_nat_pgd': ('cifar10', 'densenet121'),
+                    'resnet56_cifar10': 'cifar10',
+                    'resnet56_cifar10_fgsm': 'cifar10',
+                    'resnet56_cifar10_pgd': 'cifar10',
+                    'resnet56_cifar100': 'cifar100',
+                    'resnet56_cifar100_fgsm': 'cifar100',
+                    'resnet56_cifar100_pgd': 'cifar100',
+                    'resnet56_cifar100_to_cifar10': 'cifar10',
+                    'densenet121_cifar10': 'cifar10',
+                    'densenet121_cifar10_fgsm': 'cifar10',
+                    'densenet121_cifar10_pgd': 'cifar10',
+                    'densenet121_cifar100': 'cifar100',
+                    'densenet121_cifar100_fgsm': 'cifar100',
+                    'densenet121_cifar1000_pgd': 'cifar100',
+                    'transfer_densenet121_fgsm_nat' : ('cifar10','densenet121'),
+                    'transfer_densenet121_nat_fgsm': ('cifar10', 'densenet121'),
                     'transfer_densenet121_nat_nat': ('cifar10', 'densenet121'), 
-                    
-                    # 'transfer_resnet56_fgsm_fgsm': ('cifar10', 'resnet56'),
+                    'transfer_resnet56_fgsm_fgsm': ('cifar10', 'resnet56'),
                     'transfer_resnet56_pgd_pgd': ('cifar10', 'resnet56'),
                     'transfer_resnet56_pgd_nat': ('cifar10', 'resnet56'),
-                    # 'transfer_resnet56_nat_fgsm': ('cifar10', 'resnet56'),
+                    'transfer_resnet56_nat_fgsm': ('cifar10', 'resnet56'),
                     'transfer_resnet56_nat_pgd': ('cifar10', 'resnet56'),
-                    'transfer_resnet56_nat_nat': ('cifar10', 'resnet56')
-
-
-                    # 'densenet121_cifar100_pgd': ('cifar100','densenet121'),
-                    # 'resnet56_cifar100_pgd': ('cifar100','resnet56'),
+                    'transfer_resnet56_nat_nat': ('cifar10', 'resnet56'),
+                    'densenet121_cifar100_pgd': ('cifar100','densenet121'),
+                    'resnet56_cifar100_pgd': ('cifar100','resnet56'),
                     }
 
 for trained_network, (dataset_name, model) in trained_networks.items():
