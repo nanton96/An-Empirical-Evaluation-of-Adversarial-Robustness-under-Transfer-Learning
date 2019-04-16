@@ -102,11 +102,11 @@ for dataset_name,substitute_network in substitute_networks.items():
         target_architecture = 'resnet56' if 'resnet' in target_network else 'densenet121'
         target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes).to(device)
 
-    for adversary in attacks:
-        for e in [0.0625, 0.125]:
+    for e in [0.0625, 0.125]:
+        results[dataset_name+'_e_%.4f'%e] = []
+        for adversary in attacks:
         # e = 0.125 # distribution.rvs(1)[0]
             adversary = adversary(epsilon=e)
-            results[dataset_name+'_e_%.4f'%e] = []
             results[dataset_name+'_e_%.4f'%e].append(black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device))
             logging.info("blackbox attack for adversary: %s completed" %adversary.name)
 
