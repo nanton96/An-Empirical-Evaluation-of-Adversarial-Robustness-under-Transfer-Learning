@@ -47,7 +47,7 @@ trained_networks =  {
                     "transfer_all_layers_densenet121_nat_pgd_step_25_gamma_0.1": ('cifar10', 'densenet121'),
                     "transfer_all_layers_densenet121_pgd_nat_step_25_gamma_0.1": ('cifar10', 'densenet121'),
                     "transfer_all_layers_densenet121_pgd_nat_step_25_gamma_0.1_2": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_pgd_pgd_step_25_gamma_0.1:, ('cifar10', 'densenet121'),
+                    "transfer_all_layers_densenet121_pgd_pgd_step_25_gamma_0.1": ('cifar10', 'densenet121'),
                     "transfer_all_layers_resnet56_fgsm_fgsm_step_25_gamma_0.1": ('cifar10', 'resnet56'),
                     "transfer_all_layers_resnet56_fgsm_fgsm_step_25_gamma_0.1_2": ('cifar10', 'resnet56'),
                     "transfer_all_layers_resnet56_fgsm_nat_step_25_gamma_0.1": ('cifar10', 'resnet56'),
@@ -78,14 +78,14 @@ for trained_network, (dataset_name, model) in trained_networks.items():
     acc = test(net,test_data,device)
     results[trained_network+"_clean"] = acc
     # Attack FGSM
-    for e in [0.0625, 0.125]:
+    for e in [0.0625/2, 0.0625, 0.125]:
         logging.info('EPSILON %.4f' % e)
         for attack in attacks:
             adversary = attack(epsilon = e)
             # e=0.125 #e = distribution.rvs(1)[0]
             adversary.model = net
             acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
-            results[trained_network+"_attacked_by_"+adversary.name+'_e_%.4f'%e] = acc
+            results[trained_network+"_attacked_by_"+adversary.name+'_e_%.5f'%e] = acc
 
     path = './experiments_results/attack_results_pgd_7/white_box_attacks_pgd_7_%s.json' % trained_network
     with open(path, 'w') as outfile:

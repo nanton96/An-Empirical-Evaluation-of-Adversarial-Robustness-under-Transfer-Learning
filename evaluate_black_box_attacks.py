@@ -39,7 +39,7 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 
 substitute_networks = { 'cifar10':  'densenet121_cifar10',
-                        'cifar100': 'densenet121_cifar100',
+                        # 'cifar100': 'densenet121_cifar100',
 }
 
 target_networks =  {
@@ -57,7 +57,7 @@ target_networks =  {
                     "transfer_all_layers_densenet121_nat_pgd_step_25_gamma_0.1",
                     "transfer_all_layers_densenet121_pgd_nat_step_25_gamma_0.1",
                     "transfer_all_layers_densenet121_pgd_nat_step_25_gamma_0.1_2",
-                    # "transfer_all_layers_densenet121_pgd_pgd_step_25_gamma_0.1",
+                    "transfer_all_layers_densenet121_pgd_pgd_step_25_gamma_0.1",
                     "transfer_all_layers_resnet56_fgsm_fgsm_step_25_gamma_0.1",
                     "transfer_all_layers_resnet56_fgsm_fgsm_step_25_gamma_0.1_2",
                     "transfer_all_layers_resnet56_fgsm_nat_step_25_gamma_0.1",
@@ -102,12 +102,12 @@ for dataset_name,substitute_network in substitute_networks.items():
         target_architecture = 'resnet56' if 'resnet' in target_network else 'densenet121'
         target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes).to(device)
 
-    for e in [0.0625, 0.125]:
-        results[dataset_name+'_e_%.4f'%e] = []
+    for e in [0.0625/2, 0.0625, 0.125]:
+        results[dataset_name+'_e_%.5f'%e] = []
         for adversary in attacks:
             adversary = adversary(epsilon=e)
             logging.info("blackbox attack for adversary: %s started" %adversary.name)
-            results[dataset_name+'_e_%.4f'%e].append(black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device))
+            results[dataset_name+'_e_%.5f'%e].append(black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device))
             logging.info("blackbox attack for adversary: %s completed" %adversary.name)
 
         with open('experiments_results/attack_results/black_box_results_all_layers.json', 'w') as outfile:
