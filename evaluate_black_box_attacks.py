@@ -105,8 +105,8 @@ for dataset_name,substitute_network in substitute_networks.items():
     for e in [0.0625, 0.125]:
         results[dataset_name+'_e_%.4f'%e] = []
         for adversary in attacks:
-        # e = 0.125 # distribution.rvs(1)[0]
             adversary = adversary(epsilon=e)
+            logging.info("blackbox attack for adversary: %s started" %adversary.name)
             results[dataset_name+'_e_%.4f'%e].append(black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device))
             logging.info("blackbox attack for adversary: %s completed" %adversary.name)
 
