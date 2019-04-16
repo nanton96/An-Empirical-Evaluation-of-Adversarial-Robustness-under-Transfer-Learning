@@ -17,7 +17,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
 
-from utils.helper_functions import to_var
+from utils.helper_functions import to_var, pred_batch
 
 # --- White-box attacks ---
 
