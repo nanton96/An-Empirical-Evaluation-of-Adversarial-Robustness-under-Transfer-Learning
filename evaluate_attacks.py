@@ -78,10 +78,11 @@ for trained_network, (dataset_name, model) in trained_networks.items():
     acc = test(net,test_data,device)
     results[trained_network+"_clean"] = acc
     # Attack FGSM
-    for attack in attacks:
-        # e=0.125 #e = distribution.rvs(1)[0]
-        for e in [0.0625, 0.125]:
+    for e in [0.0625, 0.125]:
+        logging.info('EPSILON %.4f' % e)
+        for attack in attacks:
             adversary = attack(epsilon = e)
+            # e=0.125 #e = distribution.rvs(1)[0]
             adversary.model = net
             acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
             results[trained_network+"_attacked_by_"+adversary.name+'_e_%.4f'%e] = acc
