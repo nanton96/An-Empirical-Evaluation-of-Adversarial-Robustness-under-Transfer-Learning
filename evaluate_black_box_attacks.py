@@ -103,6 +103,7 @@ for dataset_name,substitute_network in substitute_networks.items():
         target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes).to(device)
 
     for e in [0.0625/2, 0.0625, 0.125]:
+        logging.info("epsilon %.5f" %e)
         results[dataset_name+'_e_%.5f'%e] = []
         for adversary in attacks:
             adversary = adversary(epsilon=e)
