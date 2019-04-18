@@ -124,13 +124,15 @@ def black_box_attack(source_net,target_networks,adversary,loader,num_output_clas
         y = y.to(device)       
 
         # Prevent label leaking        
-        y_pred  = pred_batch(x,source_net)
+        # y_pred  = pred_batch(x,source_net)
 
         # Create corresponding adversarial examples for training
         if(torch.cuda.is_available()):
             x = x.cpu()
+        # Changed this line to prevent label leaking 
+        # x_adv = adversary.perturb(x.numpy(), y_pred)  
         
-        x_adv = adversary.perturb(x.numpy(), y_pred)  
+        x_adv = adversary.perturb(x.numpy(), y)  
         x_adv = torch.from_numpy(x_adv)
 
         if torch.cuda.is_available():
