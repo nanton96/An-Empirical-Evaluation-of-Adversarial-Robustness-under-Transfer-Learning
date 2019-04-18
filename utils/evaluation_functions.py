@@ -171,6 +171,7 @@ def attack_over_test_data(model, adversary, param, loader, device,oracle=None):
         # Create corresponding adversarial examples for training
         if(torch.cuda.is_available()):
             x = x.cpu()
+            y = x.cpu()
         # We did change the following line 
         # x_adv = adversary.perturb(x.numpy(), y_pred)  
         x_adv = adversary.perturb(x.numpy(), y)  
