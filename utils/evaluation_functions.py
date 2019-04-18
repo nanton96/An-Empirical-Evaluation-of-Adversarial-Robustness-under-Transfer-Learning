@@ -129,6 +129,7 @@ def black_box_attack(source_net,target_networks,adversary,loader,num_output_clas
         # Create corresponding adversarial examples for training
         if(torch.cuda.is_available()):
             x = x.cpu()
+            y = y.cpu()
         # Changed this line to prevent label leaking 
         # x_adv = adversary.perturb(x.numpy(), y_pred)  
         
@@ -137,6 +138,7 @@ def black_box_attack(source_net,target_networks,adversary,loader,num_output_clas
 
         if torch.cuda.is_available():
             x_adv = x_adv.cuda()
+            y = y.cuda()
 
         for target_name,target_net in target_networks.items():
             with torch.no_grad():
@@ -171,13 +173,14 @@ def attack_over_test_data(model, adversary, param, loader, device,oracle=None):
         # Create corresponding adversarial examples for training
         if(torch.cuda.is_available()):
             x = x.cpu()
-            y = x.cpu(dtype=torch.long)
+            y = y.cpu()
         # We did change the following line 
         # x_adv = adversary.perturb(x.numpy(), y_pred)  
         x_adv = adversary.perturb(x.numpy(), y)  
         x_adv = torch.from_numpy(x_adv)
         if torch.cuda.is_available():
             x_adv = x_adv.cuda()
+            y = y.cuda()
         out = model(x_adv)
         _,predicted = torch.max(out.data, 1)  
         accuracy = np.mean(list(predicted.eq(y.data).cpu()))  # compute accuracy
