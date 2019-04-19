@@ -294,7 +294,7 @@ class ExperimentBuilder(nn.Module):
         # e = self.distribution.rvs(1)[0]
         e = 0.0625
         adversary = self.attacker(epsilon = e)
-        x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,adversary) 
+        x_adv = adv_train(x,y, self.model,F.cross_entropy,adversary) 
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
         _,predicted = torch.max(out.data, 1)  
