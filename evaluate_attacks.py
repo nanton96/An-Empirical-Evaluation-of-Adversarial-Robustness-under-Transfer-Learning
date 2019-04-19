@@ -101,7 +101,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
     logging.info('Experiment name: %s' %experiment_name)
 
 
-    model_path =os.path.join('./experiments_results/transfer_all_layers/', "%s/saved_models/train_model_best_readable" % (trained_network))
+    model_path =os.path.join('./experiments_results/', "%s/saved_models/train_model_best_readable" % (trained_network))
     logging.info('Loading model from %s' % (model_path))
     net = load_net(model, model_path, num_output_classes)
     net.to(device)
@@ -117,7 +117,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
             acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
             results[trained_network+"_attacked_by_"+adversary.name+'_e_%.5f'%e] = acc
 
-    path = './experiments_results/attack_results_pgd_7/white_box_attacks_pgd_7_baselines%s.json' % trained_network
+    path = './experiments_results/attack_results_white_box/white_box_attacks_pgd_7_baselines_%s.json' % trained_network
     with open(path, 'w') as outfile:
         json.dump(results, outfile)        
 

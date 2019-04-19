@@ -39,7 +39,7 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 
 substitute_networks = { 'cifar10':  'densenet121_cifar10',
-                        # 'cifar100': 'densenet121_cifar100',
+                        'cifar100': 'densenet121_cifar100',
 }
 
 target_networks =  {
@@ -48,32 +48,37 @@ target_networks =  {
                     # 'resnet56_cifar10', 
                     # 'transfer_densenet121_pgd_nat',
                     # 'transfer_densenet121_nat_pgd',
-                    "transfer_all_layers_densenet121_fgsm_fgsm_step_25_gamma_0.1",
-                    "transfer_all_layers_densenet121_fgsm_nat_step_25_gamma_0.1",
-                    "transfer_all_layers_densenet121_fgsm_nat_step_25_gamma_0.1_2",
-                    "transfer_all_layers_densenet121_nat_fgsm_step_25_gamma_0.1",
-                    "transfer_all_layers_densenet121_nat_nat_step_25_gamma_0.1",
-                    "transfer_all_layers_densenet121_nat_nat_step_25_gamma_0.1_2",
-                    "transfer_all_layers_densenet121_nat_pgd_step_25_gamma_0.1",
-                    "transfer_all_layers_densenet121_pgd_nat_step_25_gamma_0.1",
-                    "transfer_all_layers_densenet121_pgd_nat_step_25_gamma_0.1_2",
-                    "transfer_all_layers_densenet121_pgd_pgd_step_25_gamma_0.1",
-                    "transfer_all_layers_resnet56_fgsm_fgsm_step_25_gamma_0.1",
-                    "transfer_all_layers_resnet56_fgsm_fgsm_step_25_gamma_0.1_2",
-                    "transfer_all_layers_resnet56_fgsm_nat_step_25_gamma_0.1",
-                    "transfer_all_layers_resnet56_fgsm_nat_step_25_gamma_0.1_2",
-                    "transfer_all_layers_resnet56_nat_fgsm_step_25_gamma_0.1",
-                    "transfer_all_layers_resnet56_nat_fgsm_step_25_gamma_0.1_2",
-                    "transfer_all_layers_resnet56_nat_nat_step_25_gamma_0.1",
-                    "transfer_all_layers_resnet56_nat_pgd_step_25_gamma_0.1",
-                    "transfer_all_layers_resnet56_pgd_nat_step_25_gamma_0.1",
-                    "transfer_all_layers_resnet56_pgd_nat_step_25_gamma_0.1_2",
-                    "transfer_all_layers_resnet56_pgd_pgd_step_25_gamma_0.1",
-                    "transfer_all_layers_resnet56_nat_nat_step_20_gamma_0.4",
+                    "transfer_densenet121_fgsm_fgsm",
+                    "transfer_densenet121_fgsm_nat",
+                    "transfer_densenet121_nat_fgsm",
+                    "transfer_densenet121_nat_nat",
+                    "transfer_densenet121_nat_pgd",
+                    "transfer_densenet121_pgd_nat",
+                    "transfer_densenet121_pgd_pgd",
+                    "transfer_resnet56_fgsm_fgsm",
+                    "transfer_resnet56_fgsm_nat",
+                    "transfer_resnet56_nat_fgsm",
+                    "transfer_resnet56_nat_nat",
+                    "transfer_resnet56_nat_pgd",
+                    "transfer_resnet56_pgd_nat",
+                    "transfer_resnet56_pgd_pgd",
+
+                    "densenet121_cifar10",
+                    "densenet121_cifar10_pgd",
+                    "densenet121_cifaf10_fgsm",
+                    "resnet56_cifar10",
+                    "resnet56_cifar10_pgd",
+                    "resnet56_cifaf10_fgsm",
                     ],
 
-                    # 'cifar100': ['resnet56_cifar100', 'resnet56_cifar100_fgsm', 'densenet121_cifar100_fgsm','resnet56_cifar100_pgd', 'densenet121_cifar100_pgd']
-                    
+                    'cifar100': [
+                    "resnet56_cifar100",
+                    "resnet56_cifar100_pgd",
+                    "resnet56_cifaf100_fgsm",
+                    "densenet121_cifar100",
+                    "densenet121_cifar100_pgd",
+                    "densenet121_cifaf100_fgsm",
+                    ]
                     
                     }
 results = {}
@@ -98,7 +103,7 @@ for dataset_name,substitute_network in substitute_networks.items():
 
     # Load all network models trained on the specific dataset
     for target_network in target_networks[dataset_name]:
-        model_path =os.path.join("", "experiments_results/transfer_all_layers/%s/saved_models/train_model_best_readable" % (target_network))
+        model_path =os.path.join("", "experiments_results/%s/saved_models/train_model_best_readable" % (target_network))
         target_architecture = 'resnet56' if 'resnet' in target_network else 'densenet121'
         target_nets[target_network] = load_net(target_architecture, model_path, num_output_classes).to(device)
 
@@ -111,5 +116,5 @@ for dataset_name,substitute_network in substitute_networks.items():
             results[dataset_name+'_e_%.5f'%e].append(black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device))
             logging.info("blackbox attack for adversary: %s completed" %adversary.name)
 
-        with open('experiments_results/attack_results/black_box_results_all_layers_no_LL.json', 'w') as outfile:
+        with open('experiments_results/attack_results_black_box/black_box_results_baselines.json', 'w') as outfile:
             json.dump(results, outfile)        
