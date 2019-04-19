@@ -87,7 +87,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
             acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
             results[trained_network+"_attacked_by_"+adversary.name+'_e_%.5f'%e] = acc
 
-    path = './experiments_results/attack_results_pgd_7/white_box_attacks_pgd_7_%s.json' % trained_network
+    path = './experiments_results/attack_results_pgd_7/white_box_attacks_pgd_7_no_LL_%s.json' % trained_network
     with open(path, 'w') as outfile:
         json.dump(results, outfile)        
 

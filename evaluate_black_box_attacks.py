@@ -111,5 +111,5 @@ for dataset_name,substitute_network in substitute_networks.items():
             results[dataset_name+'_e_%.5f'%e].append(black_box_attack(source_net=source_net,target_networks=target_nets,adversary=adversary,loader=test_data,num_output_classes=num_output_classes,device=device))
             logging.info("blackbox attack for adversary: %s completed" %adversary.name)
 
-        with open('experiments_results/attack_results/black_box_results_all_layers.json', 'w') as outfile:
+        with open('experiments_results/attack_results/black_box_results_all_layers_no_LL.json', 'w') as outfile:
             json.dump(results, outfile)        
