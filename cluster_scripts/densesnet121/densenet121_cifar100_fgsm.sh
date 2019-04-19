@@ -35,12 +35,12 @@ export DATASET_DIR=${TMP}/datasets/
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID}/data
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
-cd ..
+cd /home/${STUDENT_ID}/mlpcw4/
 mkdir experiments_results
 
 python train.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
 						      --adv_train True --model densenet121 \
-                                                      --num_epochs 200 --adversary "fgsm"  --experiment_name 'densenet121_cifar100_fgsm' \
+                                                      --num_epochs 200 --adversary "fgsm"  --experiment_name 'densenet121_cifar100_fgsm_tsipras' \
                                                       --use_gpu "True" --gpu_id "0,1" --weight_decay_coefficient 0.00005 \
                                                       --dataset_name "cifar100"
 
