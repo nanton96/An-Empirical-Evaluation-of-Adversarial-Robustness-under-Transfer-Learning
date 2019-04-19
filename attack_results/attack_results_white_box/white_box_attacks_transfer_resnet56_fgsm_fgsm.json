@@ -1,0 +1,1 @@
+{"transfer_resnet56_fgsm_fgsm_clean": 0.8642000000000002, "transfer_resnet56_fgsm_fgsm_attacked_by_fgsm": 0.4043999999999999, "transfer_resnet56_fgsm_fgsm_attacked_by_pgd": 0.11969999999999999}

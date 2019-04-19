@@ -1,0 +1,1 @@
+{"transfer_densenet121_nat_pgd_clean": 0.8361, "transfer_densenet121_nat_pgd_attacked_by_fgsm": 0.5222000000000001, "transfer_densenet121_nat_pgd_attacked_by_pgd": 0.1056}

@@ -1,0 +1,1 @@
+{"transfer_resnet56_nat_nat_clean": 0.9001, "transfer_resnet56_nat_nat_attacked_by_fgsm": 0.3705999999999999, "transfer_resnet56_nat_nat_attacked_by_pgd": 0.06040000000000001}

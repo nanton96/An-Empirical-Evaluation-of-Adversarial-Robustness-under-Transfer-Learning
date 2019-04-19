@@ -1,0 +1,1 @@
+{"densenet121_cifar100_fgsm_clean": 0.6775, "densenet121_cifar100_fgsm_attacked_by_fgsm": 0.33690000000000003, "densenet121_cifar100_fgsm_attacked_by_pgd": 0.1412}

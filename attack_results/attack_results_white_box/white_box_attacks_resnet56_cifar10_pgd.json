@@ -1,0 +1,1 @@
+{"resnet56_cifar10_pgd_clean": 0.8817000000000002, "resnet56_cifar10_pgd_attacked_by_fgsm": 0.5657, "resnet56_cifar10_pgd_attacked_by_pgd": 0.17559999999999998}
