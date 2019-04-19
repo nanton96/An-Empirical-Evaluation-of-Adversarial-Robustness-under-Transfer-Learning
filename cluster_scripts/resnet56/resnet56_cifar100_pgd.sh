@@ -35,7 +35,7 @@ export DATASET_DIR=${TMP}/datasets/
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID}/data
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
-cd ..
+cd /home/${STUDENT_ID}/mlpcw4/
 mkdir experiments_results
 
 python train.py --batch_size 100 \
@@ -44,7 +44,7 @@ python train.py --batch_size 100 \
 				--dataset_name "cifar100" \
 				--adv_train True \
 				--adversary "pgd" \
-				--experiment_name 'resnet56_cifar100_pgd_1gpu_100b' \
+				--experiment_name 'resnet56_cifar100_pgd_tsipras' \
 				--use_gpu "True" \
 				--lr 0.1 \
 				--continue_from_epoch -1 \
