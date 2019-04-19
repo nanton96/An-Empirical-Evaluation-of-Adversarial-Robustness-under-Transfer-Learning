@@ -4,7 +4,7 @@
 #SBATCH --partition=LongJobs
 #SBATCH --gres=gpu:1
 #SBATCH --mem=12000  # memory in Mb
-#SBATCH --time=0-30:00:00
+#SBATCH --time=0-60:00:00
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 
