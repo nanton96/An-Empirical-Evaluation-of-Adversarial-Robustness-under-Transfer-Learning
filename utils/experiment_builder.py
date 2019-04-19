@@ -234,6 +234,7 @@ class ExperimentBuilder(nn.Module):
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
         _,predicted = torch.max(out.data, 1)  
+        
         if torch.cuda.is_available():
             y = y.cuda()
         adv_acc = np.mean(list(predicted.eq(y.data).cpu()))
@@ -281,16 +282,24 @@ class ExperimentBuilder(nn.Module):
         
         # Prevent label leaking, by using most probable state
 
-        y_pred  = pred_batch(x,self.model)
+        # y_pred  = pred_batch(x,self.model)
+
+        # No label leaking -> Blame Stathis
+        if(torch.cuda.is_available()):
+            y = y.cpu()
+        
 
         # Create corresponding adversarial examples for training 
 
-        e = self.distribution.rvs(1)[0]
+        # e = self.distribution.rvs(1)[0]
+        e = 0.0625
         adversary = self.attacker(epsilon = e)
         x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,adversary) 
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
         _,predicted = torch.max(out.data, 1)  
+        if torch.cuda.is_available():
+            y = y.cuda()
         adv_acc = np.mean(list(predicted.eq(y.data).cpu()))
         loss_adv =  F.cross_entropy(out, y.data)
 
