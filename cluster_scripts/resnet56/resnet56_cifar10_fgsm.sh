@@ -44,7 +44,7 @@ python train.py --batch_size 128 \
           		--dataset_name "cifar10" \
           		--adv_train True \
          		--adversary "fgsm" \
-          		--experiment_name 'resnet56_cifar10_fgsm' \
+          		--experiment_name 'resnet56_cifar10_fgsm_ll' \
           		--use_gpu "True" \
           		--lr 0.1 \
 				--continue_from_epoch -1 \

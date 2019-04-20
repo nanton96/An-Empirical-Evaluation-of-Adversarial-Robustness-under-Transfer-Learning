@@ -220,10 +220,10 @@ class ExperimentBuilder(nn.Module):
         # Prevent label leaking, by using most probable state
         e = 0.0625
         adversary =  self.attacker(epsilon = e)
-        # if adversary.name == 'pgd':
-        y_pred = y.cpu()    
-        # else:
-        # y_pred  = pred_batch(x,self.model)
+        if adversary.name == 'pgd':
+            y_pred = y.cpu()    
+        else:
+            y_pred  = pred_batch(x,self.model)
 
 
         # Create corresponding adversarial examples for training 
@@ -286,10 +286,10 @@ class ExperimentBuilder(nn.Module):
         # Prevent label leaking, by using most probable state
         e = 0.0625
         adversary =  self.attacker(epsilon = e)
-        # if adversary.name == 'pgd':
-        y_pred = y.cpu()    
-        # else:
-        # y_pred  = pred_batch(x,self.model)
+        if adversary.name == 'pgd':
+            y_pred = y.cpu()    
+        else:
+            y_pred  = pred_batch(x,self.model)
 
         # y_pred  = pred_batch(x,self.model)
 
@@ -306,8 +306,6 @@ class ExperimentBuilder(nn.Module):
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
         _,predicted = torch.max(out.data, 1)  
-        # if torch.cuda.is_available():
-        #     y = y.cuda()
         adv_acc = np.mean(list(predicted.eq(y.data).cpu()))
         loss_adv =  F.cross_entropy(out, y.data)
 

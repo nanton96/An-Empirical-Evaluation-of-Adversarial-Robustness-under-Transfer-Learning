@@ -39,7 +39,7 @@ cd /home/${STUDENT_ID}/mlpcw4/
 
 python train.py --batch_size 128 --continue_from_epoch -1 --seed 0 \
 						      --adv_train True --model densenet121 \
-                                                      --num_epochs 200 --adversary "fgsm"  --experiment_name 'densenet121_cifar10_fgsm' \
+                                                      --num_epochs 200 --adversary "fgsm"  --experiment_name 'densenet121_cifar10_fgsm_ll' \
                                                       --use_gpu "True" --gpu_id "0" --weight_decay_coefficient 0.00005 \
                                                       --dataset_name "cifar10"
 
