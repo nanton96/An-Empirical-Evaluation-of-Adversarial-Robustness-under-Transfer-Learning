@@ -216,7 +216,10 @@ class ExperimentBuilder(nn.Module):
 
 
         # Prevent label leaking, by using most probable state
-        y_pred  = pred_batch(x,self.model)
+        if self.attacker.name == 'pgd':
+            y_pred =  y = y.cpu()    
+        else:
+            y_pred  = pred_batch(x,self.model)
 
 
         # Create corresponding adversarial examples for training 

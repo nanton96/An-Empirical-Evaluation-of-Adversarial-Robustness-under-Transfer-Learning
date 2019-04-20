@@ -64,6 +64,7 @@ trained_networks =  {
 
                     "resnet56_cifar10_pgd_tsipras": ('cifar10', 'resnet56'),
                     "resnet56_cifar10_fgsm_tsipras": ('cifar10', 'resnet56'),
+                    
                     "densenet121_cifar10_fgsm_tsipras": ('cifar10', 'densenet121'),
                     
                     # CIFAR100
