@@ -216,9 +216,13 @@ class ExperimentBuilder(nn.Module):
 
 
         # Prevent label leaking, by using most probable state
-        if self.attacker.name == 'pgd':
-            y_pred =  y = y.cpu()    
+        e = 0.0625
+        advesary =  self.attacker(epsilon = e)
+        if advesary.name == 'pgd':
+            print("Indeed pgd")
+            y_pred = y.cpu()    
         else:
+            print("Indeed fgsm")
             y_pred  = pred_batch(x,self.model)
 
 
@@ -226,8 +230,6 @@ class ExperimentBuilder(nn.Module):
 
         # e = self.distribution.rvs(1)[0]
 
-        e = 0.0625
-        advesary =  self.attacker(epsilon = e)
   
        
         
@@ -283,7 +285,12 @@ class ExperimentBuilder(nn.Module):
         
         # Prevent label leaking, by using most probable state
 
-        y_pred  = pred_batch(x,self.model)
+        if self.attacker.name == 'pgd':
+            y_pred =  y = y.cpu()    
+        else:
+            y_pred  = pred_batch(x,self.model)
+
+        # y_pred  = pred_batch(x,self.model)
 
     
         # if(torch.cuda.is_available()):
