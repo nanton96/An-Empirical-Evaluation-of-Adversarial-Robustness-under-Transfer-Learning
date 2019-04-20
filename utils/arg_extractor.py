@@ -61,6 +61,8 @@ def get_args():
     parser.add_argument('--unfrozen_layers', type=int, default=5, help="number of layers to be trained on transfer learning. HINT: they will freeze 2 times the number of layers")
     
     parser.add_argument('--adv_train', type=str2bool,default = False, help="specify whether or not to perform adversarial training")
+    parser.add_argument('--use_e_distr', type=str2bool,default = False, help="specify whether or not to use an epsilon distribution when training")
+    parser.add_argument('--label_leaking_prevention', type=str2bool,default = False, help="specify whether or not to use an label leaking prevention when training")
     parser.add_argument('--adversary', type=str, default="fgsm", help="fgsm/pgd")
     parser.add_argument('--gamma', type=float, default=0.1, help="optimizer lr gamma")
     parser.add_argument('--step_size', type=int, default=25, help="optimizer step size to apply gamma")

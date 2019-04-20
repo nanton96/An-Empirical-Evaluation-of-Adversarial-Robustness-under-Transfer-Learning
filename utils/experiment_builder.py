@@ -18,7 +18,7 @@ import copy
 class ExperimentBuilder(nn.Module):
 
     def __init__(self, network_model, experiment_name, num_epochs, train_data, val_data,
-                 test_data, weight_decay_coefficient, use_gpu, scheduler, optimizer,device, adversary ='fgsm', continue_from_epoch=-1, adv_train= False ):
+                 test_data, weight_decay_coefficient, use_gpu, scheduler, optimizer,device, adversary ='fgsm', continue_from_epoch=-1, adv_train= False, use_e_distr = False, label_leaking_prevention = False ):
         """
         Initializes an ExperimentBuilder object. Such an object takes care of running training and evaluation of a deep net
         on a given dataset. It also takes care of saving per epoch models and automatically inferring the best val model
@@ -48,6 +48,8 @@ class ExperimentBuilder(nn.Module):
         #     self.device = torch.device('cpu')  # sets the device to be CPU
 
         self.adv_train = adv_train
+        self.use_e_distr = use_e_distr
+        self.label_leaking_prevention = label_leaking_prevention
         if adv_train:
             if adversary == 'fgsm':
                 self.attacker = FGSMAttack
@@ -217,18 +219,26 @@ class ExperimentBuilder(nn.Module):
         train_stat['clean_loss'] = np.asscalar(loss.data.detach().cpu().numpy())
 
 
-        # Prevent label leaking, by using most probable state
-        e = 0.0625
-        adversary =  self.attacker(epsilon = e)
-        if adversary.name == 'pgd':
-            y_pred = y.cpu()    
+        if self.use_e_distr:
+             # Create corresponding adversarial examples for training 
+            e = self.distribution.rvs(1)[0]
         else:
-            y_pred  = pred_batch(x,self.model)
+            e = 0.0625
+        
+        adversary =  self.attacker(epsilon = e)
+        
+        # if adversary.name == 'pgd':
+        #     y_pred = y.cpu()    
+        # else:
+        #     y_pred  = pred_batch(x,self.model)
 
 
-        # Create corresponding adversarial examples for training 
+        # Prevent label leaking, by using most probable state
+        if not self.label_leaking_prevention or adversary.name == 'pgd':
+                y_pred = y.cpu()  
+        else:
+                y_pred  = pred_batch(x,self.model)   
 
-        # e = self.distribution.rvs(1)[0]
 
   
        
@@ -283,25 +293,20 @@ class ExperimentBuilder(nn.Module):
         validaton_stat['clean_acc']  = accuracy
         validaton_stat['clean_loss'] = np.asscalar(loss.data.detach().cpu().numpy())
         
-        # Prevent label leaking, by using most probable state
-        e = 0.0625
-        adversary =  self.attacker(epsilon = e)
-        if adversary.name == 'pgd':
-            y_pred = y.cpu()    
+        if self.use_e_distr:
+             # Create corresponding adversarial examples for training 
+            e = self.distribution.rvs(1)[0]
         else:
-            y_pred  = pred_batch(x,self.model)
-
-        # y_pred  = pred_batch(x,self.model)
-
-    
-        # if(torch.cuda.is_available()):
-        #     y = y.cpu()
+            e = 0.0625
         
+        adversary =  self.attacker(epsilon = e)
+        
+        # Prevent label leaking, by using most probable state
+        if not self.label_leaking_prevention or adversary.name == 'pgd':
+                y_pred = y.cpu()  
+        else:
+                y_pred  = pred_batch(x,self.model)   
 
-        # Create corresponding adversarial examples for training 
-
-        # e = self.distribution.rvs(1)[0]
-       
         x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,adversary) 
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
