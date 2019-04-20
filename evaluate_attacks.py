@@ -36,43 +36,41 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 
 trained_networks =  {
+                    "transfer_densenet121_fgsm_fgsm": ('cifar10', 'densenet121'),
+                    "transfer_densenet121_fgsm_nat": ('cifar10', 'densenet121'),
+                    "transfer_densenet121_nat_fgsm": ('cifar10', 'densenet121'),
+                    "transfer_densenet121_nat_nat": ('cifar10', 'densenet121'),
+                    "transfer_densenet121_nat_pgd": ('cifar10', 'densenet121'),
+                    "transfer_densenet121_pgd_nat": ('cifar10', 'densenet121'),
+                    "transfer_densenet121_pgd_pgd": ('cifar10', 'densenet121'),
+                    "transfer_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
+                    "transfer_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_resnet56_nat_nat": ('cifar10', 'resnet56'),
+                    "transfer_resnet56_nat_pgd": ('cifar10', 'resnet56'),
+                    "transfer_resnet56_pgd_nat": ('cifar10', 'resnet56'),
+                    "transfer_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
 
-                    # 'resnet56_cifar10': 'cifar10',
-                    # 'resnet56_cifar10_fgsm': 'cifar10',
-                    # "transfer_densenet121_fgsm_fgsm": ('cifar10', 'densenet121'),
-                    # "transfer_densenet121_fgsm_nat": ('cifar10', 'densenet121'),
-                    # "transfer_densenet121_nat_fgsm": ('cifar10', 'densenet121'),
-                    # "transfer_densenet121_nat_nat": ('cifar10', 'densenet121'),
-                    # "transfer_densenet121_nat_pgd": ('cifar10', 'densenet121'),
-                    # "transfer_densenet121_pgd_nat": ('cifar10', 'densenet121'),
-                    # "transfer_densenet121_pgd_pgd": ('cifar10', 'densenet121'),
-                    # "transfer_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
-                    # "transfer_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
-                    # "transfer_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
-                    # "transfer_resnet56_nat_nat": ('cifar10', 'resnet56'),
-                    # "transfer_resnet56_nat_pgd": ('cifar10', 'resnet56'),
-                    # "transfer_resnet56_pgd_nat": ('cifar10', 'resnet56'),
-                    # "transfer_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
-
-                    # BASELINES
-                    # "densenet121_cifar10": ('cifar10', 'densenet121'),
-                    # "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
-                    # "densenet121_cifaf10_fgsm": ('cifar10', 'densenet121'),
-                    # "resnet56_cifar10": ('cifar10', 'resnet56'),
-                    # "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
-                    # "resnet56_cifaf10_fgsm": ('cifar10', 'resnet56'),
-
-                    "resnet56_cifar10_pgd_tsipras": ('cifar10', 'resnet56'),
-                    "resnet56_cifar10_fgsm_tsipras": ('cifar10', 'resnet56'),
-                    "densenet121_cifar10_fgsm_tsipras": ('cifar10', 'densenet121'),
+                    BASELINES
+                    "densenet121_cifar10": ('cifar10', 'densenet121'),
+                    "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
+                    "densenet121_cifaf10_fgsm": ('cifar10', 'densenet121'),
+                    "resnet56_cifar10": ('cifar10', 'resnet56'),
+                    "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
+                    "resnet56_cifaf10_fgsm": ('cifar10', 'resnet56'),
                     
-                    # CIFAR100
-                    # "resnet56_cifar100": ('cifar100', 'resnet56'),
-                    # "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
-                    # "resnet56_cifaf100_fgsm": ('cifar100', 'resnet56'),
-                    # "densenet121_cifar100": ('cifar100', 'densenet121'),
-                    # "densenet121_cifar100_pgd": ('cifar100', 'densenet121'),
-                    # "densenet121_cifaf100_fgsm": ('cifar100', 'densenet121'),
+                    CIFAR100
+                    "resnet56_cifar100": ('cifar100', 'resnet56'),
+                    "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
+                    "resnet56_cifaf100_fgsm": ('cifar100', 'resnet56'),
+                    "densenet121_cifar100": ('cifar100', 'densenet121'),
+                    "densenet121_cifar100_pgd": ('cifar100', 'densenet121'),
+                    "densenet121_cifaf100_fgsm": ('cifar100', 'densenet121'),
+
+
+                    # "resnet56_cifar10_pgd_tsipras": ('cifar10', 'resnet56'),
+                    # "resnet56_cifar10_fgsm_tsipras": ('cifar10', 'resnet56'),
+                    # "densenet121_cifar10_fgsm_tsipras": ('cifar10', 'densenet121'),
 
                     # "transfer_all_layers_densenet121_fgsm_fgsm_step_25_gamma_0.1": ('cifar10', 'densenet121'),
                     # "transfer_all_layers_densenet121_fgsm_nat_step_25_gamma_0.1": ('cifar10', 'densenet121'),
