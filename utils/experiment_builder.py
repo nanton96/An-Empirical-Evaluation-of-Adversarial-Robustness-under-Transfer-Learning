@@ -217,8 +217,8 @@ class ExperimentBuilder(nn.Module):
 
         # Prevent label leaking, by using most probable state
         e = 0.0625
-        advesary =  self.attacker(epsilon = e)
-        if advesary.name == 'pgd':
+        adversary =  self.attacker(epsilon = e)
+        if adversary.name == 'pgd':
             y_pred = y.cpu()    
         else:
             y_pred  = pred_batch(x,self.model)
@@ -231,7 +231,7 @@ class ExperimentBuilder(nn.Module):
   
        
         
-        x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,advesary)
+        x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,adversary)
         # x_adv = adv_train(x,y, self.model,F.cross_entropy,advesary)
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
@@ -283,8 +283,8 @@ class ExperimentBuilder(nn.Module):
         
         # Prevent label leaking, by using most probable state
         e = 0.0625
-        advesary =  self.attacker(epsilon = e)
-        if advesary.name == 'pgd':
+        adversary =  self.attacker(epsilon = e)
+        if adversary.name == 'pgd':
             y_pred =  y = y.cpu()    
         else:
             y_pred  = pred_batch(x,self.model)
