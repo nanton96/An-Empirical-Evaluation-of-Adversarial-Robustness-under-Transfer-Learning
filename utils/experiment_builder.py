@@ -188,12 +188,14 @@ class ExperimentBuilder(nn.Module):
     def run_adv_train_iter(self,x,y):
               
         self.train()
+
         train_stat = {
             'clean_acc':0,
             'clean_loss': 0,
             'adv_acc':0,
             'adv_loss': 0
         }
+
         # convert one hot encoded labels to single integer labels
 
         if len(y.shape) > 1:
@@ -218,10 +220,10 @@ class ExperimentBuilder(nn.Module):
         # Prevent label leaking, by using most probable state
         e = 0.0625
         adversary =  self.attacker(epsilon = e)
-        if adversary.name == 'pgd':
-            y_pred = y.cpu()    
-        else:
-            y_pred  = pred_batch(x,self.model)
+        # if adversary.name == 'pgd':
+        y_pred = y.cpu()    
+        # else:
+        # y_pred  = pred_batch(x,self.model)
 
 
         # Create corresponding adversarial examples for training 
@@ -284,10 +286,10 @@ class ExperimentBuilder(nn.Module):
         # Prevent label leaking, by using most probable state
         e = 0.0625
         adversary =  self.attacker(epsilon = e)
-        if adversary.name == 'pgd':
-            y_pred =  y = y.cpu()    
-        else:
-            y_pred  = pred_batch(x,self.model)
+        # if adversary.name == 'pgd':
+        y_pred = y.cpu()    
+        # else:
+        # y_pred  = pred_batch(x,self.model)
 
         # y_pred  = pred_batch(x,self.model)
 
