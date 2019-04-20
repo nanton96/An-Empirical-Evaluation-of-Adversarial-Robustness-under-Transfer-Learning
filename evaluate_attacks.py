@@ -51,7 +51,7 @@ trained_networks =  {
                     "transfer_resnet56_pgd_nat": ('cifar10', 'resnet56'),
                     "transfer_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
 
-                    BASELINES
+                    # BASELINES
                     "densenet121_cifar10": ('cifar10', 'densenet121'),
                     "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
                     "densenet121_cifaf10_fgsm": ('cifar10', 'densenet121'),
@@ -59,7 +59,7 @@ trained_networks =  {
                     "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
                     "resnet56_cifaf10_fgsm": ('cifar10', 'resnet56'),
                     
-                    CIFAR100
+                    # CIFAR100
                     "resnet56_cifar100": ('cifar100', 'resnet56'),
                     "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
                     "resnet56_cifaf100_fgsm": ('cifar100', 'resnet56'),
