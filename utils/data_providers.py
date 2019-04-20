@@ -274,7 +274,6 @@ class EMNISTDataProvider(DataProvider):
         one_of_k_targets[range(int_targets.shape[0]), int_targets] = 1
         return one_of_k_targets
 
-
 class MetOfficeDataProvider(DataProvider):
     """South Scotland Met Office weather data provider."""
 

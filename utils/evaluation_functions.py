@@ -56,7 +56,8 @@ class FGSMAttack(object):
 
         X += self.epsilon * grad_sign
         # Changed from X = np.clip(X, 0, 1) 
-        X = np.clip(X, -1, 1)
+        # X = np.clip(X, -1, 1)
+        X = np.clip(X, -2.5, 2.5)
 
         return X
 
@@ -105,7 +106,9 @@ class LinfPGDAttack(object):
 
             X = np.clip(X, X_nat - self.epsilon, X_nat + self.epsilon)
             # WE changed to [-1,1] X = np.clip(X, 0, 1) 
-            X = np.clip(X, -1, 1) # ensure valid pixel range
+            # X = np.clip(X, -1, 1) # ensure valid pixel range
+
+            X = np.clip(X, -2.5, 2.5) # ensure valid pixel range
 
         return X
 
