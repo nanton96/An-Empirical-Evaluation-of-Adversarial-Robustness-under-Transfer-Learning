@@ -38,7 +38,7 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlpcw4/
 mkdir experiments_results
 
-python train.py --batch_size 100 \
+python train.py --batch_size 128 \
          		--num_epochs 200 \
           		--model resnet56 \
           		--dataset_name "cifar100" \

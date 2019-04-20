@@ -21,7 +21,7 @@ logging.basicConfig(format='%(message)s',level=logging.INFO)
 batch_size = 100
 
 rng = np.random.RandomState(seed=0)  # set the seeds for the experiment
-torch.manual_seed(seed=0) # sets pytorch's seed
+torch.manual_seed(seed=0) # sets pytorch's seeds
 # load data_set (only need test set...)
 
 attacks = [FGSMAttack,lambda epsilon: LinfPGDAttack(epsilon=epsilon, k=7)] 
@@ -36,36 +36,36 @@ else:
     device = torch.device('cpu')  # sets the device to be CPU
 
 trained_networks =  {
-                    "transfer_densenet121_fgsm_fgsm": ('cifar10', 'densenet121'),
-                    "transfer_densenet121_fgsm_nat": ('cifar10', 'densenet121'),
-                    "transfer_densenet121_nat_fgsm": ('cifar10', 'densenet121'),
-                    "transfer_densenet121_nat_nat": ('cifar10', 'densenet121'),
-                    "transfer_densenet121_nat_pgd": ('cifar10', 'densenet121'),
-                    "transfer_densenet121_pgd_nat": ('cifar10', 'densenet121'),
-                    "transfer_densenet121_pgd_pgd": ('cifar10', 'densenet121'),
-                    "transfer_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
-                    "transfer_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
-                    "transfer_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
-                    "transfer_resnet56_nat_nat": ('cifar10', 'resnet56'),
-                    "transfer_resnet56_nat_pgd": ('cifar10', 'resnet56'),
-                    "transfer_resnet56_pgd_nat": ('cifar10', 'resnet56'),
-                    "transfer_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
+                    # "transfer_densenet121_fgsm_fgsm": ('cifar10', 'densenet121'),
+                    # "transfer_densenet121_fgsm_nat": ('cifar10', 'densenet121'),
+                    # "transfer_densenet121_nat_fgsm": ('cifar10', 'densenet121'),
+                    # "transfer_densenet121_nat_nat": ('cifar10', 'densenet121'),
+                    # "transfer_densenet121_nat_pgd": ('cifar10', 'densenet121'),
+                    # "transfer_densenet121_pgd_nat": ('cifar10', 'densenet121'),
+                    # "transfer_densenet121_pgd_pgd": ('cifar10', 'densenet121'),
+                    # "transfer_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
+                    # "transfer_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
+                    # "transfer_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
+                    # "transfer_resnet56_nat_nat": ('cifar10', 'resnet56'),
+                    # "transfer_resnet56_nat_pgd": ('cifar10', 'resnet56'),
+                    # "transfer_resnet56_pgd_nat": ('cifar10', 'resnet56'),
+                    # "transfer_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
 
                     # BASELINES
                     "densenet121_cifar10": ('cifar10', 'densenet121'),
-                    "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
-                    "densenet121_cifaf10_fgsm": ('cifar10', 'densenet121'),
+                    # "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
+                    # "densenet121_cifaf10_fgsm": ('cifar10', 'densenet121'),
                     "resnet56_cifar10": ('cifar10', 'resnet56'),
-                    "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
-                    "resnet56_cifaf10_fgsm": ('cifar10', 'resnet56'),
+                    # "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
+                    # "resnet56_cifaf10_fgsm": ('cifar10', 'resnet56'),
                     
                     # CIFAR100
                     "resnet56_cifar100": ('cifar100', 'resnet56'),
-                    "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
-                    "resnet56_cifaf100_fgsm": ('cifar100', 'resnet56'),
+                    # "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
+                    # "resnet56_cifaf100_fgsm": ('cifar100', 'resnet56'),
                     "densenet121_cifar100": ('cifar100', 'densenet121'),
-                    "densenet121_cifar100_pgd": ('cifar100', 'densenet121'),
-                    "densenet121_cifaf100_fgsm": ('cifar100', 'densenet121'),
+                    # "densenet121_cifar100_pgd": ('cifar100', 'densenet121'),
+                    # "densenet121_cifaf100_fgsm": ('cifar100', 'densenet121'),
 
 
                     # "resnet56_cifar10_pgd_tsipras": ('cifar10', 'resnet56'),
