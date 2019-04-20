@@ -112,7 +112,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
     acc = test(net,test_data,device)
     results[trained_network+"_clean"] = acc
     # Attack FGSM
-    for e in [0.0625/2, 0.0625, 0.125]:
+    for e in [0.156/2, 0.156, 0.156*2]:
         logging.info('EPSILON %.4f' % e)
         for attack in attacks:
             adversary = attack(epsilon = e)
