@@ -18,7 +18,7 @@ import copy
 class ExperimentBuilder(nn.Module):
 
     def __init__(self, network_model, experiment_name, num_epochs, train_data, val_data,
-                 test_data, weight_decay_coefficient, use_gpu, scheduler, optimizer,device, adversary ='fgsm', continue_from_epoch=-1, adv_train= False, use_e_distr = False, label_leaking_prevention = False ):
+                 test_data, weight_decay_coefficient, use_gpu, scheduler, optimizer,device, adversary ='fgsm', continue_from_epoch=-1, adv_train= False, use_e_distr = False, label_leaking_prevention = True ):
         """
         Initializes an ExperimentBuilder object. Such an object takes care of running training and evaluation of a deep net
         on a given dataset. It also takes care of saving per epoch models and automatically inferring the best val model
@@ -234,10 +234,10 @@ class ExperimentBuilder(nn.Module):
 
 
         # Prevent label leaking, by using most probable state
-        if not self.label_leaking_prevention or adversary.name == 'pgd':
-                y_pred = y.cpu()  
+        if adversary.name == 'pgd':
+            y_pred = y.cpu()  
         else:
-                y_pred  = pred_batch(x,self.model)   
+            y_pred  = pred_batch(x,self.model)   
 
 
   
@@ -302,10 +302,10 @@ class ExperimentBuilder(nn.Module):
         adversary =  self.attacker(epsilon = e)
         
         # Prevent label leaking, by using most probable state
-        if not self.label_leaking_prevention or adversary.name == 'pgd':
-                y_pred = y.cpu()  
+        if adversary.name == 'pgd':
+            y_pred = y.cpu()  
         else:
-                y_pred  = pred_batch(x,self.model)   
+            y_pred  = pred_batch(x,self.model)   
 
         x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,adversary) 
         x_adv_var = to_var(x_adv)
