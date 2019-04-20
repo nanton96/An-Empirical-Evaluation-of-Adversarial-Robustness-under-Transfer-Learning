@@ -38,13 +38,13 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlpcw4/
 mkdir experiments_results
 
-python train.py --batch_size 100 \
+python train.py --batch_size 128 \
          		--num_epochs 200 \
           		--model densenet121 \
           		--dataset_name "cifar100" \
           		--adv_train True \
          		--adversary "pgd" \
-          		--experiment_name 'densenet121_cifar100_pgd_tsipras' \
+          		--experiment_name 'densenet121_cifar100_pgd' \
           		--use_gpu "True" \
           		--lr 0.1 \
 				--continue_from_epoch -1 \

@@ -44,7 +44,7 @@ python train.py --batch_size 128 \
 				--dataset_name "cifar100" \
 				--adv_train True \
 				--adversary "pgd" \
-				--experiment_name 'resnet56_cifar100_pgd_tsipras' \
+				--experiment_name 'resnet56_cifar100_pgd' \
 				--use_gpu "True" \
 				--lr 0.1 \
 				--continue_from_epoch -1 \
