@@ -32,9 +32,8 @@ experiments =  {
         'transfer_all_layers_densenet121_nat_pgd':   ('densenet121_cifar100',     'densenet121', 'pgd', True, -1),
         'transfer_all_layers_densenet121_pgd_nat':   ('densenet121_cifar100_pgd', 'densenet121', 'nat', False, -1),
         'transfer_all_layers_densenet121_pgd_pgd':   ('densenet121_cifar100_pgd', 'densenet121', 'pgd', True, -1), 
-        'stupid_resnet56_nat_fgsm':       ('resnet56_cifar100',      'resnet56', 'fgsm', True, -1),
-        'stupid_resnet56_nat_pgd':       ('resnet56_cifar100',      'resnet56', 'pgd', True, -1),
-    
+
+        
 
         'transfer_all_layers_resnet56_nat_nat':        ('resnet56_cifar100',      'resnet56', 'nat', False, -1),
         'transfer_all_layers_resnet56_fgsm_fgsm':      ('resnet56_cifar100_fgsm', 'resnet56', 'fgsm', True, -1), 
