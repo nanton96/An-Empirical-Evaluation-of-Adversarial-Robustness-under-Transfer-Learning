@@ -53,18 +53,18 @@ trained_networks =  {
 
                     # CIFAR10
                     # "resnet56_cifar10": ('cifar10', 'resnet56'),
-                    # "resnet56_cifaf10_fgsm": ('cifar10', 'resnet56'),
+                    # "resnet56_cifar10_fgsm": ('cifar10', 'resnet56'),
                     # "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
-                    "densenet121_cifaf10_fgsm": ('cifar10', 'densenet121'),
+                    "densenet121_cifar10_fgsm": ('cifar10', 'densenet121'),
                     "densenet121_cifar10": ('cifar10', 'densenet121'),
                     # "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
 
                     
                     # CIFAR100
                     # "resnet56_cifar100": ('cifar100', 'resnet56'),
-                    # "resnet56_cifaf100_fgsm": ('cifar100', 'resnet56'),
+                    # "resnet56_cifar100_fgsm": ('cifar100', 'resnet56'),
                     # "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
-                    "densenet121_cifaf100_fgsm": ('cifar100', 'densenet121'),
+                    "densenet121_cifar100_fgsm": ('cifar100', 'densenet121'),
                     "densenet121_cifar100": ('cifar100', 'densenet121'),
                     # "densenet121_cifar100_pgd": ('cifar100', 'densenet121'),
 
