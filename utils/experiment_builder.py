@@ -216,15 +216,18 @@ class ExperimentBuilder(nn.Module):
 
 
         # Prevent label leaking, by using most probable state
-        y_pred  = pred_batch(x,self.model)
+        e = 0.0625
+        advesary =  self.attacker(epsilon = e)
+        if advesary.name == 'pgd':
+            y_pred = y.cpu()    
+        else:
+            y_pred  = pred_batch(x,self.model)
 
 
         # Create corresponding adversarial examples for training 
 
         # e = self.distribution.rvs(1)[0]
 
-        e = 0.0625
-        advesary =  self.attacker(epsilon = e)
   
        
         
@@ -279,8 +282,14 @@ class ExperimentBuilder(nn.Module):
         validaton_stat['clean_loss'] = np.asscalar(loss.data.detach().cpu().numpy())
         
         # Prevent label leaking, by using most probable state
+        e = 0.0625
+        advesary =  self.attacker(epsilon = e)
+        if advesary.name == 'pgd':
+            y_pred =  y = y.cpu()    
+        else:
+            y_pred  = pred_batch(x,self.model)
 
-        y_pred  = pred_batch(x,self.model)
+        # y_pred  = pred_batch(x,self.model)
 
     
         # if(torch.cuda.is_available()):
@@ -290,8 +299,7 @@ class ExperimentBuilder(nn.Module):
         # Create corresponding adversarial examples for training 
 
         # e = self.distribution.rvs(1)[0]
-        e = 0.0625
-        adversary = self.attacker(epsilon = e)
+       
         x_adv = adv_train(x,y_pred, self.model,F.cross_entropy,adversary) 
         x_adv_var = to_var(x_adv)
         out = self.model(x_adv_var)
