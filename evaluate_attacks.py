@@ -51,21 +51,22 @@ trained_networks =  {
                     # "transfer_resnet56_pgd_nat": ('cifar10', 'resnet56'),
                     # "transfer_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
 
-                    # BASELINES
-                    "densenet121_cifar10": ('cifar10', 'densenet121'),
-                    # "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
-                    # "densenet121_cifaf10_fgsm": ('cifar10', 'densenet121'),
-                    "resnet56_cifar10": ('cifar10', 'resnet56'),
-                    # "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
+                    # CIFAR10
+                    # "resnet56_cifar10": ('cifar10', 'resnet56'),
                     # "resnet56_cifaf10_fgsm": ('cifar10', 'resnet56'),
+                    # "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
+                    "densenet121_cifar10": ('cifar10', 'densenet121'),
+                    "densenet121_cifaf10_fgsm": ('cifar10', 'densenet121'),
+                    # "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
+
                     
                     # CIFAR100
                     "resnet56_cifar100": ('cifar100', 'resnet56'),
-                    # "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
                     # "resnet56_cifaf100_fgsm": ('cifar100', 'resnet56'),
+                    # "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
                     "densenet121_cifar100": ('cifar100', 'densenet121'),
+                    "densenet121_cifaf100_fgsm": ('cifar100', 'densenet121'),
                     # "densenet121_cifar100_pgd": ('cifar100', 'densenet121'),
-                    # "densenet121_cifaf100_fgsm": ('cifar100', 'densenet121'),
 
 
                     # "resnet56_cifar10_pgd_tsipras": ('cifar10', 'resnet56'),
@@ -112,7 +113,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
     acc = test(net,test_data,device)
     results[trained_network+"_clean"] = acc
     # Attack FGSM
-    for e in [0.156/2, 0.156, 0.156*2]:
+    for e in [0.125/4, 0.125/2, 0.125]:
         logging.info('EPSILON %.4f' % e)
         for attack in attacks:
             adversary = attack(epsilon = e)
