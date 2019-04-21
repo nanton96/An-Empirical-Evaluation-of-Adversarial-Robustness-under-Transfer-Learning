@@ -1,0 +1,1 @@
+{"resnet56_cifar100_fgsm_clean": 0.6224, "resnet56_cifar100_fgsm_attacked_by_fgsm_e_0.03125": 0.5595, "resnet56_cifar100_fgsm_attacked_by_pgd_e_0.03125": 0.0537, "resnet56_cifar100_fgsm_attacked_by_fgsm_e_0.06250": 0.42719999999999997, "resnet56_cifar100_fgsm_attacked_by_pgd_e_0.06250": 0.035100000000000006}
