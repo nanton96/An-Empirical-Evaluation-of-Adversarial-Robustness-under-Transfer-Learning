@@ -1,0 +1,1 @@
+{"transfer_all_layers_resnet56_pgd_pgd_clean": 0.8258999999999999, "transfer_all_layers_resnet56_pgd_pgd_attacked_by_fgsm_e_0.03125": 0.6506000000000001, "transfer_all_layers_resnet56_pgd_pgd_attacked_by_pgd_e_0.03125": 0.6313, "transfer_all_layers_resnet56_pgd_pgd_attacked_by_fgsm_e_0.06250": 0.4772, "transfer_all_layers_resnet56_pgd_pgd_attacked_by_pgd_e_0.06250": 0.4132}
