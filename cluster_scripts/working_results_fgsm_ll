@@ -1,0 +1,137 @@
+use GPU
+
+Loading dataset: cifar10
+Experiment name: attack_resnet56_cifar10_fgsm
+Loading model from ./experiments_results/resnet56_cifar10_fgsm/saved_models/train_model_best_readable
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+EPSILON 0.0312
+Accuracy on clean data 83.55
+fgsm accuracy on adversarial data 78.67999999999999
+EPSILON 0.0625
+pgd accuracy on adversarial data 1.03
+fgsm accuracy on adversarial data 83.32999999999998
+EPSILON 0.1250
+pgd accuracy on adversarial data 0.52
+fgsm accuracy on adversarial data 58.489999999999995
+
+Loading dataset: cifar10
+Experiment name: attack_resnet56_cifar10_fgsm_ll
+Loading model from ./experiments_results/resnet56_cifar10_fgsm_ll/saved_models/train_model_best_readable
+pgd accuracy on adversarial data 0.7799999999999999
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+EPSILON 0.0312
+Accuracy on clean data 87.12
+fgsm accuracy on adversarial data 84.42
+EPSILON 0.0625
+pgd accuracy on adversarial data 19.990000000000002
+fgsm accuracy on adversarial data 78.63
+EPSILON 0.1250
+pgd accuracy on adversarial data 13.540000000000003
+fgsm accuracy on adversarial data 60.92999999999999
+
+Loading dataset: cifar10
+Experiment name: attack_resnet56_cifar10
+Loading model from ./experiments_results/resnet56_cifar10/saved_models/train_model_best_readable
+pgd accuracy on adversarial data 4.58
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+EPSILON 0.0312
+Accuracy on clean data 92.52999999999999
+fgsm accuracy on adversarial data 25.16
+EPSILON 0.0625
+pgd accuracy on adversarial data 0.08
+fgsm accuracy on adversarial data 19.990000000000002
+EPSILON 0.1250
+pgd accuracy on adversarial data 0.01
+fgsm accuracy on adversarial data 14.29
+
+Loading dataset: cifar10
+Experiment name: attack_resnet56_cifar10_fgsm_prev
+Loading model from ./experiments_results/resnet56_cifar10_fgsm_prev/saved_models/train_model_best_readable
+pgd accuracy on adversarial data 0.0
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+EPSILON 0.0312
+Accuracy on clean data 88.99000000000001
+fgsm accuracy on adversarial data 89.15
+EPSILON 0.0625
+pgd accuracy on adversarial data 15.61
+fgsm accuracy on adversarial data 83.17999999999999
+EPSILON 0.1250
+pgd accuracy on adversarial data 12.740000000000002
+fgsm accuracy on adversarial data 66.91000000000001
+
+Loading dataset: cifar100
+Experiment name: attack_resnet56_cifar100_fgsm_prev
+Loading model from ./experiments_results/resnet56_cifar100_fgsm_prev/saved_models/train_model_best_readable
+pgd accuracy on adversarial data 5.36
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+EPSILON 0.0312
+Accuracy on clean data 58.48
+fgsm accuracy on adversarial data 32.38
+EPSILON 0.0625
+pgd accuracy on adversarial data 29.650000000000006
+fgsm accuracy on adversarial data 19.76
+EPSILON 0.1250
+pgd accuracy on adversarial data 13.879999999999997
+fgsm accuracy on adversarial data 8.21
+
+Loading dataset: cifar100
+Experiment name: attack_resnet56_cifar100_fgsm
+Loading model from ./experiments_results/resnet56_cifar100_fgsm/saved_models/train_model_best_readable
+pgd accuracy on adversarial data 2.95
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+EPSILON 0.0312
+Accuracy on clean data 52.6
+fgsm accuracy on adversarial data 37.89
+EPSILON 0.0625
+pgd accuracy on adversarial data 2.1599999999999997
+fgsm accuracy on adversarial data 54.0
+EPSILON 0.1250
+pgd accuracy on adversarial data 1.1400000000000001
+fgsm accuracy on adversarial data 25.660000000000004
+
+Loading dataset: cifar100
+Experiment name: attack_resnet56_cifar100_fgsm_ll
+Loading model from ./experiments_results/resnet56_cifar100_fgsm_ll/saved_models/train_model_best_readable
+pgd accuracy on adversarial data 0.9900000000000001
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+EPSILON 0.0312
+Accuracy on clean data 62.239999999999995
+fgsm accuracy on adversarial data 55.95
+EPSILON 0.0625
+pgd accuracy on adversarial data 5.37
+fgsm accuracy on adversarial data 42.72
+EPSILON 0.1250
+pgd accuracy on adversarial data 3.5100000000000007
+fgsm accuracy on adversarial data 25.52
+
+Loading dataset: cifar100
+Experiment name: attack_resnet56_cifar100
+Loading model from ./experiments_results/resnet56_cifar100/saved_models/train_model_best_readable
+pgd accuracy on adversarial data 1.8399999999999999
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+EPSILON 0.0312
+Accuracy on clean data 68.66000000000001
+fgsm accuracy on adversarial data 12.420000000000003
+EPSILON 0.0625
+pgd accuracy on adversarial data 1.3
+fgsm accuracy on adversarial data 10.01
+EPSILON 0.1250
+pgd accuracy on adversarial data 0.4700000000000001
+fgsm accuracy on adversarial data 6.369999999999999
+pgd accuracy on adversarial data 0.19000000000000003

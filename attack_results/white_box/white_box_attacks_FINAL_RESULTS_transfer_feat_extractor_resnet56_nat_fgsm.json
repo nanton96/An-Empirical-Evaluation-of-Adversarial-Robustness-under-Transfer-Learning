@@ -1,0 +1,1 @@
+{"transfer_feat_extractor_resnet56_nat_fgsm_clean": 0.6934, "transfer_feat_extractor_resnet56_nat_fgsm_attacked_by_fgsm_e_0.03125": 0.1145, "transfer_feat_extractor_resnet56_nat_fgsm_attacked_by_pgd_e_0.03125": 0.0002, "transfer_feat_extractor_resnet56_nat_fgsm_attacked_by_fgsm_e_0.06250": 0.131, "transfer_feat_extractor_resnet56_nat_fgsm_attacked_by_pgd_e_0.06250": 0.0}
