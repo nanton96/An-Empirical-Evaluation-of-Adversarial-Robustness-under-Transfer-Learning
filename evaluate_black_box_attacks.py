@@ -48,7 +48,7 @@ target_networks =  {
                     
                     "resnet56_cifar10",
                     "resnet56_cifar10_pgd",
-                    "resnet56_cifaf10_fgsm",
+                    "resnet56_cifar10_fgsm",
 
                     "transfer_12_layers_resnet56_fgsm_nat",
                     "transfer_12_layers_resnet56_fgsm_fgsm",
@@ -79,10 +79,10 @@ target_networks =  {
                     'cifar100': [
                     "resnet56_cifar100",
                     "resnet56_cifar100_pgd",
-                    "resnet56_cifaf100_fgsm",
+                    "resnet56_cifar100_fgsm",
                     "densenet121_cifar100",
                     "densenet121_cifar100_pgd",
-                    "densenet121_cifaf100_fgsm",
+                    "densenet121_cifar100_fgsm",
                     ]
                     
                     }
