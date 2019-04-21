@@ -35,12 +35,12 @@ export DATASET_DIR=${TMP}/datasets/
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID}/data
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
-cd ..
+cd /home/${STUDENT_ID}/mlpcw4/
 
 
 python transfer.py --batch_size 128 --continue_from_epoch -1 --seed 0 \
 				 --step_size 25 --gamma 0.1 \
                  --num_epochs 50 \
                  --lr 0.1  \
-                 --experiment_name 'transfer_all_layers_resnet56_pgd_nat' \
+                 --experiment_name 'transfer_all_layers_densenet121_nat_pgd' \
                  --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 
