@@ -57,19 +57,23 @@ trained_networks =  {
                     # "resnet56_cifar10": ('cifar10', 'resnet56'),
                     # "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
 
-                    # "transfer_12_layers_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
+                    
                     # "transfer_12_layers_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
-                    # "transfer_12_layers_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_12_layers_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
+                    "transfer_12_layers_resnet56_nat_pgd": ('cifar10', 'resnet56'),
                     "transfer_12_layers_resnet56_nat_nat": ('cifar10', 'resnet56'),
 
                     # "transfer_all_layers_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
                     # "transfer_all_layers_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_all_layers_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
+                    "transfer_all_layers_resnet56_nat_pgd": ('cifar10', 'resnet56'),
                     "transfer_all_layers_resnet56_nat_nat": ('cifar10', 'resnet56'),
 
                     # "transfer_feat_extractor_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
                     # "transfer_feat_extractor_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
                     # "transfer_feat_extractor_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_feat_extractor_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
+                    "transfer_feat_extractor_resnet56_nat_pgd": ('cifar10', 'resnet56'),
                     "transfer_feat_extractor_resnet56_nat_nat": ('cifar10', 'resnet56'),
 
                     # "resnet56_cifar10_fgsm": ('cifar10', 'resnet56'),
