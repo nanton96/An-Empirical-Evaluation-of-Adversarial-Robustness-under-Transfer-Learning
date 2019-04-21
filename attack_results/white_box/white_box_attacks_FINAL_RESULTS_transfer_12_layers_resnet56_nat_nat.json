@@ -1,0 +1,1 @@
+{"transfer_12_layers_resnet56_nat_nat_clean": 0.9124, "transfer_12_layers_resnet56_nat_nat_attacked_by_fgsm_e_0.03125": 0.2253, "transfer_12_layers_resnet56_nat_nat_attacked_by_pgd_e_0.03125": 0.0005, "transfer_12_layers_resnet56_nat_nat_attacked_by_fgsm_e_0.06250": 0.18439999999999998, "transfer_12_layers_resnet56_nat_nat_attacked_by_pgd_e_0.06250": 0.0}
