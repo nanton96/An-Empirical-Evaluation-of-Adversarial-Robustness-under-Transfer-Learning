@@ -80,9 +80,6 @@ target_networks =  {
                     "resnet56_cifar100",
                     "resnet56_cifar100_pgd",
                     "resnet56_cifar100_fgsm",
-                    "densenet121_cifar100",
-                    "densenet121_cifar100_pgd",
-                    "densenet121_cifar100_fgsm",
                     ]
                     
                     }
