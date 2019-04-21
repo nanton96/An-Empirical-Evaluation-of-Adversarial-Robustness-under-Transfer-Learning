@@ -54,11 +54,11 @@ trained_networks =  {
                     # CIFAR10
                     # "resnet56_cifar10_fgsm": ('cifar10', 'resnet56'),
                     # "resnet56_cifar10": ('cifar10', 'resnet56'),
-                    # "resnet56_cifar10_fgsm_ll": ('cifar10', 'resnet56'),
-                    # "resnet56_cifar10": ('cifar10', 'resnet56'),
+                    "resnet56_cifar10_fgsm_ll": ('cifar10', 'resnet56'),
+                    "resnet56_cifar10": ('cifar10', 'resnet56'),
                     # "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
-                    "densenet121_cifar10_fgsm": ('cifar10', 'densenet121'),
-                    "densenet121_cifar10_fgsm_ll": ('cifar10', 'densenet121'),
+                    # "densenet121_cifar10_fgsm": ('cifar10', 'densenet121'),
+                    # "densenet121_cifar10_fgsm_ll": ('cifar10', 'densenet121'),
                     # "densenet121_cifar10": ('cifar10', 'densenet121'),
                     # "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
                     # "resnet56_cifar10_fgsm_prev": ('cifar10', 'resnet56'),
@@ -70,7 +70,7 @@ trained_networks =  {
                     # "resnet56_cifar100_fgsm_ll": ('cifar100', 'resnet56'),
                     # "resnet56_cifar100": ('cifar100', 'resnet56'),
                     # "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
-                    "densenet121_cifar100_fgsm": ('cifar100', 'densenet121'),
+                    # "densenet121_cifar100_fgsm": ('cifar100', 'densenet121'),
                     # "densenet121_cifar100": ('cifar100', 'densenet121'),
                     # "densenet121_cifar100_pgd": ('cifar100', 'densenet121'),
 
@@ -119,7 +119,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
     acc = test(net,test_data,device)
     results[trained_network+"_clean"] = acc
     # Attack FGSM
-    for e in [0.125/4, 0.125/2, 0.125]:
+    for e in [0.125/4, 0.125/2]:
         logging.info('EPSILON %.4f' % e)
         for attack in attacks:
             adversary = attack(epsilon = e)
@@ -128,7 +128,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
             acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
             results[trained_network+"_attacked_by_"+adversary.name+'_e_%.5f'%e] = acc
 
-    path = './attack_results/white_box/white_box_attacks_pgd_7_TEST_%s.json' % trained_network
+    path = './attack_results/white_box/white_box_attacks_LL_EFFECT_%s.json' % trained_network
     with open(path, 'w') as outfile:
         json.dump(results, outfile)        
 
