@@ -74,7 +74,7 @@ trained_networks =  {
 
                     # "resnet56_cifar10_fgsm": ('cifar10', 'resnet56'),
                     # "resnet56_cifar10": ('cifar10', 'resnet56'),
-s                    # "densenet121_cifar10_fgsm": ('cifar10', 'densenet121'),
+                    # "densenet121_cifar10_fgsm": ('cifar10', 'densenet121'),
                     # "densenet121_cifar10_fgsm_ll": ('cifar10', 'densenet121'),
                     # "densenet121_cifar10": ('cifar10', 'densenet121'),
                     # "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
@@ -91,33 +91,6 @@ s                    # "densenet121_cifar10_fgsm": ('cifar10', 'densenet121'),
                     # "densenet121_cifar100": ('cifar100', 'densenet121'),
                     # "densenet121_cifar100_pgd": ('cifar100', 'densenet121'),
 
-
-                    # "resnet56_cifar10_pgd_tsipras": ('cifar10', 'resnet56'),
-                    # "resnet56_cifar10_fgsm_tsipras": ('cifar10', 'resnet56'),
-                    # "densenet121_cifar10_fgsm_tsipras": ('cifar10', 'densenet121'),
-
-                    # "transfer_all_layers_densenet121_fgsm_fgsm_step_25_gamma_0.1": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_fgsm_nat_step_25_gamma_0.1": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_fgsm_nat_step_25_gamma_0.1_2": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_nat_fgsm_step_25_gamma_0.1": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_nat_nat_step_25_gamma_0.1": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_nat_nat_step_25_gamma_0.1_2": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_nat_pgd_step_25_gamma_0.1": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_pgd_nat_step_25_gamma_0.1": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_pgd_nat_step_25_gamma_0.1_2": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_densenet121_pgd_pgd_step_25_gamma_0.1": ('cifar10', 'densenet121'),
-                    # "transfer_all_layers_resnet56_fgsm_fgsm_step_25_gamma_0.1": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_fgsm_fgsm_step_25_gamma_0.1_2": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_fgsm_nat_step_25_gamma_0.1": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_fgsm_nat_step_25_gamma_0.1_2": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_nat_fgsm_step_25_gamma_0.1": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_nat_fgsm_step_25_gamma_0.1_2": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_nat_nat_step_25_gamma_0.1": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_nat_pgd_step_25_gamma_0.1": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_pgd_nat_step_25_gamma_0.1": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_pgd_nat_step_25_gamma_0.1_2": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_pgd_pgd_step_25_gamma_0.1": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_nat_nat_step_20_gamma_0.4": ('cifar10', 'resnet56'),
                     }
 
 for trained_network, (dataset_name, model) in trained_networks.items():
