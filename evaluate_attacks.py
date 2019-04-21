@@ -52,12 +52,29 @@ trained_networks =  {
                     # "transfer_resnet56_pgd_pgd": ('cifar10', 'resnet56'),
 
                     # CIFAR10
+
+                    "resnet56_cifar10_fgsm": ('cifar10', 'resnet56'),
+                    "resnet56_cifar10": ('cifar10', 'resnet56'),
+                    "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
+
+                    "transfer_12_layers_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_12_layers_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
+                    "transfer_12_layers_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_12_layers_resnet56_nat_pgd": ('cifar10', 'resnet56'),
+
+                    "transfer_all_layers_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_all_layers_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
+                    "transfer_all_layers_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_all_layers_resnet56_nat_pgd": ('cifar10', 'resnet56'),
+
+                    "transfer_feat_extractor_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_feat_extractor_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
+                    "transfer_feat_extractor_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
+                    "transfer_feat_extractor_resnet56_nat_pgd": ('cifar10', 'resnet56'),
+
                     # "resnet56_cifar10_fgsm": ('cifar10', 'resnet56'),
                     # "resnet56_cifar10": ('cifar10', 'resnet56'),
-                    "resnet56_cifar10_fgsm_ll": ('cifar10', 'resnet56'),
-                    "resnet56_cifar10": ('cifar10', 'resnet56'),
-                    # "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
-                    # "densenet121_cifar10_fgsm": ('cifar10', 'densenet121'),
+s                    # "densenet121_cifar10_fgsm": ('cifar10', 'densenet121'),
                     # "densenet121_cifar10_fgsm_ll": ('cifar10', 'densenet121'),
                     # "densenet121_cifar10": ('cifar10', 'densenet121'),
                     # "densenet121_cifar10_pgd": ('cifar10', 'densenet121'),
@@ -128,7 +145,7 @@ for trained_network, (dataset_name, model) in trained_networks.items():
             acc = attack_over_test_data(model=net,device=device ,adversary=adversary, param=None, loader=test_data, oracle=None)
             results[trained_network+"_attacked_by_"+adversary.name+'_e_%.5f'%e] = acc
 
-    path = './attack_results/white_box/white_box_attacks_LL_EFFECT_%s.json' % trained_network
+    path = './attack_results/white_box/white_box_attacks_FINAL_RESULTS_%s.json' % trained_network
     with open(path, 'w') as outfile:
         json.dump(results, outfile)        
 
