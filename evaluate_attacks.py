@@ -60,17 +60,17 @@ trained_networks =  {
                     # "transfer_12_layers_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
                     # "transfer_12_layers_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
                     # "transfer_12_layers_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
-                    # "transfer_12_layers_resnet56_nat_pgd": ('cifar10', 'resnet56'),
+                    "transfer_12_layers_resnet56_nat_nat": ('cifar10', 'resnet56'),
 
                     # "transfer_all_layers_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
                     # "transfer_all_layers_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
                     # "transfer_all_layers_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
-                    # "transfer_all_layers_resnet56_nat_pgd": ('cifar10', 'resnet56'),
+                    "transfer_all_layers_resnet56_nat_nat": ('cifar10', 'resnet56'),
 
                     # "transfer_feat_extractor_resnet56_fgsm_fgsm": ('cifar10', 'resnet56'),
                     # "transfer_feat_extractor_resnet56_fgsm_nat": ('cifar10', 'resnet56'),
                     # "transfer_feat_extractor_resnet56_nat_fgsm": ('cifar10', 'resnet56'),
-                    # "transfer_feat_extractor_resnet56_nat_pgd": ('cifar10', 'resnet56'),
+                    "transfer_feat_extractor_resnet56_nat_nat": ('cifar10', 'resnet56'),
 
                     # "resnet56_cifar10_fgsm": ('cifar10', 'resnet56'),
                     # "resnet56_cifar10": ('cifar10', 'resnet56'),
@@ -83,10 +83,10 @@ trained_networks =  {
   
                     
                     # CIFAR100
-                    "resnet56_cifar100_fgsm": ('cifar100', 'resnet56'),
+                    # "resnet56_cifar100_fgsm": ('cifar100', 'resnet56'),
                     # "resnet56_cifar100_fgsm_ll": ('cifar100', 'resnet56'),
-                    "resnet56_cifar100": ('cifar100', 'resnet56'),
-                    "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
+                    # "resnet56_cifar100": ('cifar100', 'resnet56'),
+                    # "resnet56_cifar100_pgd": ('cifar100', 'resnet56'),
                     # "densenet121_cifar100_fgsm": ('cifar100', 'densenet121'),
                     # "densenet121_cifar100": ('cifar100', 'densenet121'),
                     # "densenet121_cifar100_pgd": ('cifar100', 'densenet121'),
