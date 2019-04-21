@@ -1,10 +1,10 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=Short
+#SBATCH --partition=MSC
 #SBATCH --gres=gpu:1
 #SBATCH --mem=12000  # memory in Mb
-#SBATCH --time=0-03:59:00
+#SBATCH --time=0-17:59:00
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 
@@ -38,9 +38,9 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlpcw4/
 
 
-python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
+python transfer.py --batch_size 128 --continue_from_epoch -1 --seed 0 \
 				 --step_size 25 --gamma 0.1 \
-                 --experiment_name 'transfer_resnet56_pgd_nat' \
                  --num_epochs 50 \
-                 --lr 0.1 \
+                 --lr 0.1  \
+                 --experiment_name 'transfer_all_layers_resnet56_nat_pgd' \
                  --use_gpu True --gpu_id "0" --weight_decay_coefficient 0.00005 
