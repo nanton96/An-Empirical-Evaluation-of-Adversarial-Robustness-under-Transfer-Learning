@@ -35,7 +35,7 @@ export DATASET_DIR=${TMP}/datasets/
 rsync -ua --progress /home/${STUDENT_ID}/mlpcw4/data/ /disk/scratch/${STUDENT_ID}/data
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
-cd ..
+cd /home/${STUDENT_ID}/mlpcw4/
 
 
 python transfer.py --batch_size 100 --continue_from_epoch -1 --seed 0 \
