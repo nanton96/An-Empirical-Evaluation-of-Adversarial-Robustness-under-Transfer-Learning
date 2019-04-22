@@ -26,8 +26,8 @@ experiments =  {
         'transfer_all_layers_resnet56_nat_nat':     ('resnet56_cifar100',      'resnet56', 'nat',  False,   -1),
         'transfer_all_layers_resnet56_fgsm_nat':    ('resnet56_cifar100_fgsm', 'resnet56', 'nat',  False,   -1),
         'transfer_all_layers_resnet56_pgd_nat':     ('resnet56_cifar100_pgd',  'resnet56', 'nat',  False,   -1),
-        'transfer_all_layers_resnet56_fgsm_fgsm':   ('resnet56_cifar100_fgsm', 'resnet56', 'fgsm', True,    -1), 
-        'transfer_all_layers_resnet56_nat_fgsm':    ('resnet56_cifar100',      'resnet56', 'fgsm', True,    -1),
+        'transfer_all_layers_resnet56_fgsm_fgsm_no_ll':   ('resnet56_cifar100_fgsm_no_ll', 'resnet56', 'fgsm', True,    -1), 
+        'transfer_all_layers_resnet56_nat_fgsm_no_ll':    ('resnet56_cifar100',      'resnet56', 'fgsm', True,    -1),
         'transfer_all_layers_resnet56_pgd_pgd':     ('resnet56_cifar100_pgd',  'resnet56', 'pgd',  True,    -1), 
         'transfer_all_layers_resnet56_nat_pgd':     ('resnet56_cifar100',      'resnet56', 'pgd',  True,    -1),
 
@@ -35,8 +35,8 @@ experiments =  {
         'transfer_12_layers_resnet56_nat_nat':     ('resnet56_cifar100',      'resnet56', 'nat',  False,   12),
         'transfer_12_layers_resnet56_fgsm_nat':    ('resnet56_cifar100_fgsm', 'resnet56', 'nat',  False,   12),
         'transfer_12_layers_resnet56_pgd_nat':     ('resnet56_cifar100_pgd',  'resnet56', 'nat',  False,   12),
-        'transfer_12_layers_resnet56_fgsm_fgsm':   ('resnet56_cifar100_fgsm', 'resnet56', 'fgsm', True,    12), 
-        'transfer_12_layers_resnet56_nat_fgsm':    ('resnet56_cifar100',      'resnet56', 'fgsm', True,    12),
+        'transfer_12_layers_resnet56_fgsm_fgsm_no_ll':   ('resnet56_cifar100_fgsm_no_ll', 'resnet56', 'fgsm', True,    12), 
+        'transfer_12_layers_resnet56_nat_fgsm_no_ll':    ('resnet56_cifar100',      'resnet56', 'fgsm', True,    12),
         'transfer_12_layers_resnet56_pgd_pgd':     ('resnet56_cifar100_pgd',  'resnet56', 'pgd',  True,    12), 
         'transfer_12_layers_resnet56_nat_pgd':     ('resnet56_cifar100',      'resnet56', 'pgd',  True,    12),
 
@@ -44,8 +44,8 @@ experiments =  {
         'transfer_feat_extractor_resnet56_nat_nat':     ('resnet56_cifar100',      'resnet56', 'nat',  False,   0),
         'transfer_feat_extractor_resnet56_fgsm_nat':    ('resnet56_cifar100_fgsm', 'resnet56', 'nat',  False,   0),
         'transfer_feat_extractor_resnet56_pgd_nat':     ('resnet56_cifar100_pgd',  'resnet56', 'nat',  False,   0),
-        'transfer_feat_extractor_resnet56_fgsm_fgsm':   ('resnet56_cifar100_fgsm', 'resnet56', 'fgsm', True,    0), 
-        'transfer_feat_extractor_resnet56_nat_fgsm':    ('resnet56_cifar100',      'resnet56', 'fgsm', True,    0),
+        'transfer_feat_extractor_resnet56_fgsm_fgsm_no_ll':   ('resnet56_cifar100_fgsm_no_ll', 'resnet56', 'fgsm', True,    0), 
+        'transfer_feat_extractor_resnet56_nat_fgsm_no_ll':    ('resnet56_cifar100',      'resnet56', 'fgsm', True,    0),
         'transfer_feat_extractor_resnet56_pgd_pgd':     ('resnet56_cifar100_pgd',  'resnet56', 'pgd',  True,    0), 
         'transfer_feat_extractor_resnet56_nat_pgd':     ('resnet56_cifar100',      'resnet56', 'pgd',  True,    0)
     }
