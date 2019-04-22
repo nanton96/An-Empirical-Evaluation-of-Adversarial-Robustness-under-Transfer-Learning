@@ -121,5 +121,5 @@ slurm-*
 # Ingore trained models
 saved_models/
 
-# Ignore experimental results
-
+# Ignore experimental result
+data/
