@@ -119,7 +119,7 @@ slurm-*
 /checkpoint
 
 # Ingore trained models
-/models
+saved_models/
 
 # Ignore experimental results
-/experiments_results
+

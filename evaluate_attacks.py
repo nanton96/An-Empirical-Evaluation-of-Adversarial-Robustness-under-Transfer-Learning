@@ -54,7 +54,7 @@ trained_networks =  {
 
                     # CIFAR10
 
-                    "resnet56_cifar10_fgsm_ll": ('cifar10', 'resnet56'),
+                    #"resnet56_cifar10_fgsm_ll": ('cifar10', 'resnet56'),
                     # "resnet56_cifar10": ('cifar10', 'resnet56'),
                     # "resnet56_cifar10_pgd": ('cifar10', 'resnet56'),
 
