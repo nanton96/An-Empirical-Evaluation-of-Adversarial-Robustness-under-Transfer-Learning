@@ -1,8 +1,12 @@
-# mlpcw4 - Adversarial Transfer Learning: From Accuracy to Adversarial Robustness
+# An Empirical Evaluation of Adversarial Robustness under Transfer Learning
 
 In this work, we try to band together adversarial robustness and transfer learning. We show that vanilla transfer learning can not transfer robustness across domains under white-box attacks. However, it maintains robustness against black box adversaries. We propose a method of injecting adversarial examples during transfer learning, to maintain robustness against both types of attacks. This technique can be beneficial for developing robust models in tasks where transfer learning is applicable. Our method achieves comparable performance to adversarially training from scratch while requiring significantly less computational resources.
 
+This is the implementation for the paper:
 
+Todor Davchev, Timos Korres, Stathi Fotiadis, Nick Antonopoulos, Subramanian Ramamoorthy(2019) 
+
+[An Empirical Evaluation of Adversarial Robustness under Transfer Learning](https://arxiv.org/abs/1905.02675)
 
 
 Github references:
