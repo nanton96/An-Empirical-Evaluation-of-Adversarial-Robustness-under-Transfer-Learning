@@ -4,9 +4,7 @@ In this work, we try to band together adversarial robustness and transfer learni
 
 This is the implementation for the paper:
 
-Todor Davchev, Timos Korres, Stathi Fotiadis, Nick Antonopoulos, Subramanian Ramamoorthy(2019) 
-
-[An Empirical Evaluation of Adversarial Robustness under Transfer Learning](https://arxiv.org/abs/1905.02675)
+Todor Davchev, Timos Korres, Stathi Fotiadis, Nick Antonopoulos, Subramanian Ramamoorthy(2019) [An Empirical Evaluation of Adversarial Robustness under Transfer Learning](https://arxiv.org/abs/1905.02675) under review for publication in ICML 2019 generalisation workshop.
 
 
 Github references:
